@@ -63,7 +63,7 @@ void main(void)
   
   for(uint8_t i=0;i<64;i++)
   {
-    WRITE_BUFFER[i]=i;
+    //WRITE_BUFFER[i]=0xff;
   }
   
   
@@ -72,36 +72,32 @@ void main(void)
   
   delay=10;
   while(delay--);
-  
-  temp[0]=0x08;	
   if(status)
-    status=SWIM_WOTF(SWIM_DM_CSR2,temp,1);          //stall
+  status=SWIM_Soft_Reset();
   
-  temp[0]=SWIM_FLASH_PUKR_KEY1;		        //MASSKEY1
   if(status)
-    status=SWIM_WOTF(SWIM_FLASH_PUKR,temp,1);
-  
-  temp[0]=SWIM_FLASH_PUKR_KEY2;		        //MASSKEY2
+  status=SWIM_Stall_CPU();
+ /* 
   if(status)
-    status=SWIM_WOTF(SWIM_FLASH_PUKR,temp,1);
+  status=SWIM_Unlock_Flash();
   
   if(status)
   {
     for (blk=0;blk<128;blk++)
     {
-      temp[0]=0x01;					//0000505B,Flash_CR2 ,Bit0=1,???????
-      temp[1]=0xFE;				        //0000505C,Flash_NCR2
-      if(status);
-      status=SWIM_WOTF(SWIM_FLASH_CR2,temp,2);       //??????????????Flash_CR2,NCR2,???????????0
+      temp[0]=0x01;					//Flash_CR2  standard block programming
+      temp[1]=0xFE;				        //Flash_NCR2
+      if(status)
+      status=SWIM_WOTF(SWIM_FLASH_CR2,temp,2);      
       
-      if(status);
+      if(status)
       status=SWIM_WOTF(0x00008000+(blk*64),WRITE_BUFFER,64);
       delay=1000;
       while(delay--);
       
     }
   }
-  
+  */
   if(status)
     status=SWIM_ROTF(0x00008000, READ_BUFFER, 64);
   

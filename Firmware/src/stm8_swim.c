@@ -472,3 +472,53 @@ uint8_t SWIM_Enter(void)
   NRST_HIGH();
   return 0;
 }
+
+uint8_t SWIM_Soft_Reset(void)
+{
+  return SWIM_Send_Data(SWIM_CMD_SRST,SWIM_CMD_LEN,1);
+}
+
+
+uint8_t SWIM_Stall_CPU(void)
+{
+  uint8_t temp[1]={0x08};
+  return SWIM_WOTF(SWIM_DM_CSR2,temp,1);//stall the cpu
+}
+
+uint8_t SWIM_Unlock_Flash(void)
+{
+  uint8_t temp[1];
+  
+  temp[0]=SWIM_FLASH_PUKR_KEY1;
+  if(SWIM_WOTF(SWIM_FLASH_PUKR,temp,1))
+  {
+  temp[0]=SWIM_FLASH_PUKR_KEY2;
+  return SWIM_WOTF(SWIM_FLASH_PUKR,temp,1);
+  }
+  return 0;
+}
+
+uint8_t SWIM_Unlock_EEprom(void)
+{
+  uint8_t temp[1];
+  
+  temp[0]=SWIM_FLASH_DUKR_KEY1;
+  if(SWIM_WOTF(SWIM_FLASH_DUKR,temp,1))
+  {
+  temp[0]=SWIM_FLASH_DUKR_KEY2;
+  return SWIM_WOTF(SWIM_FLASH_DUKR,temp,1);
+  }
+  return 0;
+}
+
+uint8_t SWIM_Unlock_OptionByte(void)
+{
+  uint8_t temp[2];
+  if(SWIM_ROTF(SWIM_FLASH_CR2,temp,2))
+  {
+    temp[0]|=(0x01);  // OPT = 1 and NOPT = 0
+    temp[1]&=(~0x01);
+    return SWIM_WOTF(SWIM_FLASH_CR2,temp,2);
+  }
+  return 0;
+}
