@@ -26,6 +26,15 @@
 */ 
 
 
+
+
+
+
+
+
+/*********************************CILIKA V1.2**********************************/
+
+
 /* Includes ------------------------------------------------------------------*/
 #include "stm8s.h"
 #include "millis.h"
@@ -34,39 +43,35 @@
 
 
 
+
 /* Private defines -----------------------------------------------------------*/
-
-
-
 uint8_t WRITE_BUFFER[64]={0};
 uint8_t READ_BUFFER[64]={0xFF};
-
 extern uint32_t delay;
-
-
 /* Private function prototypes -----------------------------------------------*/
 
 
 /* Private functions ---------------------------------------------------------*/
 
 
-
-
 void main(void)
 {
   
-  SWIM_setup();
+  SWIM_Setup();
   
+
+    
+    
   delay=10000;
   while(delay--);
   
   
   for(uint8_t i=0;i<64;i++)
   {
-    //WRITE_BUFFER[i]=0xff;
+   WRITE_BUFFER[i]=26;
   }
   
-  
+ 
   uint8_t status,temp[2],blk;
   status=SWIM_Enter();
   
@@ -77,10 +82,11 @@ void main(void)
   
   if(status)
   status=SWIM_Stall_CPU();
- /* 
+  
+  
   if(status)
   status=SWIM_Unlock_Flash();
-  
+
   if(status)
   {
     for (blk=0;blk<128;blk++)
@@ -97,21 +103,17 @@ void main(void)
       
     }
   }
-  */
+  
   if(status)
-    status=SWIM_ROTF(0x00008000, READ_BUFFER, 64);
-  
-  
+  status=SWIM_ROTF(0x00008000, READ_BUFFER, 64);
   
   delay=10000;
   
-  
-  
+
   /* Infinite loop */
   while (1)
   {
-    
-    
+
   }
   
 }

@@ -1,40 +1,37 @@
 #include "stm8_swim.h"
 
 
-uint8_t SWIM_PULSE_1=(0x7f);
-uint8_t SWIM_PULSE_0=(0x01);
+uint8_t SWIM_PULSE_1=(4); 
+uint8_t SWIM_PULSE_0=(40);  
 
 uint8_t INT_Capture[11]={0};
 uint8_t INT_Capture_Index=0;
 
 uint32_t delay;
 
-void SWIM_setup(void)
+void SWIM_Setup(void)
 {
   CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
-  GPIO_Init(MOSI_port, MOSI_pin,GPIO_MODE_OUT_PP_HIGH_FAST);
-  GPIO_Init(MISO_port, MISO_pin,GPIO_MODE_IN_FL_NO_IT);
-  GPIO_Init(SWIM_NRST_port, SWIM_NRST_pin,GPIO_MODE_OUT_PP_HIGH_FAST);
-  GPIO_Init(SWIM_INT_port, SWIM_INT_pin,GPIO_MODE_IN_PU_NO_IT);//disable interupt for now
-  EXTI_SetExtIntSensitivity(EXTI_PORT_GPIOC,EXTI_SENSITIVITY_FALL_ONLY);
   
+  GPIO_Init(SWIM_NRST_port, SWIM_NRST_pin, GPIO_MODE_OUT_PP_HIGH_SLOW);
   
+  GPIO_Init(SWIM_INT_port, SWIM_INT_pin, GPIO_MODE_IN_PU_NO_IT);//disable interupt for now
+  EXTI_SetExtIntSensitivity(EXTI_PORT_GPIOC, EXTI_SENSITIVITY_FALL_ONLY);
   
-  SPI_DeInit();
-  SPI_Init(SPI_FIRSTBIT_MSB, 
-           SPI_BAUDRATEPRESCALER_4, 
-           SPI_MODE_MASTER, 
-           SPI_CLOCKPOLARITY_HIGH, 
-           SPI_CLOCKPHASE_2EDGE, 
-           SPI_DATADIRECTION_2LINES_FULLDUPLEX, 
-           SPI_NSS_SOFT, 
-           (0x07));
+  GPIO_Init(SWIM_OUT_PORT, SWIM_OUT_pin, GPIO_MODE_OUT_PP_HIGH_FAST); //pwm
+
+  TIM2_TimeBaseInit(TIM2_PRESCALER_1, 43);  //  (8Mhz/22) swim period
   
-  SPI->DR=0xFF;
-  SPI_Cmd(ENABLE);
+  /* Channel 1 PWM configuration */ 
+  TIM2_OC1Init(TIM2_OCMODE_PWM1, TIM2_OUTPUTSTATE_ENABLE, 0x00, TIM2_OCPOLARITY_LOW ); 
+  TIM2_OC1PreloadConfig(ENABLE);
   
-  while(!(SPI->SR & (uint8_t)SPI_FLAG_TXE));
-  SPI->DR;
+  /* Enables TIM peripheral Preload register on ARR */
+  TIM2_ARRPreloadConfig(ENABLE);
+  TIM2_Cmd(ENABLE);
+  
+  enableInterrupts();//globle interrupt enable 
+  
 }
 
 
@@ -66,91 +63,102 @@ uint8_t SWIM_Send_Data(uint8_t data,uint8_t len,uint8_t retry)
   
   do
   {
+    TIM->CNTRH=0x00;
+    TIM->CNTRL=0x00;
     INT_Capture_Index=0;
     if(len==3)
     {  
-      SPI->DR=SWIM_TX[0];
-      while(!(SPI->SR & (uint8_t)SPI_FLAG_TXE));
-      SPI->DR;
+      TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE; 
+      TIM->CCRL = SWIM_TX[0];
+      while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
+      TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE; 
       
-      SPI->DR=SWIM_TX[1];
-      while(!(SPI->SR & (uint8_t)SPI_FLAG_TXE));
-      SPI->DR;
+      TIM->CCRL = SWIM_TX[1];
+      while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
+      TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE;
+
+      TIM->CCRL = SWIM_TX[2];
+      while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
+      TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE;
       
-      SPI->DR=SWIM_TX[2];
-      while(!(SPI->SR & (uint8_t)SPI_FLAG_TXE));
-      SPI->DR;
+      TIM->CCRL = SWIM_TX[3];
+      while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
+      TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE;
       
-      SPI->DR=SWIM_TX[3];
-      while(!(SPI->SR & (uint8_t)SPI_FLAG_TXE));
-      SPI->DR;
+      TIM->CCRL = SWIM_TX[4];
+      while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
+      TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE;
       
-      SPI->DR=SWIM_TX[4];
-      Enable_SWIM_INT(); //enable intrrupt on PC3
-      enableInterrupts();//1 capture interrupt  
-      while(!(SPI->SR & (uint8_t)SPI_FLAG_TXE));
-      SPI->DR;
+      TIM->CCRL = 0x00;
+      Enable_SWIM_INT(); //enable intrrupt on SWIM_INT
+      while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
+      TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE;
       
+
     }
     
     
     else if(len==8)
     {
-      SPI->DR=SWIM_TX[0];
-      while(!(SPI->SR & (uint8_t)SPI_FLAG_TXE));
-      SPI->DR;
+      TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE; 
       
-      SPI->DR=SWIM_TX[1];
-      while(!(SPI->SR & (uint8_t)SPI_FLAG_TXE));
-      SPI->DR;
+      TIM->CCRL = SWIM_TX[0];
+      while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
+      TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE; 
       
-      SPI->DR=SWIM_TX[2];
-      while(!(SPI->SR & (uint8_t)SPI_FLAG_TXE));
-      SPI->DR;
+      TIM->CCRL = SWIM_TX[1];
+      while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
+      TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE; 
       
-      SPI->DR=SWIM_TX[3];
-      while(!(SPI->SR & (uint8_t)SPI_FLAG_TXE));
-      SPI->DR;
+      TIM->CCRL = SWIM_TX[2];
+      while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
+      TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE; 
       
-      SPI->DR=SWIM_TX[4];
-      while(!(SPI->SR & (uint8_t)SPI_FLAG_TXE));
-      SPI->DR;
+      TIM->CCRL = SWIM_TX[3];
+      while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
+      TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE; 
       
-      SPI->DR=SWIM_TX[5];
-      while(!(SPI->SR & (uint8_t)SPI_FLAG_TXE));
-      SPI->DR;
+      TIM->CCRL = SWIM_TX[4];
+      while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
+      TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE; 
       
-      SPI->DR=SWIM_TX[6];
-      while(!(SPI->SR & (uint8_t)SPI_FLAG_TXE));
-      SPI->DR;
+      TIM->CCRL = SWIM_TX[5];
+      while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
+      TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE; 
       
-      SPI->DR=SWIM_TX[7];
-      while(!(SPI->SR & (uint8_t)SPI_FLAG_TXE));
-      SPI->DR;
+      TIM->CCRL = SWIM_TX[6];
+      while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
+      TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE; 
       
-      SPI->DR=SWIM_TX[8];
-      while(!(SPI->SR & (uint8_t)SPI_FLAG_TXE));
-      SPI->DR;
+      TIM->CCRL = SWIM_TX[7];
+      while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
+      TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE; 
       
-      SPI->DR=SWIM_TX[9];
-      Enable_SWIM_INT(); //enable intrrupt on PC3
-      enableInterrupts();//1 capture interrupt
-      while(!(SPI->SR & (uint8_t)SPI_FLAG_TXE));
-      SPI->DR;
+      TIM->CCRL = SWIM_TX[8];
+      while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
+      TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE; 
+      
+      TIM->CCRL=SWIM_TX[9];
+      while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));      
+      TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE;
+      
+      TIM->CCRL = 0x00;
+      Enable_SWIM_INT(); //enable intrrupt on SWIM_INT
+      while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
+      TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE;
+      
     }
     else
     {
-      Disable_SWIM_INT(); //disable intrrupt on PC3
-      disableInterrupts();
+      Disable_SWIM_INT(); //disable interrupt on SWIM_INT
       return 0;
     }
     
     timeout=255;
-    while(INT_Capture_Index<2 && timeout--);
-    Disable_SWIM_INT(); //disable intrrupt on PC3
-    disableInterrupts();
+    while(INT_Capture_Index<1 && timeout--);
+    Disable_SWIM_INT(); //disable interrupt on SWIM_INT
     
-    if(INT_Capture_Index>1)
+    if(INT_Capture_Index==1)
     {
       INT_Capture_Index=0;
       return 1;
@@ -170,22 +178,20 @@ void delay_20us()
 
 void  SWIM_HIGH(void)
 {
-  SPI->DR=0xFF;
-  while(!(SPI->SR & (uint8_t)SPI_FLAG_TXE));
-  SPI->DR;
-  //GPIO_WriteHigh(MOSI_port,MOSI_pin);
-  
+
+  TIM->CCRL = (uint8_t)(0x00);
+  while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
+  TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE;
+  //GPIO_WriteHigh(SWIM_OUT_PORT,SWIM_OUT_pin);
 }
 
 
 void  SWIM_LOW(void)
 {
-  SPI->DR=0x00;
-  while(!(SPI->SR & (uint8_t)SPI_FLAG_TXE));
-  SPI->DR;
-  
-  //GPIO_WriteLow(MOSI_port,MOSI_pin);
-  
+  TIM->CCRL = (uint8_t)(0xFF);
+  while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
+  TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE;
+  //GPIO_WriteLow(SWIM_OUT_PORT,SWIM_OUT_pin);
 }
 
 
@@ -214,31 +220,31 @@ uint8_t SWIM_WOTF(uint32_t addr, uint8_t *buf, uint16_t size) {
   while (size) {
     cur_len = (size > 255) ? 255 : size;
     
-    ret = SWIM_Send_Data(SWIM_CMD_WOTF, SWIM_CMD_LEN, 1);
+    ret = SWIM_Send_Data(SWIM_CMD_WOTF, SWIM_CMD_LEN, 0);
     if (!ret) {
       return 0;
     }
-    ret = SWIM_Send_Data(cur_len, 8, 1);
+    ret = SWIM_Send_Data(cur_len, 8, 0);
     if (!ret) {
       return 0;
     }
-    ret = SWIM_Send_Data((cur_addr >> 16) & 0xFF, 8, 1);
-    if (!ret) {
-      return 0;
-      
-    }
-    ret = SWIM_Send_Data((cur_addr >> 8) & 0xFF, 8, 1);
+    ret = SWIM_Send_Data((cur_addr >> 16) & 0xFF, 8, 0);
     if (!ret) {
       return 0;
       
     }
-    ret = SWIM_Send_Data((cur_addr >> 0) & 0xFF, 8, 1);
+    ret = SWIM_Send_Data((cur_addr >> 8) & 0xFF, 8, 0);
+    if (!ret) {
+      return 0;
+      
+    }
+    ret = SWIM_Send_Data((cur_addr >> 0) & 0xFF, 8, 0);
     if (!ret) {
       return 0;
     }
     
     for (i = 0; i < cur_len; i++) {
-      ret = SWIM_Send_Data(*buf++, 8, 1);
+      ret = SWIM_Send_Data(*buf++, 8, 0);
       if (!ret) {
         return 0;
       }
@@ -256,7 +262,7 @@ uint8_t SWIM_ROTF(uint32_t addr, uint8_t *buf, uint16_t size) {
   uint8_t cur_len,retry_count=2;
   uint32_t cur_addr = addr;
   uint8_t ret = 0;
-  uint32_t ptrTX[1];
+  uint8_t ptrTX[1];
   
   uint8_t first_byte = 1, parity = 0, i;
   uint8_t nbytes;
@@ -304,43 +310,50 @@ uint8_t SWIM_ROTF(uint32_t addr, uint8_t *buf, uint16_t size) {
       {
         first_byte = 0;
         ptrTX[0] = SWIM_PULSE_0; /*send Nack */
-        delay=5;
+        delay=10;
         while(delay--);
       }
       
       INT_Capture_Index=0;
-      Enable_SWIM_INT(); //enable intrrupt on PC3
-      enableInterrupts();
+
+      TIM->CNTRH=0x00;
+      TIM->CNTRL=0x00;
+      TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE; 
+      TIM->CCRL = ptrTX[0];
+      while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
+      TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE; 
       
+      TIM->CCRL = 0x00;
+          
+      Enable_SWIM_INT(); //enable intrrupt on SWIM_INT
       
-      SPI->DR=ptrTX[0];   //send ack/Nack
-      while(!(SPI->SR & (uint8_t)SPI_FLAG_TXE));
-      SPI->DR;
+      while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
+      TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE; 
+      
       timeout=1000;
-      while(INT_Capture_Index<11 && timeout--);//capture data
-      Disable_SWIM_INT(); //disable intrrupt on PC3
-      disableInterrupts();
+      while(INT_Capture_Index<10 && timeout--);//capture data
+      Disable_SWIM_INT(); //disable interrupt on SWIM_INT
       
       
-      if (INT_Capture[1] && INT_Capture_Index==11) /* start bit from mcu */
+      if (INT_Capture[0] && INT_Capture_Index==10) /* start bit from mcu */
       {
         INT_Capture_Index=0;
         parity = 0;
         temp=0;
         for (i = 0; i < 8; i++) {
-          if (INT_Capture[2 + i]) {
+          if (INT_Capture[1 + i]) {
             temp |= 1 << (7 - i);
             parity++;
           }
         }
-        if (INT_Capture[10] && (parity & 1)) /*parity check */
+        if (INT_Capture[9] && (parity & 1)) /*parity check */
         {
           retry_count=2;
           ptrTX[0] = SWIM_PULSE_1; /*send ack */
           *buf++=temp;
           nbytes--;
         }
-        else if (!INT_Capture[10] && !(parity & 1)) /*parity check */
+        else if (!INT_Capture[9] && !(parity & 1)) /*parity check */
         {
           retry_count=2;
           ptrTX[0] = SWIM_PULSE_1; /*send ack */
@@ -365,7 +378,6 @@ uint8_t SWIM_ROTF(uint32_t addr, uint8_t *buf, uint16_t size) {
       if(!retry_count)
       {
         Disable_SWIM_INT();//disable interupt
-        disableInterrupts();
         return 0;   
       }
       
@@ -376,37 +388,37 @@ uint8_t SWIM_ROTF(uint32_t addr, uint8_t *buf, uint16_t size) {
     size -= cur_len;
   }
   Disable_SWIM_INT();//disable interupt
-  disableInterrupts();
-  SPI->DR=SWIM_PULSE_1;   //send ack for last byte
-  while(!(SPI->SR & (uint8_t)SPI_FLAG_TXE));
-  SPI->DR;
+  
+  TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE;
+  TIM->CCRL = SWIM_PULSE_1; //send ack for last byte
+  while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
+  TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE;
+  TIM->CCRL = 0x00;
+
+ 
   return 1;
 }
 
 
 uint8_t SWIM_Enter(void)
 {
-  
-  uint8_t i,rst=0;
+  uint8_t i;
   uint16_t timeout=1000;
   uint8_t retry=2;
   
   while(retry--)
   {
-    if(!rst)
-    {
-      NRST_LOW();
-      delay=200;
-      while(delay--);
-      
-      NRST_HIGH();
-      delay=200;
-      while(delay--);  
-      
-      NRST_LOW();
-      delay=200;
-      while(delay--);  
-    }
+    NRST_LOW();
+    delay=200;
+    while(delay--);
+    
+    NRST_HIGH();
+    delay=200;
+    while(delay--);  
+    
+    NRST_LOW();
+    delay=200;
+    while(delay--);  
     
     SWIM_LOW();
     delay=200;
@@ -439,13 +451,11 @@ uint8_t SWIM_Enter(void)
       delay=50;
       while(delay--);
     }
-    Enable_SWIM_INT(); //enable intrrupt on PC3
+    Enable_SWIM_INT(); //enable intrrupt on SWIM_INT
     SWIM_HIGH();
-    enableInterrupts();
     
     while(INT_Capture_Index<1 && timeout--);//capture data
-    Disable_SWIM_INT(); //disable intrrupt on PC3
-    disableInterrupts();
+    Disable_SWIM_INT(); //disable interrupt on SWIM_INT
     
     if(INT_Capture_Index)
     {
@@ -460,13 +470,6 @@ uint8_t SWIM_Enter(void)
         return 1;
       }
       
-    }
-    else
-    {
-      rst++;
-      NRST_HIGH();
-      delay=5000;
-      while(delay--);
     }
   }
   NRST_HIGH();

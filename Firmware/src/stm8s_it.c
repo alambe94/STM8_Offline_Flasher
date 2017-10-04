@@ -24,6 +24,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm8s_it.h"
 
+#include "stm8_swim.h"
+
+
 /** @addtogroup Template_Project
   * @{
   */
@@ -114,6 +117,7 @@ INTERRUPT_HANDLER(EXTI_PORTA_IRQHandler, 3)
   /* In order to detect unexpected events during development,
      it is recommended to set a breakpoint on the following instruction.
   */
+
 }
 
 /**
@@ -138,8 +142,10 @@ INTERRUPT_HANDLER(EXTI_PORTC_IRQHandler, 5)
   /* In order to detect unexpected events during development,
      it is recommended to set a breakpoint on the following instruction.
   */
-  INT_Capture[INT_Capture_Index]=(GPIOC->IDR & GPIO_PIN_3) ;
+  
+  INT_Capture[INT_Capture_Index]=(SWIM_INT_port->IDR & SWIM_INT_pin) ;
   INT_Capture_Index++;
+
 }
 
 /**

@@ -9,17 +9,25 @@
 
 
 /* Private defines -----------------------------------------------------------*/
-#define MOSI_pin                         GPIO_PIN_6
-#define MOSI_port                        GPIOC
 
-#define MISO_pin                         GPIO_PIN_7
-#define MISO_port                        GPIOC
+
+#define SWIM_INT_pin                     GPIO_PIN_3
+#define SWIM_INT_port                    GPIOC
 
 #define SWIM_NRST_pin                    GPIO_PIN_4
 #define SWIM_NRST_port                   GPIOC
 
-#define SWIM_INT_port                    GPIOC
-#define SWIM_INT_pin                     GPIO_PIN_3
+
+#define SWIM_OUT_pin                     GPIO_PIN_5   
+#define SWIM_OUT_PORT                    GPIOC 
+
+#define CCRL                             CCR1L 
+#define TIM                              TIM2
+#define TIM_FLAG_UPDATE                  TIM2_FLAG_UPDATE 
+
+
+
+
 
 
 
@@ -78,7 +86,13 @@
 
 /* Private function prototypes -----------------------------------------------*/
 
-void SWIM_setup(void);
+void SWIM_Setup(void);
+void SWIM_HIGH(void);
+void SWIM_LOW(void);
+void NRST_HIGH(void);
+void NRST_LOW(void);
+
+
 uint8_t SWIM_Enter(void);
 uint8_t SWIM_Soft_Reset(void);
 uint8_t SWIM_Send_Data(uint8_t data,uint8_t len,uint8_t retry);
