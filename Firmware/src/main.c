@@ -68,7 +68,7 @@ void main(void)
   
   for(uint8_t i=0;i<64;i++)
   {
-   WRITE_BUFFER[i]=26;
+   WRITE_BUFFER[i]=i;
   }
   
  
@@ -98,7 +98,7 @@ void main(void)
       
       if(status)
       status=SWIM_WOTF(0x00008000+(blk*64),WRITE_BUFFER,64);
-      delay=1000;
+      delay=800; //5ms delay after block write
       while(delay--);
       
     }

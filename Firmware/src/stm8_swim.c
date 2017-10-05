@@ -19,7 +19,7 @@ void SWIM_Setup(void)
   EXTI_SetExtIntSensitivity(EXTI_PORT_GPIOC, EXTI_SENSITIVITY_FALL_ONLY);
   
   GPIO_Init(SWIM_OUT_PORT, SWIM_OUT_pin, GPIO_MODE_OUT_PP_HIGH_FAST); //pwm
-
+  
   TIM2_TimeBaseInit(TIM2_PRESCALER_1, 43);  //  (8Mhz/22) swim period
   
   /* Channel 1 PWM configuration */ 
@@ -76,7 +76,7 @@ uint8_t SWIM_Send_Data(uint8_t data,uint8_t len,uint8_t retry)
       TIM->CCRL = SWIM_TX[1];
       while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
       TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE;
-
+      
       TIM->CCRL = SWIM_TX[2];
       while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
       TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE;
@@ -94,7 +94,7 @@ uint8_t SWIM_Send_Data(uint8_t data,uint8_t len,uint8_t retry)
       while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
       TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE;
       
-
+      
     }
     
     
@@ -158,15 +158,15 @@ uint8_t SWIM_Send_Data(uint8_t data,uint8_t len,uint8_t retry)
     while(INT_Capture_Index<1 && timeout--);
     Disable_SWIM_INT(); //disable interrupt on SWIM_INT
     
-    if(INT_Capture_Index==1)
+    if(INT_Capture_Index==1 && INT_Capture[0])
     {
       INT_Capture_Index=0;
       return 1;
     }
     
-  }
+  }  while(retry--);
   
-  while(retry--);
+  
   return 0;
 }
 
@@ -178,7 +178,7 @@ void delay_20us()
 
 void  SWIM_HIGH(void)
 {
-
+  
   TIM->CCRL = (uint8_t)(0x00);
   while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
   TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE;
@@ -315,7 +315,7 @@ uint8_t SWIM_ROTF(uint32_t addr, uint8_t *buf, uint16_t size) {
       }
       
       INT_Capture_Index=0;
-
+      
       TIM->CNTRH=0x00;
       TIM->CNTRL=0x00;
       TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE; 
@@ -324,7 +324,7 @@ uint8_t SWIM_ROTF(uint32_t addr, uint8_t *buf, uint16_t size) {
       TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE; 
       
       TIM->CCRL = 0x00;
-          
+      
       Enable_SWIM_INT(); //enable intrrupt on SWIM_INT
       
       while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
@@ -389,13 +389,15 @@ uint8_t SWIM_ROTF(uint32_t addr, uint8_t *buf, uint16_t size) {
   }
   Disable_SWIM_INT();//disable interupt
   
+  TIM->CNTRH=0x00;
+  TIM->CNTRL=0x00;
   TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE;
   TIM->CCRL = SWIM_PULSE_1; //send ack for last byte
   while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
   TIM->SR1 &= (uint8_t)~TIM_FLAG_UPDATE;
   TIM->CCRL = 0x00;
-
- 
+  
+  
   return 1;
 }
 
@@ -457,7 +459,7 @@ uint8_t SWIM_Enter(void)
     while(INT_Capture_Index<1 && timeout--);//capture data
     Disable_SWIM_INT(); //disable interrupt on SWIM_INT
     
-    if(INT_Capture_Index)
+    if(INT_Capture_Index==1 && !INT_Capture[0])
     {
       INT_Capture_Index=0;
       delay=20;
@@ -495,8 +497,8 @@ uint8_t SWIM_Unlock_Flash(void)
   temp[0]=SWIM_FLASH_PUKR_KEY1;
   if(SWIM_WOTF(SWIM_FLASH_PUKR,temp,1))
   {
-  temp[0]=SWIM_FLASH_PUKR_KEY2;
-  return SWIM_WOTF(SWIM_FLASH_PUKR,temp,1);
+    temp[0]=SWIM_FLASH_PUKR_KEY2;
+    return SWIM_WOTF(SWIM_FLASH_PUKR,temp,1);
   }
   return 0;
 }
@@ -508,8 +510,8 @@ uint8_t SWIM_Unlock_EEprom(void)
   temp[0]=SWIM_FLASH_DUKR_KEY1;
   if(SWIM_WOTF(SWIM_FLASH_DUKR,temp,1))
   {
-  temp[0]=SWIM_FLASH_DUKR_KEY2;
-  return SWIM_WOTF(SWIM_FLASH_DUKR,temp,1);
+    temp[0]=SWIM_FLASH_DUKR_KEY2;
+    return SWIM_WOTF(SWIM_FLASH_DUKR,temp,1);
   }
   return 0;
 }
