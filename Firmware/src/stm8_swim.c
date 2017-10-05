@@ -7,8 +7,6 @@ uint8_t SWIM_PULSE_0=(40);
 uint8_t INT_Capture[11]={0};
 uint8_t INT_Capture_Index=0;
 
-uint32_t delay;
-
 void SWIM_Setup(void)
 {
   CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
@@ -171,11 +169,6 @@ uint8_t SWIM_Send_Data(uint8_t data,uint8_t len,uint8_t retry)
 }
 
 
-
-void delay_20us()
-{
-}
-
 void  SWIM_HIGH(void)
 {
   
@@ -310,8 +303,7 @@ uint8_t SWIM_ROTF(uint32_t addr, uint8_t *buf, uint16_t size) {
       {
         first_byte = 0;
         ptrTX[0] = SWIM_PULSE_0; /*send Nack */
-        delay=10;
-        while(delay--);
+        delay_us(100);
       }
       
       INT_Capture_Index=0;
@@ -411,47 +403,44 @@ uint8_t SWIM_Enter(void)
   while(retry--)
   {
     NRST_LOW();
-    delay=200;
-    while(delay--);
+    delay_ms(10);
     
     NRST_HIGH();
-    delay=200;
-    while(delay--);  
+    delay_ms(30);
+ 
     
     NRST_LOW();
-    delay=200;
-    while(delay--);  
+    delay_ms(10);
+ 
     
     SWIM_LOW();
-    delay=200;
-    while(delay--);
+    delay_ms(2);
+
     
     INT_Capture_Index=0;
     
     for (i = 0; i < 4; i++) {
       
       SWIM_HIGH();
-      
-      delay=100;
-      while(delay--);    
-      
+     
+      delay_us(500);
+  
       SWIM_LOW();
       
-      
-      delay=100;
-      while(delay--);
+      delay_us(500);
+
     }
     for (i = 0; i < 4; i++) {
       
       SWIM_HIGH();
       
-      delay=50;
-      while(delay--); 
+      delay_us(250);
+
       
       SWIM_LOW();
       
-      delay=50;
-      while(delay--);
+      delay_us(250);
+
     }
     Enable_SWIM_INT(); //enable intrrupt on SWIM_INT
     SWIM_HIGH();
@@ -462,8 +451,7 @@ uint8_t SWIM_Enter(void)
     if(INT_Capture_Index==1 && !INT_Capture[0])
     {
       INT_Capture_Index=0;
-      delay=20;
-      while(delay--);
+      delay_ms(10);
       uint8_t temp = 0xA0;
       i=SWIM_WOTF(SWIM_CSR, &temp, 1);
       if(i)

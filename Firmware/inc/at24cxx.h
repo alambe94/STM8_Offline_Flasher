@@ -3,6 +3,9 @@
 
 #include "stm8s.h"
 #include "i2c.h"
+#include "stm8s.h"
+#include "millis.h"
+#include "stdlib.h"
 
 
 #define EEPROM_ADDR 0xA6

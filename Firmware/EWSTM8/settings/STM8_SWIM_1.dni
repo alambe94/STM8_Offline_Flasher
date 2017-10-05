@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=593827005
+Checksum=-1831724198
 [CallStack]
 ShowArgs=0
 [Disassembly]
@@ -30,7 +30,7 @@ Category=_ 0
 LoggingEnabled=_ 0
 LogFile=_ ""
 [Breakpoints]
-Bp0=_ "STD_CODE" "{$PROJ_DIR$\..\src\main.c}.110.3" 1 0 0 0 "" 0 ""
+Bp0=_ "STD_CODE" "{$PROJ_DIR$\..\src\main.c}.97.3" 1 0 0 0 "" 0 ""
 Count=1
 [Aliases]
 Count=0

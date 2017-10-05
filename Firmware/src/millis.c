@@ -2,10 +2,13 @@
 #include "millis.h"
 
 /* Private defines -----------------------------------------------------------*/
+
+
 #define TIM4_PERIOD 125
 
 
 __IO uint32_t current_millis = 0; //--IO: volatile read/write 
+
 
 
 void Millis_Init(void)
@@ -33,6 +36,34 @@ uint32_t millis(void)
 	return current_millis;
 }
 
+
+
+void delay_us(uint16_t time)
+{
+    while(time--)
+    {
+        nop();
+        nop();
+        nop();
+        nop();
+        nop();
+        nop();
+        nop();
+    }
+}
+
+
+void delay_ms(uint16_t time)
+{
+    while(time--)
+    {
+        delay_us(1000);
+    }
+}
+
+
+
+/*
 void delay_ms(uint32_t time)
 {
 	uint32_t temp;
@@ -40,10 +71,10 @@ void delay_ms(uint32_t time)
 	while(millis()-temp<time);
 	
 }
+*/
 
-
-
-//Interupt event, happen every 1 ms
+/*
+//Interupt event, happens every 1 ms
 
 INTERRUPT_HANDLER(TIM4_UPD_OVF_IRQHandler, 23) 
 
@@ -53,3 +84,4 @@ INTERRUPT_HANDLER(TIM4_UPD_OVF_IRQHandler, 23)
 	TIM4_ClearITPendingBit(TIM4_IT_UPDATE);
 }
 
+*/

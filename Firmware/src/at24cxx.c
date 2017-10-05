@@ -40,7 +40,6 @@ uint8_t AT24CXX_Read_Byte(uint16_t Address) {
 
 
 uint8_t AT24CXX_Write_Page(uint16_t Address, uint8_t *buf, uint16_t len) {
-  uint16_t i;
   
   uint8_t index;
   if(!len)
@@ -62,8 +61,8 @@ uint8_t AT24CXX_Write_Page(uint16_t Address, uint8_t *buf, uint16_t len) {
     I2C_Write_Byte(*buf++);
   }
     I2C_Stop();
-    i=6000;
-    while(i--);
+    delay_ms(5);
+
     return 1;
 
   }
@@ -106,7 +105,7 @@ void AT24CXX_Write_Buffer(uint16_t Address, uint8_t *buf, uint16_t len) {
   {
     for(index=0;index<len;index++)
     {
-   AT24CXX_Write_Page((Address+index), buf+index, 1);
+   AT24CXX_Write_Page((Address+index), (buf+index) , 1 );
     }
   }
   else
