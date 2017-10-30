@@ -303,7 +303,7 @@ uint8_t SWIM_ROTF(uint32_t addr, uint8_t *buf, uint16_t size) {
       {
         first_byte = 0;
         ptrTX[0] = SWIM_PULSE_0; /*send Nack */
-        delay_us(100);
+        delay_us(50);
       }
       
       INT_Capture_Index=0;
@@ -419,7 +419,7 @@ uint8_t SWIM_Enter(void)
     
     INT_Capture_Index=0;
     
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < 4u; i++) {
       
       SWIM_HIGH();
      
@@ -430,7 +430,7 @@ uint8_t SWIM_Enter(void)
       delay_us(500);
 
     }
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < 4u; i++) {
       
       SWIM_HIGH();
       
@@ -445,10 +445,10 @@ uint8_t SWIM_Enter(void)
     Enable_SWIM_INT(); //enable intrrupt on SWIM_INT
     SWIM_HIGH();
     
-    while(INT_Capture_Index<1 && timeout--);//capture data
+    while(INT_Capture_Index<1u && --timeout);//capture data
     Disable_SWIM_INT(); //disable interrupt on SWIM_INT
     
-    if(INT_Capture_Index==1 && !INT_Capture[0])
+    if(INT_Capture_Index==1u && !INT_Capture[0])
     {
       INT_Capture_Index=0;
       delay_ms(10);
@@ -509,8 +509,8 @@ uint8_t SWIM_Unlock_OptionByte(void)
   uint8_t temp[2];
   if(SWIM_ROTF(SWIM_FLASH_CR2,temp,2))
   {
-    temp[0]|=(0x01);  // OPT = 1 and NOPT = 0
-    temp[1]&=(~0x01);
+    temp[0]|=(0x01u);  // OPT = 1 and NOPT = 0
+    temp[1]&=(~0x01u);
     return SWIM_WOTF(SWIM_FLASH_CR2,temp,2);
   }
   return 0;

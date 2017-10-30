@@ -21,7 +21,7 @@ uint8_t I2C_Start() {
   uint8_t timeout=255;
   
   I2C->CR2 |= (I2C_CR2_START);
-  while (!(I2C->SR1 & (I2C_SR1_SB)) && --timeout);
+  while (!(I2C->SR1 & (I2C_SR1_SB)) && (--timeout));
     if(timeout)
   {
     return 1;

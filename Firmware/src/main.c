@@ -54,7 +54,7 @@ void main(void)
 
   for(uint8_t i=0;i<64;i++)
   {
-   WRITE_BUFFER[i]=i;
+   WRITE_BUFFER[i]=55;
   }
   
  
@@ -72,10 +72,10 @@ void main(void)
   
   if(status)
   status=SWIM_Unlock_Flash();
-
+/*
   if(status)
   {
-    for (blk=0;blk<128;blk++)
+    for (blk=0;blk<1;blk++)
     {
       temp[0]=0x01;					//Flash_CR2  standard block programming
       temp[1]=0xFE;				        //Flash_NCR2
@@ -87,10 +87,10 @@ void main(void)
       delay_ms(5); //5ms delay after block write      
     }
   }
-  
+*/
   if(status)
   status=SWIM_ROTF(0x00008000, READ_BUFFER, 64);
-  
+ 
   
 
   /* Infinite loop */

@@ -10,12 +10,12 @@
 
 #define EEPROM_ADDR 0xA6
 
-#define Address_Width_16 16 
-#define Address_Width_8  8
+#define Address_Width_16 16u 
+#define Address_Width_8  8u
 
-#define Page_Length_8   8
-#define Page_Length_16  16
-#define Page_Length_64  64
+#define Page_Length_8   8u
+#define Page_Length_16  16u
+#define Page_Length_64  64u
 
 
 
