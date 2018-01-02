@@ -17,7 +17,7 @@
         <debug>1</debug>
         <option>
           <name>GenDeviceSelectMenu</name>
-          <state>STM8S003K3	STM8S003K3</state>
+          <state>STM8S003F3	STM8S003F3</state>
         </option>
         <option>
           <name>GenCodeModel</name>
@@ -1638,6 +1638,9 @@
     </file>
     <file>
       <name>$PROJ_DIR$\..\STM8S_StdPeriph_Driver\src\stm8s_gpio.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\STM8S_StdPeriph_Driver\src\stm8s_i2c.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\STM8S_StdPeriph_Driver\src\stm8s_tim2.c</name>

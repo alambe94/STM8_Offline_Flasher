@@ -1,18 +1,18 @@
-"C:\Users\sam\Desktop\STM8_SWIM_1.1\STM8S_StdPeriph_Driver\src\stm8s_gpio.c"
+"C:\Users\sam\Desktop\STM8_SWIM_1.1PCB\STM8S_StdPeriph_Driver\src\stm8s_gpio.c"
 -std=c99
 -ferror-limit=100
 -I
-C:\Users\sam\Desktop\STM8_SWIM_1.1\EWSTM8\..\inc
+C:\Users\sam\Desktop\STM8_SWIM_1.1PCB\EWSTM8\..\inc
 -I
-C:\Users\sam\Desktop\STM8_SWIM_1.1\EWSTM8\..\STM8S_StdPeriph_Driver\inc
+C:\Users\sam\Desktop\STM8_SWIM_1.1PCB\EWSTM8\..\STM8S_StdPeriph_Driver\inc
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.3\stm8\inc
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.3\stm8\inc\c
 -I
-C:\Users\sam\Desktop\STM8_SWIM_1.1\inc
+C:\Users\sam\Desktop\STM8_SWIM_1.1PCB\inc
 -I
-C:\Users\sam\Desktop\STM8_SWIM_1.1\STM8S_StdPeriph_Driver\inc
+C:\Users\sam\Desktop\STM8_SWIM_1.1PCB\STM8S_StdPeriph_Driver\inc
 -DSTM8S003=1
 -D__CHAR_BITS__=8
 -D__CHAR_MAX__=0xff

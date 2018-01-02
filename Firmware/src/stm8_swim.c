@@ -474,8 +474,13 @@ uint8_t SWIM_Soft_Reset(void)
 
 uint8_t SWIM_Stall_CPU(void)
 {
-  uint8_t temp[1]={0x08};
-  return SWIM_WOTF(SWIM_DM_CSR2,temp,1);//stall the cpu
+  uint8_t temp[1];
+    if(SWIM_ROTF(SWIM_DM_CSR2,temp,1))
+    {
+      temp[1]|=0x08;
+      return SWIM_WOTF(SWIM_DM_CSR2,temp,1);//stall the cpu
+    }
+    return 0;
 }
 
 uint8_t SWIM_Unlock_Flash(void)

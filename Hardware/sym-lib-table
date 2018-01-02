@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name STM8_Flasher-rescue)(type Legacy)(uri ${KIPRJMOD}/STM8_Flasher-rescue.lib)(options "")(descr ""))
+)

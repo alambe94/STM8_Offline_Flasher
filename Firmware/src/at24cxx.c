@@ -1,8 +1,6 @@
 
 #include "at24cxx.h"
 
-uint8_t Address_Width=Address_Width_8;
-uint8_t Page_Length=Page_Length_8;
 
 void AT24CXX_Write_Byte(uint16_t Address, uint8_t data) {
   I2C_Start();
@@ -15,6 +13,7 @@ void AT24CXX_Write_Byte(uint16_t Address, uint8_t data) {
   I2C_Write_Byte((uint8_t)Address);/*send register address to write*/
   I2C_Write_Byte(data);
   I2C_Stop();
+  delay_ms(3);/*Memory Programming Time approx 5ms*/ /*3ms for BL24CXX */
 }
 
 uint8_t AT24CXX_Read_Byte(uint16_t Address) {
@@ -47,12 +46,13 @@ uint8_t AT24CXX_Write_Page(uint16_t Address, uint8_t *buf, uint16_t len) {
    return 1;
   }
   
-  I2C_Start();
+  if(I2C_Start())/*generate star condition*/
+  {
   if(I2C_Write_Address(EEPROM_ADDR + 0))/*Send device address + write bit */
   {
   if(Address_Width>Address_Width_8)/* Only if address is 16 bit */
   {
-    I2C_Write_Byte((uint8_t)Address>>8);
+    I2C_Write_Byte((uint8_t)Address>>8);//MSB
   }
   I2C_Write_Byte((uint8_t)Address);/*send register address to write*/
   
@@ -61,11 +61,12 @@ uint8_t AT24CXX_Write_Page(uint16_t Address, uint8_t *buf, uint16_t len) {
     I2C_Write_Byte(*buf++);/*write data to address*/
   }
     I2C_Stop();
-    delay_ms(5);/*Memory Programming Time approx 5ms*/
-
+    delay_ms(5);/*Memory Programming Time approx 5ms*/ /*3ms for BL24CXX */
+    //delay in reading device
     return 1;
-
   }
+  }
+  
   I2C_Stop();
   return 0;
  
