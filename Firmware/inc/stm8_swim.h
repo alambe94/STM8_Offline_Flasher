@@ -86,30 +86,33 @@
 
 /* Private function prototypes -----------------------------------------------*/
 
-void SWIM_Setup(void);
-void SWIM_HIGH(void);
-void SWIM_LOW(void);
-void NRST_HIGH(void);
-void NRST_LOW(void);
+void SWIM_Setup();
+void SWIM_HIGH();
+void SWIM_LOW();
+void NRST_HIGH();
+void NRST_LOW();
 
 
-uint8_t SWIM_Enter(void);
-uint8_t SWIM_Soft_Reset(void);
+uint8_t SWIM_Enter();
+uint8_t SWIM_Soft_Reset();
 uint8_t SWIM_Send_Data(uint8_t data,uint8_t len,uint8_t retry);
 uint8_t SWIM_WOTF(uint32_t addr, uint8_t *buf, uint16_t size);
 uint8_t SWIM_ROTF(uint32_t addr, uint8_t *buf, uint16_t size);
 
-uint8_t SWIM_Stall_CPU(void);
-uint8_t SWIM_Unlock_OptionByte(void);
-uint8_t SWIM_Lock_OptionByte(void);
+uint8_t SWIM_Stall_CPU();
+uint8_t SWIM_Unlock_OptionByte();
+uint8_t SWIM_Lock_OptionByte();
 
-uint8_t SWIM_Unlock_EEprom(void);
-uint8_t SWIM_Lock_EEprom(void);
+uint8_t SWIM_Unlock_EEprom();
+uint8_t SWIM_Lock_EEprom();
 
-uint8_t SWIM_Unlock_Flash(void);
-uint8_t SWIM_Lock_Flash(void);
+uint8_t SWIM_Unlock_Flash();
+uint8_t SWIM_Lock_Flash();
 
-uint8_t SWIM_Wait_For_Write(void);
+uint8_t SWIM_Wait_For_Write();
+uint8_t SWIM_Enable_Block_Programming();
+uint8_t SWIM_Reset_Device();
+
 
 
 

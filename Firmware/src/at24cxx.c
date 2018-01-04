@@ -61,7 +61,7 @@ uint8_t AT24CXX_Write_Page(uint16_t Address, uint8_t *buf, uint16_t len) {
     I2C_Write_Byte(*buf++);/*write data to address*/
   }
     I2C_Stop();
-    delay_ms(5);/*Memory Programming Time approx 5ms*/ /*3ms for BL24CXX */
+    delay_ms(4);/*Memory Programming Time approx 5ms*/ /*3ms for BL24CXX */
     //delay in reading device
     return 1;
   }

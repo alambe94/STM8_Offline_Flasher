@@ -7,7 +7,7 @@ uint8_t SWIM_PULSE_0=(40);
 uint8_t INT_Capture[11]={0};
 uint8_t INT_Capture_Index=0;
 
-void SWIM_Setup(void)
+void SWIM_Setup()
 {
   CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
   
@@ -169,7 +169,7 @@ uint8_t SWIM_Send_Data(uint8_t data,uint8_t len,uint8_t retry)
 }
 
 
-void  SWIM_HIGH(void)
+void  SWIM_HIGH()
 {
   
   TIM->CCRL = (uint8_t)(0x00);
@@ -179,7 +179,7 @@ void  SWIM_HIGH(void)
 }
 
 
-void  SWIM_LOW(void)
+void  SWIM_LOW()
 {
   TIM->CCRL = (uint8_t)(0xFF);
   while(!(TIM->SR1 & (uint8_t)TIM_FLAG_UPDATE));
@@ -188,12 +188,12 @@ void  SWIM_LOW(void)
 }
 
 
-void  NRST_HIGH(void)
+void  NRST_HIGH()
 {
   GPIO_WriteHigh(SWIM_NRST_port,SWIM_NRST_pin);
 }
 
-void  NRST_LOW(void)
+void  NRST_LOW()
 {
   GPIO_WriteLow(SWIM_NRST_port,SWIM_NRST_pin);
 }
@@ -394,7 +394,7 @@ uint8_t SWIM_ROTF(uint32_t addr, uint8_t *buf, uint16_t size) {
 }
 
 
-uint8_t SWIM_Enter(void)
+uint8_t SWIM_Enter()
 {
   uint8_t i;
   uint16_t timeout=1000;
@@ -466,24 +466,23 @@ uint8_t SWIM_Enter(void)
   return 0;
 }
 
-uint8_t SWIM_Soft_Reset(void)
+uint8_t SWIM_Stall_CPU()
+{
+  uint8_t temp[1];
+  if(SWIM_ROTF(SWIM_DM_CSR2,temp,1))
+  {
+    temp[0]=0x08;
+    return SWIM_WOTF(SWIM_DM_CSR2,temp,1);//stall the cpu
+  }
+  return 0;
+}
+
+uint8_t SWIM_Soft_Reset()
 {
   return SWIM_Send_Data(SWIM_CMD_SRST,SWIM_CMD_LEN,1);
 }
 
-
-uint8_t SWIM_Stall_CPU(void)
-{
-  uint8_t temp[1];
-    if(SWIM_ROTF(SWIM_DM_CSR2,temp,1))
-    {
-      temp[1]|=0x08;
-      return SWIM_WOTF(SWIM_DM_CSR2,temp,1);//stall the cpu
-    }
-    return 0;
-}
-
-uint8_t SWIM_Unlock_Flash(void)
+uint8_t SWIM_Unlock_Flash()
 {
   uint8_t temp[1];
   temp[0]=SWIM_FLASH_PUKR_KEY1;
@@ -495,7 +494,7 @@ uint8_t SWIM_Unlock_Flash(void)
   return 0;
 }
 
-uint8_t SWIM_Lock_Flash(void)
+uint8_t SWIM_Lock_Flash()
 {
   uint8_t temp[1];
   if(SWIM_ROTF(SWIM_FLASH_IAPSR,temp,1))
@@ -507,7 +506,7 @@ uint8_t SWIM_Lock_Flash(void)
 }
 
 
-uint8_t SWIM_Unlock_EEprom(void)
+uint8_t SWIM_Unlock_EEprom()
 {
   uint8_t temp[1];
   temp[0]=SWIM_FLASH_DUKR_KEY1;
@@ -520,7 +519,7 @@ uint8_t SWIM_Unlock_EEprom(void)
 }
 
 
-uint8_t SWIM_Lock_EEprom(void)
+uint8_t SWIM_Lock_EEprom()
 {
   uint8_t temp[1];
   if(SWIM_ROTF(SWIM_FLASH_IAPSR,temp,1))
@@ -532,25 +531,25 @@ uint8_t SWIM_Lock_EEprom(void)
 }
 
 
-uint8_t SWIM_Unlock_OptionByte(void)
+uint8_t SWIM_Unlock_OptionByte()
 {
   uint8_t temp[2];
   if(SWIM_ROTF(SWIM_FLASH_CR2,temp,2))
   {
     temp[0]|=(uint8_t)(0x80);  // OPT = 1 and NOPT = 0
-    temp[1]&=(uint8_t)(~0x80);
+    temp[1]&=(uint8_t)(0x7F);
     return SWIM_WOTF(SWIM_FLASH_CR2,temp,2);
   }
   return 0;
 }
 
 
-uint8_t SWIM_Lock_OptionByte(void)
+uint8_t SWIM_Lock_OptionByte()
 {
   uint8_t temp[2];
   if(SWIM_ROTF(SWIM_FLASH_CR2,temp,2))
   {
-    temp[0]&=(uint8_t)(~0x80); // OPT = 0 and NOPT = 1
+    temp[0]&=(uint8_t)(0x7F); // OPT = 0 and NOPT = 1
     temp[1]|=(uint8_t)(0x80); 
     return SWIM_WOTF(SWIM_FLASH_CR2,temp,2);
   }
@@ -576,6 +575,34 @@ uint8_t SWIM_Wait_For_Write()
   }
   
   return 1;
+}
+
+
+uint8_t SWIM_Enable_Block_Programming()
+{
+  uint8_t temp[2];
+  if(SWIM_ROTF(SWIM_FLASH_CR2,temp,2))
+  {
+    temp[0]|=0x01;  //Flash_CR2  standard block programming
+    temp[1]&=0xFE;  //Flash_NCR2
+    return SWIM_WOTF(SWIM_FLASH_CR2,temp,2); 
+  }
+  return 0;
+}
+
+uint8_t SWIM_Reset_Device()
+{
+  uint8_t temp[1]={0xA4};
+  if(SWIM_WOTF(SWIM_CSR, temp, 1))
+  {
+    SWIM_Soft_Reset();
+    NRST_LOW();
+    delay_ms(2);
+    NRST_HIGH();
+    return 1;
+    
+  }
+  return 0;
 }
 
 
