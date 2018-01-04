@@ -486,7 +486,6 @@ uint8_t SWIM_Stall_CPU(void)
 uint8_t SWIM_Unlock_Flash(void)
 {
   uint8_t temp[1];
-  
   temp[0]=SWIM_FLASH_PUKR_KEY1;
   if(SWIM_WOTF(SWIM_FLASH_PUKR,temp,1))
   {
@@ -496,10 +495,21 @@ uint8_t SWIM_Unlock_Flash(void)
   return 0;
 }
 
+uint8_t SWIM_Lock_Flash(void)
+{
+  uint8_t temp[1];
+  if(SWIM_ROTF(SWIM_FLASH_IAPSR,temp,1))
+  {
+    temp[0]&= (uint8_t)0xFD; //
+    return SWIM_WOTF(SWIM_FLASH_IAPSR,temp,1);
+  }
+  return 0;
+}
+
+
 uint8_t SWIM_Unlock_EEprom(void)
 {
   uint8_t temp[1];
-  
   temp[0]=SWIM_FLASH_DUKR_KEY1;
   if(SWIM_WOTF(SWIM_FLASH_DUKR,temp,1))
   {
@@ -509,14 +519,63 @@ uint8_t SWIM_Unlock_EEprom(void)
   return 0;
 }
 
+
+uint8_t SWIM_Lock_EEprom(void)
+{
+  uint8_t temp[1];
+  if(SWIM_ROTF(SWIM_FLASH_IAPSR,temp,1))
+  {
+    temp[0]&= (uint8_t)0xF7; //
+    return SWIM_WOTF(SWIM_FLASH_IAPSR,temp,1);
+  }
+  return 0;
+}
+
+
 uint8_t SWIM_Unlock_OptionByte(void)
 {
   uint8_t temp[2];
   if(SWIM_ROTF(SWIM_FLASH_CR2,temp,2))
   {
-    temp[0]|=(0x01u);  // OPT = 1 and NOPT = 0
-    temp[1]&=(~0x01u);
+    temp[0]|=(uint8_t)(0x80);  // OPT = 1 and NOPT = 0
+    temp[1]&=(uint8_t)(~0x80);
     return SWIM_WOTF(SWIM_FLASH_CR2,temp,2);
   }
   return 0;
 }
+
+
+uint8_t SWIM_Lock_OptionByte(void)
+{
+  uint8_t temp[2];
+  if(SWIM_ROTF(SWIM_FLASH_CR2,temp,2))
+  {
+    temp[0]&=(uint8_t)(~0x80); // OPT = 0 and NOPT = 1
+    temp[1]|=(uint8_t)(0x80); 
+    return SWIM_WOTF(SWIM_FLASH_CR2,temp,2);
+  }
+  return 0;
+}
+
+
+uint8_t SWIM_Wait_For_Write()
+{
+  uint8_t flagstatus[1]={0};
+  uint16_t timeout = 0xFFFF;
+  
+  while ((flagstatus[0] == 0x00) && (timeout != 0x00))
+  {
+    SWIM_ROTF(SWIM_FLASH_IAPSR,flagstatus,1);
+    flagstatus[0] = (uint8_t)(flagstatus[0]&FLASH_IAPSR_EOP);
+    timeout--;
+  }
+  
+  if (timeout == 0x00 )
+  {
+    return 0;
+  }
+  
+  return 1;
+}
+
+

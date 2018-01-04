@@ -62,20 +62,20 @@
 
 #define SWIM_OPT0               0x4800 //Read-out protection (ROP)
 
-#define OPT1                    0x4801 //User boot code(UBC)
-#define NOPT1                   0x4802 
+#define SWIM_OPT1                    0x4801 //User boot code(UBC)
+#define SWIM_NOPT1                   0x4802 
 
-#define OPT2                    0x4803 //Alternate function remapping(AFR)
-#define NOPT2                   0x4804 
+#define SWIM_OPT2                    0x4803 //Alternate function remapping(AFR)
+#define SWIM_NOPT2                   0x4804 
 
-#define OPT3                    0x4805 //Misc. option
-#define NOPT3                   0x4806 
+#define SWIM_OPT3                    0x4805 //Misc. option
+#define SWIM_NOPT3                   0x4806 
 
-#define OPT4                    0x4807 //Clock option
-#define NOPT4                   0x4808 
+#define SWIM_OPT4                    0x4807 //Clock option
+#define SWIM_NOPT4                   0x4808 
 
-#define OPT5                    0x4809 //HSE clock startup
-#define NOPT5                   0x480A 
+#define SWIM_OPT5                    0x4809 //HSE clock startup
+#define SWIM_NOPT5                   0x480A 
 
 
 
@@ -101,8 +101,16 @@ uint8_t SWIM_ROTF(uint32_t addr, uint8_t *buf, uint16_t size);
 
 uint8_t SWIM_Stall_CPU(void);
 uint8_t SWIM_Unlock_OptionByte(void);
+uint8_t SWIM_Lock_OptionByte(void);
+
 uint8_t SWIM_Unlock_EEprom(void);
+uint8_t SWIM_Lock_EEprom(void);
+
 uint8_t SWIM_Unlock_Flash(void);
+uint8_t SWIM_Lock_Flash(void);
+
+uint8_t SWIM_Wait_For_Write(void);
+
 
 
 

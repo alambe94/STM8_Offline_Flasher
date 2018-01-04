@@ -8,7 +8,7 @@ void AT24CXX_Write_Byte(uint16_t Address, uint8_t data) {
   
   if(Address_Width>Address_Width_8)/* Only if address is 16 bit */
   {
-    I2C_Write_Byte((uint8_t)Address>>8u);
+    I2C_Write_Byte((uint8_t)(Address>>8));
   }
   I2C_Write_Byte((uint8_t)Address);/*send register address to write*/
   I2C_Write_Byte(data);
@@ -25,7 +25,7 @@ uint8_t AT24CXX_Read_Byte(uint16_t Address) {
   
   if(Address_Width>Address_Width_8)/* Only if address is 16 bit */
   {
-    I2C_Write_Byte((uint8_t)Address>>8);
+    I2C_Write_Byte((uint8_t)(Address>>8));
   }
   I2C_Write_Byte((uint8_t)Address);/*send register address to read*/
   
@@ -52,7 +52,7 @@ uint8_t AT24CXX_Write_Page(uint16_t Address, uint8_t *buf, uint16_t len) {
   {
   if(Address_Width>Address_Width_8)/* Only if address is 16 bit */
   {
-    I2C_Write_Byte((uint8_t)Address>>8);//MSB
+    I2C_Write_Byte((uint8_t)(Address>>8));//MSB
   }
   I2C_Write_Byte((uint8_t)Address);/*send register address to write*/
   
@@ -79,7 +79,7 @@ uint8_t AT24CXX_Read_Buffer(uint16_t Address, uint8_t *buf, uint16_t len) {
   {
   if(Address_Width>Address_Width_8)/* Only if address is 16 bit */
   {
-    I2C_Write_Byte((uint8_t)Address>>8);
+    I2C_Write_Byte((uint8_t)(Address>>8));
   }
   I2C_Write_Byte((uint8_t)Address);/*send register address to read*/
   
