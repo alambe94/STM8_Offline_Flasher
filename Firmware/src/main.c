@@ -555,7 +555,7 @@ void main(void)
             STM8_Flash_Compare(); 
           }
           
-          if(state_machine==2)
+          if(state_machine==5)
           {
             STM8_flash_read();
             STM8_Flash_Compare();
@@ -578,7 +578,7 @@ void main(void)
       LED_GREEN_off();
     }
     
-    if(state_machine==2)
+    if(state_machine==5)
     {
       LED_RED_off();
       LED_GREEN_on();
