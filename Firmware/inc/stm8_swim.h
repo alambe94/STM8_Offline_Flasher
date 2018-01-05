@@ -103,8 +103,8 @@ uint8_t SWIM_Stall_CPU();
 uint8_t SWIM_Unlock_OptionByte();
 uint8_t SWIM_Lock_OptionByte();
 
-uint8_t SWIM_Unlock_EEprom();
-uint8_t SWIM_Lock_EEprom();
+uint8_t SWIM_Unlock_EEPROM();
+uint8_t SWIM_Lock_EEPROM();
 
 uint8_t SWIM_Unlock_Flash();
 uint8_t SWIM_Lock_Flash();

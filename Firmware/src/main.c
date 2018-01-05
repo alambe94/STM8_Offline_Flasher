@@ -67,8 +67,8 @@
 
 
 #define FLASH_STORE_ADDRESS             0x0000 //in 24CXX   8K flash STM8S003  0x00 to 0x2000
-#define EEPROM_STORE_ADDRESS            0x2000 //in 24CXX   128B EEprom STM8S003 0x00 to 0x3080
-#define OPTION_BYTE_STORE_ADDRESS       0x3000 //in 24CXX   10B  option byte register STM8S003
+#define EEPROM_STORE_ADDRESS            0x3000 //in 24CXX   128B EEPROM STM8S003 0x3000 to 0x3080
+#define OPTION_BYTE_STORE_ADDRESS       0x4000 //in 24CXX   10B  option byte register STM8S003
 
 
 
@@ -84,16 +84,17 @@ uint8_t state_change_flag=0;
 
 
 /* Private function prototypes -----------------------------------------------*/
-void STM8_flash_read(void);   /*Read from stm8 device and store in 24cxx */
-void STM8_flash_write(void);  /*Read from 24cxx and flash stm8*/
-void STM8_24Cxx_read(void);  /*Read from 24cxx and store 24cxx*/ //todo
+void STM8_Flash_Read(void);   /*Read from stm8 device and store in 24cxx */
+void STM8_Flash_Write(void);  /*Read from 24cxx and flash stm8*/
+void STM8_Flash_Compare(void);
+void STM8_24Cxx_Read(void);  /*Read from 24cxx and store 24cxx*/ //todo
 
 
 /* Private functions ---------------------------------------------------------*/
-void STM8_flash_read(void)
+void STM8_Flash_Read(void)
 {
   uint8_t status,blk;
-
+  
   status=SWIM_Enter();
   
   delay_ms(1);
@@ -108,8 +109,7 @@ void STM8_flash_read(void)
     status=SWIM_Stall_CPU();
   }
   
-#if 1
-  /*read flash data from stm8*/
+  /****************************read flash data from stm8********************************/
   for (blk=0;blk<128;blk++)
   {
     if(status)
@@ -133,8 +133,11 @@ void STM8_flash_read(void)
     }
     
   }
-
-  /*read EEprom data from stm8*/
+  /*************************************************************************************/
+  
+  
+  
+  /*****************************read EEPROM data from stm8************************************/
   
   for (blk=0;blk<2;blk++) /*128 bytes*/
   {
@@ -155,11 +158,11 @@ void STM8_flash_read(void)
     } 
     
   }
- #endif
-
+  /*************************************************************************************/
   
-
-  /*read Option bytes data from stm8*/
+  
+  
+  /***************************read Option bytes data from stm8*************************/
   if(status)
   {
     status=SWIM_ROTF(SWIM_OPT1,RAM_BUFFER,10);
@@ -173,21 +176,29 @@ void STM8_flash_read(void)
     LED_GREEN_on();
     LED_RED_on();
   }
-
- 
+  
+  if(status)
+  {
+    status=SWIM_Reset_Device();
+  }
+  
   if(status)
   {
     LED_GREEN_on();
   }
   
 }
+/*************************************************************************************/
 
 
 
-void STM8_flash_write(void)
+
+
+
+void STM8_Flash_Write(void)
 {
   uint8_t status,blk;
-
+  
   status=SWIM_Enter();
   
   delay_ms(1);
@@ -202,8 +213,6 @@ void STM8_flash_write(void)
     status=SWIM_Stall_CPU();
   }
   
-  
-
   /********************************write flash data to stm8*************************/
   if(status)
   {
@@ -246,12 +255,12 @@ void STM8_flash_write(void)
   }
   
   /*************************************************************************************/
-
   
-  /*************************write EEprom data to stm8*********************************/
+  
+  /*************************write EEPROM data to stm8*********************************/
   if(status)
   {
-    status=SWIM_Unlock_EEprom();
+    status=SWIM_Unlock_EEPROM();
   }
   for (blk=0;blk<2;blk++) /*128 bytes*/
   {
@@ -281,14 +290,14 @@ void STM8_flash_write(void)
   
   if(status)
   {
-    status=SWIM_Lock_EEprom();
+    status=SWIM_Lock_EEPROM();
   }
   
   
   /*************************************************************************************/
   
   
-  /*write Option bytes data to stm8*/
+  /************************write Option bytes data to stm8******************************/
   if(status)
   {
     status=SWIM_Unlock_OptionByte();
@@ -296,7 +305,7 @@ void STM8_flash_write(void)
   
   if(status)
   {
-    status=SWIM_Unlock_EEprom();//same sequence for option bytes
+    status=SWIM_Unlock_EEPROM();//same sequence for option bytes
   }
   
   if(status)
@@ -315,11 +324,13 @@ void STM8_flash_write(void)
     status=SWIM_WOTF(SWIM_OPT2,RAM_BUFFER+2,2);
     delay_ms(10);
   }
+  
   if(status)
   {
     status=SWIM_WOTF(SWIM_OPT3,RAM_BUFFER+4,2);
     delay_ms(10);
   }
+  
   if(status)
   {
     status=SWIM_WOTF(SWIM_OPT4,RAM_BUFFER+6,2);
@@ -333,12 +344,12 @@ void STM8_flash_write(void)
   
   if(status)
   {
-  status=SWIM_Lock_EEprom();
+    status=SWIM_Lock_EEPROM();
   }
   
   if(status)
   {
-  status=SWIM_Lock_OptionByte();
+    status=SWIM_Lock_OptionByte();
   }
   
   /*************************************************************************************/
@@ -347,6 +358,11 @@ void STM8_flash_write(void)
   {
     LED_GREEN_on();
     LED_RED_on();
+  }
+  
+  if(status)
+  {
+    status=SWIM_Reset_Device();
   }
   
   if(status)
@@ -361,7 +377,7 @@ void STM8_flash_write(void)
 void STM8_Flash_Compare(void)
 {
   uint8_t status;
-
+  
   status=SWIM_Enter();
   
   
@@ -377,7 +393,9 @@ void STM8_Flash_Compare(void)
     status=SWIM_Stall_CPU();
   }
   
-  for(uint8_t i=0;i<127;i++)
+  /****************************************flash compare**************************/
+  
+  for(uint8_t i=0;i<128;i++)
   {
     if(status)
     {
@@ -405,10 +423,11 @@ void STM8_Flash_Compare(void)
     }
     
   }
+  /*************************************************************************************/
   
   
-  /*eeprom compare*/
-    for(uint8_t i=0;i<2;i++)
+  /****************************************eeprom compare**************************/
+  for(uint8_t i=0;i<2;i++)
   {
     if(status)
     {
@@ -436,9 +455,10 @@ void STM8_Flash_Compare(void)
     }
     
   }
+  /*************************************************************************************/
   
-
-    /*option byte compare*/
+  
+  /******************************option byte compare*************************************/
   
   if(status)
   {
@@ -464,6 +484,8 @@ void STM8_Flash_Compare(void)
       status=0;
     }
   }
+  /*************************************************************************************/
+  
   
   if(status)
   {
@@ -472,16 +494,16 @@ void STM8_Flash_Compare(void)
   
   if(status)
   {
-  for(uint8_t j=0;j<10;j++)
-  {
-    LED_RED_on();
-    LED_GREEN_off();
-    delay_ms(100);
-    LED_RED_off();
-    LED_GREEN_on();
-    delay_ms(100);
-
-  }
+    for(uint8_t j=0;j<10;j++)
+    {
+      LED_RED_on();
+      LED_GREEN_off();
+      delay_ms(100);
+      LED_RED_off();
+      LED_GREEN_on();
+      delay_ms(100);
+      
+    }
   }
   
 }
@@ -499,7 +521,7 @@ void main(void)
   GPIO_Init(LED_GREEN_port, LED_GREEN_pin, GPIO_MODE_OUT_PP_HIGH_SLOW);
   GPIO_Init(PROG_SWITCH_port, PROG_SWITCH_pin, GPIO_MODE_IN_PU_NO_IT);
   
- 
+  
   /* Infinite loop */
   while (1)
   {
@@ -521,18 +543,18 @@ void main(void)
           }
           if(state_machine==1)
           {
-          LED_RED_on();
-          LED_GREEN_off();
+            LED_RED_on();
+            LED_GREEN_off();
           }
           if(state_machine==5)
           {
-          LED_RED_off();
-          LED_GREEN_on();
+            LED_RED_off();
+            LED_GREEN_on();
           }
           if(state_machine==0)
           {
-          LED_RED_off();
-          LED_GREEN_off();
+            LED_RED_off();
+            LED_GREEN_off();
           }
         }
       }
@@ -540,31 +562,31 @@ void main(void)
       if(state_change_flag==0)
       {
         
-          if(state_machine==0)
-          {
+        if(state_machine==0)
+        {
           LED_RED_on();
           LED_GREEN_on();
           delay_ms(100); 
           LED_RED_off();
           LED_GREEN_off();
-          }
-          
-          if(state_machine==1)
-          {
-            STM8_flash_write();
-            STM8_Flash_Compare(); 
-          }
-          
-          if(state_machine==5)
-          {
-            STM8_flash_read();
-            STM8_Flash_Compare();
-          }
-         
+        }
+        
+        if(state_machine==1)
+        {
+          STM8_Flash_Write();
+          STM8_Flash_Compare(); 
+        }
+        
+        if(state_machine==5)
+        {
+          STM8_Flash_Read();
+          STM8_Flash_Compare();
+        }
+        
       }
       
     }
-   
+    
     
     if(state_machine==0)
     {
@@ -585,7 +607,7 @@ void main(void)
     }
     
     
-       
+    
     
   }
   

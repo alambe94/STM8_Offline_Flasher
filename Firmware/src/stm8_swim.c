@@ -506,7 +506,7 @@ uint8_t SWIM_Lock_Flash()
 }
 
 
-uint8_t SWIM_Unlock_EEprom()
+uint8_t SWIM_Unlock_EEPROM()
 {
   uint8_t temp[1];
   temp[0]=SWIM_FLASH_DUKR_KEY1;
@@ -519,7 +519,7 @@ uint8_t SWIM_Unlock_EEprom()
 }
 
 
-uint8_t SWIM_Lock_EEprom()
+uint8_t SWIM_Lock_EEPROM()
 {
   uint8_t temp[1];
   if(SWIM_ROTF(SWIM_FLASH_IAPSR,temp,1))
