@@ -511,104 +511,30 @@ void STM8_Flash_Compare(void)
 
 void main(void)
 {
+    CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1); //f_master = HSI = 16Mhz
+    GPIO_Init(SWIM_PORT, SWIM_PIN, GPIO_MODE_OUT_PP_HIGH_FAST);
+    SWIM_DELAY_1250_NS();
   
-  SWIM_Setup();
-  
-  I2C_setup();
-  
-  /*Initialise LEDs and switch */
-  GPIO_Init(LED_RED_port, LED_RED_pin, GPIO_MODE_OUT_PP_HIGH_SLOW);
-  GPIO_Init(LED_GREEN_port, LED_GREEN_pin, GPIO_MODE_OUT_PP_HIGH_SLOW);
-  GPIO_Init(PROG_SWITCH_port, PROG_SWITCH_pin, GPIO_MODE_IN_PU_NO_IT);
-  
+
+
+
   
   /* Infinite loop */
   while (1)
   {
-    uint32_t timeout=0;
-    if(PROG_SWITCH_read()==PROG_SWITCH_pressed)
-    {
-      state_change_flag=0;
-      while(PROG_SWITCH_read()==PROG_SWITCH_pressed)
-      {
-        timeout++;
-        if(timeout>500000)
-        {
-          timeout=0;
-          state_machine++;
-          state_change_flag=1;
-          if(state_machine>5)
-          {
-            state_machine=0;
-          }
-          if(state_machine==1)
-          {
-            LED_RED_on();
-            LED_GREEN_off();
-          }
-          if(state_machine==5)
-          {
-            LED_RED_off();
-            LED_GREEN_on();
-          }
-          if(state_machine==0)
-          {
-            LED_RED_off();
-            LED_GREEN_off();
-          }
-        }
-      }
-      
-      if(state_change_flag==0)
-      {
-        
-        if(state_machine==0)
-        {
-          LED_RED_on();
-          LED_GREEN_on();
-          delay_ms(100); 
-          LED_RED_off();
-          LED_GREEN_off();
-        }
-        
-        if(state_machine==1)
-        {
-          STM8_Flash_Write();
-          STM8_Flash_Compare(); 
-        }
-        
-        if(state_machine==5)
-        {
-          STM8_Flash_Read();
-          STM8_Flash_Compare();
-        }
-        
-      }
-      
-    }
+   //SWIM_Write_Data(0x01);
+   //SWIM_Write_Data(0xFF);
+    SWIM_PIN_HIGH();
     
-    
-    if(state_machine==0)
-    {
-      LED_RED_off();
-      LED_GREEN_off();
-    }
-    
-    if(state_machine==1)
-    {
-      LED_RED_on();
-      LED_GREEN_off();
-    }
-    
-    if(state_machine==5)
-    {
-      LED_RED_off();
-      LED_GREEN_on();
-    }
-    
-    
-    
-    
+    SWIM_PIN_READ();
+    SWIM_PIN_READ();
+    SWIM_PIN_READ();
+    SWIM_PIN_READ();
+    SWIM_PIN_READ();
+
+    SWIM_PIN_LOW();
+   delay_ms(10);
+
   }
   
 }

@@ -605,4 +605,104 @@ uint8_t SWIM_Reset_Device()
   return 0;
 }
 
+//inline did not work
+//function call overhead causing timing issues
+#define SWIM_Write_Bit(bit)\
+{\
+  if(bit)\
+  {\
+    SWIM_PIN_LOW();\
+    SWIM_DELAY_250_NS();\
+    SWIM_PIN_HIGH();\
+    SWIM_DELAY_1000_NS();\
+    SWIM_DELAY_1000_NS();\
+    SWIM_DELAY_500_NS();\
+  }else\
+  {\
+    SWIM_PIN_LOW();\
+    SWIM_DELAY_1000_NS();\
+    SWIM_DELAY_1000_NS();\
+    SWIM_DELAY_500_NS();\
+    SWIM_PIN_HIGH();\
+    SWIM_DELAY_250_NS();\
+  }\
+}while(0)
+
+
+uint8_t SWIM_Write_Data(uint8_t data)
+{
+  uint8_t Start_Bit = 0;
+  uint8_t data_frame[8];
+  uint8_t parity_bit = 0;
+  uint8_t ack = 0;
+  
+  data_frame[0] = data>>7 & 0x01;
+  data_frame[1] = data>>6 & 0x01;
+  data_frame[2] = data>>5 & 0x01;
+  data_frame[3] = data>>4 & 0x01;
+  data_frame[4] = data>>3 & 0x01;
+  data_frame[5] = data>>2 & 0x01;
+  data_frame[6] = data>>1 & 0x01;
+  data_frame[7] = data>>0 & 0x01;
+  for (uint8_t i = 0; i <=7; i++) 
+  {
+      parity_bit += data_frame[i];
+  }
+  parity_bit &= 0x01;
+  
+  SWIM_Write_Bit(Start_Bit);
+  SWIM_Write_Bit(data_frame[0]);
+  SWIM_Write_Bit(data_frame[1]);
+  SWIM_Write_Bit(data_frame[2]);
+  SWIM_Write_Bit(data_frame[3]);
+  SWIM_Write_Bit(data_frame[4]);
+  SWIM_Write_Bit(data_frame[5]);
+  SWIM_Write_Bit(data_frame[6]);
+  SWIM_Write_Bit(data_frame[7]);
+  SWIM_Write_Bit(parity_bit);
+  
+  ack = SWIM_PIN_READ();
+  ack = SWIM_PIN_READ();
+  ack = SWIM_PIN_READ();
+  ack = SWIM_PIN_READ();
+  
+  return ack;
+
+}
+
+
+uint8_t SWIM_Write_Cammand(uint8_t cammand)
+{
+  uint8_t Start_Bit = 0;
+  uint8_t data_frame[3];
+  uint8_t parity_bit = 0;
+  uint8_t ack = 0;
+  
+  data_frame[0] = cammand>>2 & 0x01;
+  data_frame[1] = cammand>>1 & 0x01;
+  data_frame[2] = cammand>>0 & 0x01;
+
+  for (uint8_t i = 0; i <=3; i++) 
+  {
+      parity_bit += data_frame[i];
+  }
+  parity_bit &= 0x01;
+  
+  SWIM_Write_Bit(Start_Bit);
+  SWIM_Write_Bit(data_frame[0]);
+  SWIM_Write_Bit(data_frame[1]);
+  SWIM_Write_Bit(data_frame[2]);
+  SWIM_Write_Bit(parity_bit);
+  
+  ack = SWIM_PIN_READ();
+  ack = SWIM_PIN_READ();
+  ack = SWIM_PIN_READ();
+  ack = SWIM_PIN_READ();
+  
+  return ack;
+  
+  
+ 
+}
+
 
