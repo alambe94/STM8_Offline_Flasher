@@ -26,6 +26,18 @@
 #define TIM_FLAG_UPDATE                  TIM2_FLAG_UPDATE 
 
 
+#define SWIM_PIN               GPIO_PIN_6   
+#define SWIM_PORT              GPIOC
+
+#define SWIM_PIN_HIGH()        SWIM_PORT->ODR |=  SWIM_PIN     
+#define SWIM_PIN_LOW()         SWIM_PORT->ODR &= ~SWIM_PIN   
+#define SWIM_PIN_READ()        SWIM_PORT->IDR &   SWIM_PIN
+
+#define SWIM_DELAY_250_NS()    nop(), nop(), nop()
+#define SWIM_DELAY_500_NS()    SWIM_DELAY_250_NS(); SWIM_DELAY_250_NS(); nop()
+#define SWIM_DELAY_750_NS()    SWIM_DELAY_500_NS(); SWIM_DELAY_250_NS(); nop()
+#define SWIM_DELAY_1000_NS()   SWIM_DELAY_500_NS(); SWIM_DELAY_500_NS(); nop()
+#define SWIM_DELAY_1250_NS()   SWIM_DELAY_1000_NS(); SWIM_DELAY_250_NS()
 
 
 
@@ -112,6 +124,12 @@ uint8_t SWIM_Lock_Flash();
 uint8_t SWIM_Wait_For_Write();
 uint8_t SWIM_Enable_Block_Programming();
 uint8_t SWIM_Reset_Device();
+
+
+
+uint8_t SWIM_Write_Data(uint8_t data);
+uint8_t SWIM_Write_Cammand(uint8_t cammand);
+
 
 
 
