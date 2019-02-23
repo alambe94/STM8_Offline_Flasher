@@ -10,23 +10,20 @@
 
 /* Private defines -----------------------------------------------------------*/
 
+#define SWIM_IN_PIN            GPIO_PIN_6
+#define SWIM_IN_PIN_PORT       GPIOC
 
-#define SWIM_INT_pin                     GPIO_PIN_3
-#define SWIM_INT_port                    GPIOC
-
-#define SWIM_NRST_pin                    GPIO_PIN_4
-#define SWIM_NRST_port                   GPIOC
-
-
-#define SWIM_OUT_pin                     GPIO_PIN_5   
-#define SWIM_OUT_PORT                    GPIOC 
-
-#define CCRL                             CCR1L 
-#define TIM                              TIM2
-#define TIM_FLAG_UPDATE                  TIM2_FLAG_UPDATE 
+#define	ENABLE_SWIM_INT()     (SWIM_IN_PIN_PORT->CR2 |= SWIM_IN_PIN)    
+#define	DISABLE_SWIM_INT()    (SWIM_IN_PIN_PORT->CR2 &= ~(SWIM_IN_PIN)) 
 
 
-#define SWIM_PIN               GPIO_PIN_6   
+#define NRST_PIN               GPIO_PIN_4
+#define NRST_PORT              GPIOC
+
+#define NRST_PIN_HIGH()        NRST_PORT->ODR |=  NRST_PIN     
+#define NRST_PIN_LOW()         NRST_PORT->ODR &=  ~NRST_PIN   
+
+#define SWIM_PIN               GPIO_PIN_5   
 #define SWIM_PORT              GPIOC
 
 #define SWIM_PIN_HIGH()        SWIM_PORT->ODR |=  SWIM_PIN     
@@ -34,9 +31,9 @@
 #define SWIM_PIN_READ()        SWIM_PORT->IDR &   SWIM_PIN
 
 #define SWIM_DELAY_250_NS()    nop(), nop(), nop()
-#define SWIM_DELAY_500_NS()    SWIM_DELAY_250_NS(); SWIM_DELAY_250_NS(); nop()
-#define SWIM_DELAY_750_NS()    SWIM_DELAY_500_NS(); SWIM_DELAY_250_NS(); nop()
-#define SWIM_DELAY_1000_NS()   SWIM_DELAY_500_NS(); SWIM_DELAY_500_NS(); nop()
+#define SWIM_DELAY_500_NS()    SWIM_DELAY_250_NS(); SWIM_DELAY_250_NS(); 
+#define SWIM_DELAY_750_NS()    SWIM_DELAY_500_NS(); SWIM_DELAY_250_NS();
+#define SWIM_DELAY_1000_NS()   SWIM_DELAY_500_NS(); SWIM_DELAY_500_NS();
 #define SWIM_DELAY_1250_NS()   SWIM_DELAY_1000_NS(); SWIM_DELAY_250_NS()
 
 
@@ -72,7 +69,7 @@
 #define SWIM_EEPROM_START_ADDRESS 0x004000 //to 0x00407F  (128 bytes) (total 640 bytes unofficial)
 #define SWIM_RAM_START_ADDRESS    0x000000 //to 0x0003FF  (1k)
 
-#define SWIM_OPT0               0x4800 //Read-out protection (ROP)
+#define SWIM_OPT0                    0x4800 //Read-out protection (ROP)
 
 #define SWIM_OPT1                    0x4801 //User boot code(UBC)
 #define SWIM_NOPT1                   0x4802 
@@ -90,45 +87,77 @@
 #define SWIM_NOPT5                   0x480A 
 
 
-
-#define	Enable_SWIM_INT()     (SWIM_INT_port->CR2 |= (uint8_t)SWIM_INT_pin)    
-#define	Disable_SWIM_INT()    (SWIM_INT_port->CR2 &= (uint8_t)(~(SWIM_INT_pin)))    
-
-
-
 /* Private function prototypes -----------------------------------------------*/
 
 void SWIM_Setup();
-void SWIM_HIGH();
-void SWIM_LOW();
-void NRST_HIGH();
-void NRST_LOW();
 
+uint8_t SWIM_Enter(void);
+uint8_t SWIM_Soft_Reset(void);
+uint8_t SWIM_WOTF(uint32_t addr, uint8_t *buf, uint8_t size);
+uint8_t SWIM_ROTF(uint32_t addr, uint8_t *buf, uint8_t size);
 
-uint8_t SWIM_Enter();
-uint8_t SWIM_Soft_Reset();
-uint8_t SWIM_Send_Data(uint8_t data,uint8_t len,uint8_t retry);
-uint8_t SWIM_WOTF(uint32_t addr, uint8_t *buf, uint16_t size);
-uint8_t SWIM_ROTF(uint32_t addr, uint8_t *buf, uint16_t size);
+uint8_t SWIM_Stall_CPU(void);
+uint8_t SWIM_Unlock_OptionByte(void);
+uint8_t SWIM_Lock_OptionByte(void);
 
-uint8_t SWIM_Stall_CPU();
-uint8_t SWIM_Unlock_OptionByte();
-uint8_t SWIM_Lock_OptionByte();
+uint8_t SWIM_Unlock_EEPROM(void);
+uint8_t SWIM_Lock_EEPROM(void);
 
-uint8_t SWIM_Unlock_EEPROM();
-uint8_t SWIM_Lock_EEPROM();
+uint8_t SWIM_Unlock_Flash(void);
+uint8_t SWIM_Lock_Flash(void);
 
-uint8_t SWIM_Unlock_Flash();
-uint8_t SWIM_Lock_Flash();
-
-uint8_t SWIM_Wait_For_Write();
-uint8_t SWIM_Enable_Block_Programming();
-uint8_t SWIM_Reset_Device();
+uint8_t SWIM_Wait_For_Write(void);
+uint8_t SWIM_Enable_Block_Programming(void);
+uint8_t SWIM_Reset_Device(void);
 
 
 
 uint8_t SWIM_Write_Data(uint8_t data);
 uint8_t SWIM_Write_Cammand(uint8_t cammand);
+
+//inline did not work
+//function call overhead causing timing issues
+#define SWIM_Write_Bit(bit)\
+{\
+  if(bit)\
+  {\
+    SWIM_PIN_LOW();\
+    SWIM_DELAY_250_NS();\
+    SWIM_PIN_HIGH();\
+    SWIM_DELAY_1000_NS();\
+    SWIM_DELAY_1000_NS();\
+    SWIM_DELAY_500_NS();\
+  }else\
+  {\
+    SWIM_PIN_LOW();\
+    SWIM_DELAY_1000_NS();\
+    SWIM_DELAY_1000_NS();\
+    SWIM_DELAY_500_NS();\
+    SWIM_PIN_HIGH();\
+    SWIM_DELAY_250_NS();\
+  }\
+}
+
+//parity or ack bit
+#define SWIM_Write_Parity_Ack_Bit(bit)\
+{\
+  if(bit)\
+  {\
+    SWIM_PIN_LOW();\
+    SWIM_DELAY_250_NS();\
+    SWIM_PIN_HIGH();\
+    SWIM_DELAY_1000_NS();\
+    SWIM_DELAY_1000_NS();\
+    SWIM_DELAY_250_NS();\
+  }else\
+  {\
+    SWIM_PIN_LOW();\
+    SWIM_DELAY_1000_NS();\
+    SWIM_DELAY_1000_NS();\
+    SWIM_DELAY_500_NS();\
+    SWIM_PIN_HIGH();\
+  }\
+}
 
 
 
