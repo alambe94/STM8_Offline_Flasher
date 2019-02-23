@@ -36,10 +36,6 @@
 #include "string.h"
 
 
-
-
-
-
 /* Private defines -----------------------------------------------------------*/
 
 #define PROG_SWITCH_pressed             0
@@ -514,15 +510,69 @@ void main(void)
 {
   SWIM_Setup();
   
-  static uint8_t status = 0;
-  uint8_t reg = 0;
   
-  status = SWIM_Enter();
+  uint8_t status,blk;
+  uint8_t temp;
+  
+  
+
+  //status=SWIM_Reset_Device();
+
+  
+  status=SWIM_Enter();
   
   delay_ms(1);
   
-  status = SWIM_ROTF(SWIM_CSR,&reg,1);
- 
+
+  if(status)
+  {
+    status=SWIM_Soft_Reset();
+  }
+  
+  if(status)
+  {
+    status=SWIM_Stall_CPU();
+  }
+  
+
+  for(uint8_t i=0; i<64; i++)
+  {
+    RAM_BUFFER[i] = 0x00;
+  }
+  
+
+  
+  /****************************read flash data from stm8********************************/
+  for (blk=0;blk<128;blk++)
+  {
+    if(status)
+    {
+      status=SWIM_ROTF(SWIM_FLASH_START_ADDRESS+(blk*64),RAM_BUFFER,64);
+    }
+    
+  }
+  /*************************************************************************************/
+  
+  
+  
+  /*****************************read EEPROM data from stm8************************************/
+  
+  for (blk=0;blk<2;blk++) /*128 bytes*/
+  {
+    if(status)
+    {
+      status=SWIM_ROTF(SWIM_EEPROM_START_ADDRESS+(blk*64),RAM_BUFFER,64);
+    }
+  }
+  /*************************************************************************************/
+  
+  
+  
+  /***************************read Option bytes data from stm8*************************/
+  if(status)
+  {
+    status=SWIM_ROTF(SWIM_OPT1,RAM_BUFFER,10);
+  }
   
   /* Infinite loop */
   while (1)

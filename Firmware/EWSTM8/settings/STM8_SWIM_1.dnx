@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <settings>
     <DebugChecksum>
-        <Checksum>4074957129</Checksum>
+        <Checksum>3935399225</Checksum>
     </DebugChecksum>
     <Stack>
         <FillEnabled>0</FillEnabled>
@@ -17,6 +17,10 @@
     <CallStack>
         <ShowArgs>0</ShowArgs>
     </CallStack>
+    <watch_formats>
+        <Fmt0>{W}1:INT_Count	3	0</Fmt0>
+        <Fmt1>{W}1:size	3	0</Fmt1>
+    </watch_formats>
     <DataSample>
         <LogEnabled>0</LogEnabled>
         <GraphEnabled>0</GraphEnabled>
@@ -32,10 +36,9 @@
         <LogFile>_ ""</LogFile>
     </TermIOLog>
     <Breakpoints>
-        <Bp0>_ "STD_CODE" "{$PROJ_DIR$\..\src\stm8_swim.c}.72.3" 1 0 0 0 "" 0 ""</Bp0>
-        <Bp1>_ "STD_CODE" "{$PROJ_DIR$\..\src\stm8_swim.c}.14.3" 1 0 0 0 "" 0 ""</Bp1>
-        <Bp2>_ "STD_CODE" "{$PROJ_DIR$\..\src\stm8_swim.c}.419.3" 1 0 0 0 "" 0 ""</Bp2>
-        <Count>3</Count>
+        <Bp0>_ "STD_CODE" "{$PROJ_DIR$\..\src\stm8_swim.c}.421.1" 0 0 0 0 "" 0 ""</Bp0>
+        <Bp1>_ "STD_CODE" "{$PROJ_DIR$\..\src\main.c}.560.3" 1 0 0 0 "" 0 ""</Bp1>
+        <Count>2</Count>
     </Breakpoints>
     <Aliases>
         <Count>0</Count>
