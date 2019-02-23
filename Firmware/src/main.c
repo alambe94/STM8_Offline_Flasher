@@ -33,7 +33,10 @@
 #include "stm8_swim.h"
 #include "i2c.h"
 #include "at24cxx.h"
-#include "string.h"
+
+
+
+
 
 
 /* Private defines -----------------------------------------------------------*/
@@ -508,78 +511,104 @@ void STM8_Flash_Compare(void)
 
 void main(void)
 {
+  
   SWIM_Setup();
   
+  I2C_setup();
   
-  uint8_t status,blk;
-  uint8_t temp;
+  /*Initialise LEDs and switch */
+  GPIO_Init(LED_RED_port, LED_RED_pin, GPIO_MODE_OUT_PP_HIGH_SLOW);
+  GPIO_Init(LED_GREEN_port, LED_GREEN_pin, GPIO_MODE_OUT_PP_HIGH_SLOW);
+  GPIO_Init(PROG_SWITCH_port, PROG_SWITCH_pin, GPIO_MODE_IN_PU_NO_IT);
   
-  
-
-  //status=SWIM_Reset_Device();
-
-  
-  status=SWIM_Enter();
-  
-  delay_ms(1);
-  
-
-  if(status)
-  {
-    status=SWIM_Soft_Reset();
-  }
-  
-  if(status)
-  {
-    status=SWIM_Stall_CPU();
-  }
-  
-
-  for(uint8_t i=0; i<64; i++)
-  {
-    RAM_BUFFER[i] = 0x00;
-  }
-  
-
-  
-  /****************************read flash data from stm8********************************/
-  for (blk=0;blk<128;blk++)
-  {
-    if(status)
-    {
-      status=SWIM_ROTF(SWIM_FLASH_START_ADDRESS+(blk*64),RAM_BUFFER,64);
-    }
-    
-  }
-  /*************************************************************************************/
-  
-  
-  
-  /*****************************read EEPROM data from stm8************************************/
-  
-  for (blk=0;blk<2;blk++) /*128 bytes*/
-  {
-    if(status)
-    {
-      status=SWIM_ROTF(SWIM_EEPROM_START_ADDRESS+(blk*64),RAM_BUFFER,64);
-    }
-  }
-  /*************************************************************************************/
-  
-  
-  
-  /***************************read Option bytes data from stm8*************************/
-  if(status)
-  {
-    status=SWIM_ROTF(SWIM_OPT1,RAM_BUFFER,10);
-  }
   
   /* Infinite loop */
   while (1)
   {
-
+    uint32_t timeout=0;
+    if(PROG_SWITCH_read()==PROG_SWITCH_pressed)
+    {
+      state_change_flag=0;
+      while(PROG_SWITCH_read()==PROG_SWITCH_pressed)
+      {
+        timeout++;
+        if(timeout>500000)
+        {
+          timeout=0;
+          state_machine++;
+          state_change_flag=1;
+          if(state_machine>5)
+          {
+            state_machine=0;
+          }
+          if(state_machine==1)
+          {
+            LED_RED_on();
+            LED_GREEN_off();
+          }
+          if(state_machine==5)
+          {
+            LED_RED_off();
+            LED_GREEN_on();
+          }
+          if(state_machine==0)
+          {
+            LED_RED_off();
+            LED_GREEN_off();
+          }
+        }
+      }
+      
+      if(state_change_flag==0)
+      {
+        
+        if(state_machine==0)
+        {
+          LED_RED_on();
+          LED_GREEN_on();
+          delay_ms(100); 
+          LED_RED_off();
+          LED_GREEN_off();
+        }
+        
+        if(state_machine==1)
+        {
+          STM8_Flash_Write();
+          STM8_Flash_Compare(); 
+        }
+        
+        if(state_machine==5)
+        {
+          STM8_Flash_Read();
+          STM8_Flash_Compare();
+        }
+        
+      }
+      
+    }
     
-
+    
+    if(state_machine==0)
+    {
+      LED_RED_off();
+      LED_GREEN_off();
+    }
+    
+    if(state_machine==1)
+    {
+      LED_RED_on();
+      LED_GREEN_off();
+    }
+    
+    if(state_machine==5)
+    {
+      LED_RED_off();
+      LED_GREEN_on();
+    }
+    
+    
+    
+    
   }
   
 }
