@@ -33,6 +33,7 @@
 #include "stm8_swim.h"
 #include "i2c.h"
 #include "at24cxx.h"
+#include "string.h"
 
 
 
@@ -511,29 +512,23 @@ void STM8_Flash_Compare(void)
 
 void main(void)
 {
-    CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1); //f_master = HSI = 16Mhz
-    GPIO_Init(SWIM_PORT, SWIM_PIN, GPIO_MODE_OUT_PP_HIGH_FAST);
-    SWIM_DELAY_1250_NS();
+  SWIM_Setup();
   
-
-
-
+  static uint8_t status = 0;
+  uint8_t reg = 0;
+  
+  status = SWIM_Enter();
+  
+  delay_ms(1);
+  
+  status = SWIM_ROTF(SWIM_CSR,&reg,1);
+ 
   
   /* Infinite loop */
   while (1)
   {
-   //SWIM_Write_Data(0x01);
-   //SWIM_Write_Data(0xFF);
-    SWIM_PIN_HIGH();
-    
-    SWIM_PIN_READ();
-    SWIM_PIN_READ();
-    SWIM_PIN_READ();
-    SWIM_PIN_READ();
-    SWIM_PIN_READ();
 
-    SWIM_PIN_LOW();
-   delay_ms(10);
+    
 
   }
   

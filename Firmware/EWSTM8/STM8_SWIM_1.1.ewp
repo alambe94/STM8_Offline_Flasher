@@ -1639,9 +1639,6 @@
         <file>
             <name>$PROJ_DIR$\..\src\stm8_swim.c</name>
         </file>
-        <file>
-            <name>$PROJ_DIR$\..\src\stm8s_it.c</name>
-        </file>
     </group>
     <group>
         <name>STM8S_StdPeriph_Driver</name>

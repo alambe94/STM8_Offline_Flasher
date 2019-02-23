@@ -1,5 +1,6 @@
 #include "stm8s.h"
 #include "millis.h"
+#include "stm8_swim.h"
 
 /* Private defines -----------------------------------------------------------*/
 
@@ -40,16 +41,10 @@ uint32_t millis(void)
 
 void delay_us(uint16_t time)
 {
-    while(time--)
-    {
-        nop();
-        nop();
-        nop();
-        nop();
-        nop();
-        nop();
-        nop();
-    }
+  while(time--)
+  {
+    SWIM_DELAY_1000_NS();
+  }
 }
 
 

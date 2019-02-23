@@ -35,9 +35,6 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-extern uint8_t INT_Capture[11];
-extern uint8_t INT_Capture_Index;
-
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 /* Public functions ----------------------------------------------------------*/
@@ -142,10 +139,7 @@ INTERRUPT_HANDLER(EXTI_PORTC_IRQHandler, 5)
   /* In order to detect unexpected events during development,
      it is recommended to set a breakpoint on the following instruction.
   */
-  
-  INT_Capture[INT_Capture_Index]=(SWIM_INT_port->IDR & SWIM_INT_pin) ;
-  INT_Capture_Index++;
-
+  SWIM_IN_ISR();
 }
 
 /**
