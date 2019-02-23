@@ -32,7 +32,6 @@ void Millis_Init(void)
 
 
 uint32_t millis(void)
-
 {
 	return current_millis;
 }
@@ -43,7 +42,14 @@ void delay_us(uint16_t time)
 {
   while(time--)
   {
-    SWIM_DELAY_1000_NS();
+    nop();
+    nop();
+    nop();
+    nop();
+    nop();
+    nop();
+    nop();
+    nop();
   }
 }
 

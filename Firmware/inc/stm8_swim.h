@@ -10,18 +10,20 @@
 
 /* Private defines -----------------------------------------------------------*/
 
-#define SWIM_IN_PIN            GPIO_PIN_6
-#define SWIM_IN_PIN_PORT       GPIOC
-
-#define	ENABLE_SWIM_INT()     (SWIM_IN_PIN_PORT->CR2 |= SWIM_IN_PIN)    
-#define	DISABLE_SWIM_INT()    (SWIM_IN_PIN_PORT->CR2 &= ~(SWIM_IN_PIN)) 
-
-
 #define NRST_PIN               GPIO_PIN_4
 #define NRST_PORT              GPIOC
 
 #define NRST_PIN_HIGH()        NRST_PORT->ODR |=  NRST_PIN     
 #define NRST_PIN_LOW()         NRST_PORT->ODR &=  ~NRST_PIN   
+
+#define SWIM_PIN_OUT()        SWIM_PORT->ODR |=  SWIM_PIN;\
+                              SWIM_PORT->CR1 &= ~SWIM_PIN;\
+                              SWIM_PORT->DDR |=  SWIM_PIN
+
+#define SWIM_PIN_IN_INT()     SWIM_PORT->DDR &=  ~SWIM_PIN;\
+                              SWIM_PORT->CR1 |=   SWIM_PIN;\
+                              SWIM_PORT->CR2 |=   SWIM_PIN 
+
 
 #define SWIM_PIN               GPIO_PIN_5   
 #define SWIM_PORT              GPIOC
@@ -29,12 +31,17 @@
 #define SWIM_PIN_HIGH()        SWIM_PORT->ODR |=  SWIM_PIN     
 #define SWIM_PIN_LOW()         SWIM_PORT->ODR &= ~SWIM_PIN   
 #define SWIM_PIN_READ()        SWIM_PORT->IDR &   SWIM_PIN
+#define SWIM_PIN_READ11()      SWIM_PORT->IDR
 
-#define SWIM_DELAY_250_NS()    nop(), nop(), nop()
-#define SWIM_DELAY_500_NS()    SWIM_DELAY_250_NS(); SWIM_DELAY_250_NS(); 
-#define SWIM_DELAY_750_NS()    SWIM_DELAY_500_NS(); SWIM_DELAY_250_NS();
-#define SWIM_DELAY_1000_NS()   SWIM_DELAY_500_NS(); SWIM_DELAY_500_NS();
-#define SWIM_DELAY_1250_NS()   SWIM_DELAY_1000_NS(); SWIM_DELAY_250_NS()
+
+#define SWIM_DELAY_1_BIT()     nop(); nop()
+#define SWIM_DELAY_0_BIT()     SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();\
+                               SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();\
+                               SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();\
+                               SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();\
+                               SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT()
+
+
 
 
 
@@ -122,19 +129,15 @@ uint8_t SWIM_Write_Cammand(uint8_t cammand);
   if(bit)\
   {\
     SWIM_PIN_LOW();\
-    SWIM_DELAY_250_NS();\
+    SWIM_DELAY_1_BIT();\
     SWIM_PIN_HIGH();\
-    SWIM_DELAY_1000_NS();\
-    SWIM_DELAY_1000_NS();\
-    SWIM_DELAY_500_NS();\
+    SWIM_DELAY_0_BIT();\
   }else\
   {\
     SWIM_PIN_LOW();\
-    SWIM_DELAY_1000_NS();\
-    SWIM_DELAY_1000_NS();\
-    SWIM_DELAY_500_NS();\
+    SWIM_DELAY_0_BIT();\
     SWIM_PIN_HIGH();\
-    SWIM_DELAY_250_NS();\
+    SWIM_DELAY_1_BIT();\
   }\
 }
 
@@ -144,18 +147,13 @@ uint8_t SWIM_Write_Cammand(uint8_t cammand);
   if(bit)\
   {\
     SWIM_PIN_LOW();\
-    SWIM_DELAY_250_NS();\
-    SWIM_PIN_HIGH();\
-    SWIM_DELAY_1000_NS();\
-    SWIM_DELAY_1000_NS();\
-    SWIM_DELAY_250_NS();\
+    SWIM_DELAY_1_BIT();\
+    SWIM_PIN_IN_INT();\
   }else\
   {\
     SWIM_PIN_LOW();\
-    SWIM_DELAY_1000_NS();\
-    SWIM_DELAY_1000_NS();\
-    SWIM_DELAY_500_NS();\
-    SWIM_PIN_HIGH();\
+    SWIM_DELAY_0_BIT();\
+    SWIM_PIN_IN_INT();\
   }\
 }
 

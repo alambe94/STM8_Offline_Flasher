@@ -14,8 +14,8 @@ C:\Users\sam\Desktop\STM8_Flasher\Firmware\inc
 -I
 C:\Users\sam\Desktop\STM8_Flasher\Firmware\STM8S_StdPeriph_Driver\inc
 -D__CHAR_BITS__=8
--D__CHAR_MAX__=0xff
--D__CHAR_MIN__=0
+-D__CHAR_MAX__=127
+-D__CHAR_MIN__=(-__CHAR_MAX__-1)
 -D__CHAR_SIZE__=1
 -D__UNSIGNED_CHAR_MAX__=0xff
 -D__SIGNED_CHAR_MAX__=127
@@ -231,6 +231,7 @@ C:\Users\sam\Desktop\STM8_Flasher\Firmware\STM8S_StdPeriph_Driver\inc
 -D__HAS_LOCATED_DECLARATION__=1
 -D__HAS_LOCATED_WITH_INIT__=1
 -D__IAR_COMPILERBASE__=595714
+-D__SIGNED_CHARS__=1
 -D__STDC__=1
 -D__STDC_VERSION__=199901L
 -D__STDC_HOSTED__=1
