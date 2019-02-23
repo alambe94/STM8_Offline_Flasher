@@ -37,8 +37,7 @@
     </TermIOLog>
     <Breakpoints>
         <Bp0>_ "STD_CODE" "{$PROJ_DIR$\..\src\stm8_swim.c}.421.1" 0 0 0 0 "" 0 ""</Bp0>
-        <Bp1>_ "STD_CODE" "{$PROJ_DIR$\..\src\main.c}.560.3" 1 0 0 0 "" 0 ""</Bp1>
-        <Count>2</Count>
+        <Count>1</Count>
     </Breakpoints>
     <Aliases>
         <Count>0</Count>

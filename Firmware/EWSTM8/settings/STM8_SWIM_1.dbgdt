@@ -756,7 +756,7 @@
                     <item>status</item>
                     <item>RAM_BUFFER</item>
                     <item>size</item>
-                    <item></item>
+                    <item />
                 </expressions>
                 <col-names>
                     <item>Expression</item>
