@@ -75,6 +75,7 @@ uint8_t AT24CXX_Write_Page(uint16_t Address, uint8_t *buf, uint16_t len) {
 uint8_t AT24CXX_Read_Buffer(uint16_t Address, uint8_t *buf, uint16_t len) {
 
   I2C_Start();
+  
   if(I2C_Write_Address(EEPROM_ADDR + 0))/*Send device address + write bit */
   {
   if(Address_Width>Address_Width_8)/* Only if address is 16 bit */

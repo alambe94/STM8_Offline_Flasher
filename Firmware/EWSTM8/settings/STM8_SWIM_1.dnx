@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <settings>
     <DebugChecksum>
-        <Checksum>1499479495</Checksum>
+        <Checksum>772628930</Checksum>
     </DebugChecksum>
     <Stack>
         <FillEnabled>0</FillEnabled>
@@ -39,10 +39,13 @@
         <LogFile>_ ""</LogFile>
     </TermIOLog>
     <Breakpoints>
-        <Bp0>_ "STD_CODE" "{$PROJ_DIR$\..\src\stm8_swim.c}.456.1" 0 0 0 0 "" 0 ""</Bp0>
-        <Bp1>_ "STD_CODE" "{$PROJ_DIR$\..\src\main.c}.335.3" 1 0 0 0 "" 0 ""</Bp1>
-        <Bp2>_ "STD_CODE" "{$PROJ_DIR$\..\src\main.c}.94.10" 1 0 0 0 "" 0 ""</Bp2>
-        <Count>3</Count>
+        <Bp0>_ "STD_CODE" "{$PROJ_DIR$\..\src\stm8_swim.c}.458.1" 0 0 0 0 "" 0 ""</Bp0>
+        <Bp1>_ "STD_CODE" "{$PROJ_DIR$\..\src\main.c}.647.1" 0 0 0 0 "" 0 ""</Bp1>
+        <Bp2>_ "STD_CODE" "{$PROJ_DIR$\..\src\main.c}.647.1" 0 0 0 0 "" 0 ""</Bp2>
+        <Bp3>_ "STD_CODE" "{$PROJ_DIR$\..\src\main.c}.647.1" 0 0 0 0 "" 0 ""</Bp3>
+        <Bp4>_ "STD_CODE" "{$PROJ_DIR$\..\src\main.c}.527.12" 1 0 0 0 "" 0 ""</Bp4>
+        <Bp5>_ "STD_CODE" "{$PROJ_DIR$\..\src\main.c}.375.3" 1 0 0 0 "" 0 ""</Bp5>
+        <Count>6</Count>
     </Breakpoints>
     <Aliases>
         <Count>0</Count>

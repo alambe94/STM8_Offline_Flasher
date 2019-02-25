@@ -37,46 +37,73 @@
 
 /* Private defines -----------------------------------------------------------*/
 
-#define PROG_SWITCH_pressed             0
+#define PROG_SWITCH_PRESSED             0
 
-#define LED_RED_pin                     GPIO_PIN_2
-#define LED_RED_port                    GPIOA
+#define LED_RED_PIN                     GPIO_PIN_2
+#define LED_RED_PORT                    GPIOA
 
-#define LED_GREEN_pin                   GPIO_PIN_3
-#define LED_GREEN_port                  GPIOA
+#define LED_GREEN_PIN                   GPIO_PIN_3
+#define LED_GREEN_PORT                  GPIOA
 
-#define PROG_SWITCH_pin                 GPIO_PIN_4
-#define PROG_SWITCH_port                GPIOD
-
-
-#define LED_RED_off()                   (LED_RED_port->ODR |=LED_RED_pin)
-#define LED_RED_on()                    (LED_RED_port->ODR &=~LED_RED_pin)
-#define LED_RED_toggle()                (LED_RED_port->ODR ^=LED_RED_pin)
+#define PROG_SWITCH_PIN                 GPIO_PIN_4
+#define PROG_SWITCH_PORT                GPIOD
 
 
-#define LED_GREEN_off()                 (LED_GREEN_port->ODR  |=LED_GREEN_pin)
-#define LED_GREEN_on()                  (LED_GREEN_port->ODR &=~LED_GREEN_pin)
-#define LED_GREEN_toggle()              (LED_GREEN_port->ODR ^= LED_GREEN_pin)
+#define LED_RED_OFF()                   (LED_RED_PORT->ODR |=LED_RED_PIN)
+#define LED_RED_ON()                    (LED_RED_PORT->ODR &=~LED_RED_PIN)
+#define LED_RED_TOGGLE()                (LED_RED_PORT->ODR ^=LED_RED_PIN)
 
 
-#define PROG_SWITCH_read()              (PROG_SWITCH_port->IDR & PROG_SWITCH_pin)
+#define LED_GREEN_OFF()                 (LED_GREEN_PORT->ODR  |=LED_GREEN_PIN)
+#define LED_GREEN_ON()                  (LED_GREEN_PORT->ODR &=~LED_GREEN_PIN)
+#define LED_GREEN_TOGGLE()              (LED_GREEN_PORT->ODR ^= LED_GREEN_PIN)
+
+
+#define PROG_SWITCH_READ()              (PROG_SWITCH_PORT->IDR & PROG_SWITCH_PIN)
+#define IS_PROG_SWITCH_PRESSED()        ((PROG_SWITCH_PORT->IDR & PROG_SWITCH_PIN)?0:1)
+
+
+
+#define STM8_FLASH_START_ADDRESS     0x008000 //to 0x009FFF  (8k)
+#define STM8_EEPROM_START_ADDRESS    0x004000 //to 0x00407F  (128 bytes) (total 640 bytes unofficial)
+#define STM8_RAM_START_ADDRESS       0x000000 //to 0x0003FF  (1k)
+
+#define SWIM_OPT0                    0x4800 //Read-out protection (ROP)
+
+#define SWIM_OPT1                    0x4801 //User boot code(UBC)
+#define SWIM_NOPT1                   0x4802 
+
+#define SWIM_OPT2                    0x4803 //Alternate function remapping(AFR)
+#define SWIM_NOPT2                   0x4804 
+
+#define SWIM_OPT3                    0x4805 //Misc. option
+#define SWIM_NOPT3                   0x4806 
+
+#define SWIM_OPT4                    0x4807 //Clock option
+#define SWIM_NOPT4                   0x4808 
+
+#define SWIM_OPT5                    0x4809 //HSE clock startup
+#define SWIM_NOPT5                   0x480A 
 
 
 #define FLASH_STORE_ADDRESS             0x0000 //in 24CXX   8K flash STM8S003  0x00 to 0x2000
 #define EEPROM_STORE_ADDRESS            0x3000 //in 24CXX   128B EEPROM STM8S003 0x3000 to 0x3080
 #define OPTION_BYTE_STORE_ADDRESS       0x4000 //in 24CXX   10B  option byte register STM8S003
 
+#define STM8S003_BLOCK_SIZE             64  //
+#define STM8S003_FLASH_PAGES            128 //stm8s003 has 128 pages of 64 bytes
+#define STM8S003_EEPROM_PAGES           2   //stm8s003 has 2 pages of 64 bytes (extra 2 page unofficial)
 
 
+uint8_t RAM_BUFFER[STM8S003_BLOCK_SIZE]={0};
+uint8_t COMPARE_BUFFER[STM8S003_BLOCK_SIZE]={0};
 
-uint8_t RAM_BUFFER[64]={0};
-uint8_t COMPARE_BUFFER[64]={0};
-
-
-uint8_t state_machine=0;/* 0->Ideal, 1->Flash, 2->Read */
-uint8_t state_change_flag=0;
-
-
+enum State
+{
+  IDEAL,
+  STM8_TO_AT24,
+  AT24_TO_STM8
+}Current_State;
 
 
 /* Private function prototypes -----------------------------------------------*/
@@ -89,9 +116,10 @@ uint8_t STM8_24Cxx_Read(void);  /*Read from 24cxx and store 24cxx*/ //todo
 /* Private functions ---------------------------------------------------------*/
 uint8_t STM8_To_AT24C256(void)
 {
-  uint8_t status,blk;
+  uint8_t status;
+  uint16_t address_offset = 0;
   
-  status=SWIM_Enter();
+  status = SWIM_Enter();
   
   delay_ms(1);
   
@@ -100,72 +128,72 @@ uint8_t STM8_To_AT24C256(void)
     status=SWIM_Stall_CPU();
   }
   
-  /****************************read flash data from stm8********************************/
-  for (blk=0;blk<128;blk++)
+  /****************************read flash data from stm8 start********************************/
+  for (uint8_t i=0; i<STM8S003_FLASH_PAGES; i++)
   {
+    address_offset = (i*STM8S003_BLOCK_SIZE);
+    
     if(status)
     {
-      status=SWIM_ROTF(SWIM_FLASH_START_ADDRESS+(blk*64),RAM_BUFFER,64);
-    }
-    if(status)
-    {
-      status=AT24CXX_Write_Page(FLASH_STORE_ADDRESS+(blk*64),RAM_BUFFER,64); 
+      status=SWIM_ROTF(STM8_FLASH_START_ADDRESS+address_offset, RAM_BUFFER, STM8S003_BLOCK_SIZE);
     }
     
-    if(status==0)
+    if(status)
     {
-      LED_GREEN_on();
-      LED_RED_on();
-      break;
+      status=AT24CXX_Write_Page(FLASH_STORE_ADDRESS+address_offset, RAM_BUFFER, STM8S003_BLOCK_SIZE); 
+    }
+    
+    if(status)
+    {
+      LED_GREEN_TOGGLE();     
     } 
     else
     {
-      LED_GREEN_toggle();     
+      return 0; //failed
     }
     
   }
-  /*************************************************************************************/
+  /****************************read flash data from stm8 end********************************/
   
   
   
-  /*****************************read EEPROM data from stm8************************************/
-  
-  for (blk=0;blk<2;blk++) /*128 bytes*/
+  /*****************************read EEPROM data from stm8 start************************************/
+  for (uint8_t i=0; i<STM8S003_EEPROM_PAGES; i++)
   {
+    address_offset = (i*STM8S003_BLOCK_SIZE);
+    
     if(status)
     {
-      status=SWIM_ROTF(SWIM_EEPROM_START_ADDRESS+(blk*64),RAM_BUFFER,64);
-    }
-    if(status)
-    {
-      status=AT24CXX_Write_Page(EEPROM_STORE_ADDRESS+(blk*64),RAM_BUFFER,64);
+      status=SWIM_ROTF(STM8_EEPROM_START_ADDRESS+ address_offset,RAM_BUFFER, STM8S003_BLOCK_SIZE);
     }
     
-    if(status==0)
+    if(status)
     {
-      LED_GREEN_on();
-      LED_RED_on();
-      break;
+      status=AT24CXX_Write_Page(EEPROM_STORE_ADDRESS+address_offset, RAM_BUFFER, STM8S003_BLOCK_SIZE);
+    }
+    
+    if(status)
+    {
+      LED_GREEN_TOGGLE();     
     } 
-    
+    else
+    {
+      return 0; //failed
+    }
   }
-  /*************************************************************************************/
+  /*****************************read EEPROM data from stm8 end************************************/
   
   
   
-  /***************************read Option bytes data from stm8*************************/
+  /***************************read Option bytes data from stm8 start*************************/
   if(status)
   {
-    status=SWIM_ROTF(SWIM_OPT1,RAM_BUFFER,10);
+    status=SWIM_ROTF(SWIM_OPT1,RAM_BUFFER,10); // stm8s0033 has 10 option bytes
   }
+  
   if(status)
   {
     status=AT24CXX_Write_Page(OPTION_BYTE_STORE_ADDRESS,RAM_BUFFER,10);
-  }
-  if(status==0)
-  {
-    LED_GREEN_on();
-    LED_RED_on();
   }
   
   if(status)
@@ -174,35 +202,44 @@ uint8_t STM8_To_AT24C256(void)
   }
   
   return status;
-  
 }
-/*************************************************************************************/
+/***************************read Option bytes data from stm8 end*************************/
 
 
+
+
+
+/****************************** AT24C256_To_STM8 start*******************************************/
 uint8_t AT24C256_To_STM8(void)
 {
-  uint8_t status,blk;
+  uint8_t status;
+  uint16_t address_offset = 0;
+  
+  status=SWIM_Reset_Device();
   
   status=SWIM_Enter();
   
-  delay_ms(1);
- 
+  /** wait atleast 5 ms *********************/
+  delay_ms(5);
+  
   if(status)
   {
     status=SWIM_Stall_CPU();
   }
-  
-  /********************************write flash data to stm8*************************/
+        
+  /********************************write flash data to stm8 start*************************/
   if(status)
   {
     status=SWIM_Unlock_Flash();
   }
-  for (blk=0;blk<128;blk++)
+  
+  for (uint8_t i =0; i<STM8S003_FLASH_PAGES; i++)
   {
+    address_offset = (i*STM8S003_BLOCK_SIZE);
     
     if(status)
     {
-     status=AT24CXX_Read_Buffer(FLASH_STORE_ADDRESS+(blk*64),RAM_BUFFER,64); 
+      status=AT24CXX_Read_Buffer(FLASH_STORE_ADDRESS+address_offset, RAM_BUFFER, STM8S003_BLOCK_SIZE); 
     }  
     
     if(status)
@@ -212,40 +249,38 @@ uint8_t AT24C256_To_STM8(void)
     
     if(status)
     {
-      status=SWIM_WOTF(SWIM_FLASH_START_ADDRESS+(blk*64),RAM_BUFFER,64);
+      status=SWIM_WOTF(STM8_FLASH_START_ADDRESS+address_offset, RAM_BUFFER,STM8S003_BLOCK_SIZE);
       delay_ms(5); //5ms delay after block write  //compansated in reading 24cxx
     }
-    
-    if(status==0)
+   
+    if(status)
     {
-      LED_GREEN_on();
-      LED_RED_on();
-      break;
+      LED_RED_TOGGLE();
     } 
-    else
-    {
-      LED_RED_toggle();
-    }
+    
   }
   
   if(status)
   {
     status=SWIM_Lock_Flash();
   }
+  /********************************write flash data to stm8 end*************************/
   
-  /*************************************************************************************/
   
   
-  /*************************write EEPROM data to stm8*********************************/
+  /*************************write EEPROM data to stm8 start*********************************/
   if(status)
   {
     status=SWIM_Unlock_EEPROM();
   }
-  for (blk=0;blk<2;blk++) /*128 bytes*/
+  
+  for (uint8_t i=0; i<STM8S003_EEPROM_PAGES; i++)
   {
+    address_offset = (i*STM8S003_BLOCK_SIZE);
+    
     if(status)
     {
-      status=AT24CXX_Read_Buffer(EEPROM_STORE_ADDRESS+(blk*64),RAM_BUFFER,64);
+      status=AT24CXX_Read_Buffer(EEPROM_STORE_ADDRESS+address_offset, RAM_BUFFER, STM8S003_BLOCK_SIZE);
     }
     
     if(status)
@@ -255,15 +290,14 @@ uint8_t AT24C256_To_STM8(void)
     
     if(status)
     {
-      status=SWIM_WOTF(SWIM_EEPROM_START_ADDRESS+(blk*64),RAM_BUFFER,64);
+      status=SWIM_WOTF(STM8_EEPROM_START_ADDRESS+address_offset, RAM_BUFFER, STM8S003_BLOCK_SIZE);
       delay_ms(5); //5ms delay after block write  
     }
-    if(status==0)
+    
+    if(status)
     {
-      LED_GREEN_on();
-      LED_RED_on();
-      break;
-    }
+      LED_RED_TOGGLE();
+    } 
     
   }
   
@@ -271,16 +305,16 @@ uint8_t AT24C256_To_STM8(void)
   {
     status=SWIM_Lock_EEPROM();
   }
+  /*************************write EEPROM data to stm8 end*********************************/
   
   
-  /*************************************************************************************/
   
-  /************************write Option bytes data to stm8******************************/
+  /************************write Option bytes data to stm8 start******************************/
   if(status)
   {
     status=SWIM_Unlock_OptionByte();
   }
-
+  
   if(status)
   {
     status=SWIM_Unlock_EEPROM();//same sequence for option bytes
@@ -294,30 +328,31 @@ uint8_t AT24C256_To_STM8(void)
   if(status)
   {
     status=SWIM_WOTF(SWIM_OPT1,RAM_BUFFER,2);
-    delay_ms(5);
+    delay_ms(10);
   }
   
   if(status)
   {
     status=SWIM_WOTF(SWIM_OPT2,RAM_BUFFER+2,2);
-    delay_ms(5);
+    delay_ms(10);
   }
   
   if(status)
   {
     status=SWIM_WOTF(SWIM_OPT3,RAM_BUFFER+4,2);
-   delay_ms(5);
+    delay_ms(10);
   }
   
   if(status)
   {
     status=SWIM_WOTF(SWIM_OPT4,RAM_BUFFER+6,2);
-    delay_ms(5);
+    delay_ms(10);
   }
+  
   if(status)
   {
     status=SWIM_WOTF(SWIM_OPT5,RAM_BUFFER+8,2);
-    delay_ms(5);
+    delay_ms(10);
   }
   
   if(status)
@@ -329,8 +364,8 @@ uint8_t AT24C256_To_STM8(void)
   {
     status=SWIM_Lock_OptionByte();
   }
+  /************************write Option bytes data to stm8 end******************************/
   
-  /*************************************************************************************/
   
   if(status)
   {
@@ -339,89 +374,96 @@ uint8_t AT24C256_To_STM8(void)
   
   return status;
 }
+/****************************** AT24C256_To_STM8 end*******************************************/
 
 
 
+
+
+/****************************** Compare_STM8_And_AT24C256 start*******************************************/
 uint8_t Compare_STM8_And_AT24C256(void)
 {
-  uint8_t status;
+  uint8_t status = 0;
+  uint16_t address_offset = 0;
   
+  status=SWIM_Reset_Device();
+
   status=SWIM_Enter();
   
-  delay_ms(1);
+  delay_ms(5);
   
   if(status)
   {
     status=SWIM_Stall_CPU();
   }
   
-  /****************************************flash compare**************************/
-  
-  for(uint8_t i=0;i<128;i++)
+  /****************************************flash compare start**************************/
+  for(uint8_t i=0; i<STM8S003_FLASH_PAGES; i++)
   {
+    address_offset = (i*STM8S003_BLOCK_SIZE);
+    
     if(status)
     {
-      status=SWIM_ROTF(SWIM_FLASH_START_ADDRESS+(i*64),RAM_BUFFER,64);
+      status=SWIM_ROTF(STM8_FLASH_START_ADDRESS+address_offset, RAM_BUFFER, STM8S003_BLOCK_SIZE);
     }
     if(status)
     {
-      status=AT24CXX_Read_Buffer(FLASH_STORE_ADDRESS+(i*64),COMPARE_BUFFER,64);
+      status=AT24CXX_Read_Buffer(FLASH_STORE_ADDRESS+address_offset, COMPARE_BUFFER, STM8S003_BLOCK_SIZE);
     }
     
-    for(uint8_t j=0;j<64;j++)
+    for(uint8_t j=0; j<STM8S003_BLOCK_SIZE; j++)
     {
       if(RAM_BUFFER[j]==COMPARE_BUFFER[j])
       {
-        LED_GREEN_toggle();    
-        LED_RED_toggle();     
+        LED_GREEN_TOGGLE();    
+        LED_RED_TOGGLE();     
       }
       else
-      {    
-        LED_GREEN_on();
-        LED_RED_on();
-        status=0;
+      {
+        status = 0;
         break;
       }
+      
     }
     
   }
-  /*************************************************************************************/
+  /****************************************flash compare end**************************/
   
   
-  /****************************************eeprom compare**************************/
-  for(uint8_t i=0;i<2;i++)
+  /****************************************eeprom compare start**************************/
+  for(uint8_t i=0; i<STM8S003_EEPROM_PAGES ;i++)
   {
+    address_offset = (i*STM8S003_BLOCK_SIZE);
+    
     if(status)
     {
-      status=SWIM_ROTF(SWIM_EEPROM_START_ADDRESS+(i*64),RAM_BUFFER,64);
+      status=SWIM_ROTF(STM8_EEPROM_START_ADDRESS+address_offset, RAM_BUFFER, STM8S003_BLOCK_SIZE);
     }
     if(status)
     {
-      status=AT24CXX_Read_Buffer(EEPROM_STORE_ADDRESS+(i*64),COMPARE_BUFFER,64);
+      status=AT24CXX_Read_Buffer(EEPROM_STORE_ADDRESS+address_offset, COMPARE_BUFFER, STM8S003_BLOCK_SIZE);
     }
     
-    for(uint8_t j=0;j<64;j++)
+    for(uint8_t j=0; j<STM8S003_BLOCK_SIZE; j++)
     {
       if(RAM_BUFFER[j]==COMPARE_BUFFER[j])
       {
-        LED_GREEN_toggle();    
-        LED_RED_toggle();     
+        LED_GREEN_TOGGLE();    
+        LED_RED_TOGGLE();     
       }
       else
-      {    
-        LED_GREEN_on();
-        LED_RED_on();
-        status=0;
+      {
+        status = 0;
         break;
       }
+      
     }
     
   }
-  /*************************************************************************************/
+  /****************************************eeprom compare end**************************/
   
   
-  /******************************option byte compare*************************************/
-  
+  /******************************option byte compare start*************************************/
   if(status)
   {
     status=SWIM_ROTF(SWIM_OPT1,RAM_BUFFER,10);
@@ -432,57 +474,152 @@ uint8_t Compare_STM8_And_AT24C256(void)
     status=AT24CXX_Read_Buffer(OPTION_BYTE_STORE_ADDRESS,COMPARE_BUFFER,10);
   }
   
-  for(uint8_t j=0;j<10;j++)
+  for(uint8_t j=0; j<10; j++)
   {
     if(RAM_BUFFER[j]==COMPARE_BUFFER[j])
     {
-      LED_GREEN_toggle();    
-      LED_RED_toggle();     
+      LED_GREEN_TOGGLE();    
+      LED_RED_TOGGLE();     
     }
     else
-    {    
-      LED_GREEN_on();
-      LED_RED_on();
-      status=0;
+    {
+      status = 0;
     }
+    
   }
-  /*************************************************************************************/
+  /******************************option byte compare end*************************************/
+  
   
   if(status)
   {
     status=SWIM_Reset_Device();
-  }
+  }  
   
-return status;
-  
+  return status;
 }
+/****************************** Compare_STM8_And_AT24C256 start*******************************************/
+
+
+
+
+
+
 
 
 void main(void)
 {
+  uint16_t status = 0;
+  
+  uint16_t switch_pressed_time = 0;
   
   SWIM_Setup();
   
   I2C_setup();
   
   /*Initialise LEDs and switch */
-  GPIO_Init(LED_RED_port, LED_RED_pin, GPIO_MODE_OUT_PP_HIGH_SLOW);
-  GPIO_Init(LED_GREEN_port, LED_GREEN_pin, GPIO_MODE_OUT_PP_HIGH_SLOW);
-  GPIO_Init(PROG_SWITCH_port, PROG_SWITCH_pin, GPIO_MODE_IN_PU_NO_IT);
+  GPIO_Init(LED_RED_PORT, LED_RED_PIN, GPIO_MODE_OUT_PP_HIGH_SLOW);
+  GPIO_Init(LED_GREEN_PORT, LED_GREEN_PIN, GPIO_MODE_OUT_PP_HIGH_SLOW);
+  GPIO_Init(PROG_SWITCH_PORT, PROG_SWITCH_PIN, GPIO_MODE_IN_PU_NO_IT);
   
   
-  STM8_To_AT24C256();
+  while(1)
+  {
+  status = AT24C256_To_STM8();
+  
+  status =Compare_STM8_And_AT24C256();//after flashing compare with stored data
 
+  }
   
-  AT24C256_To_STM8();
-  Compare_STM8_And_AT24C256();
-  
- 
   /* Infinite loop */
   while (1)
   {
-
- 
+    while(PROG_SWITCH_READ() == PROG_SWITCH_PRESSED)
+    {
+      delay_ms(1);
+      switch_pressed_time++;
+    }
+    
+    switch(Current_State)
+    {
+      
+    case IDEAL:
+      LED_GREEN_ON(); // LED GREEN and RED ON to indicate ideal state
+      LED_RED_ON();
+      if(switch_pressed_time>5000)//was pressed for 5sec
+      {
+        switch_pressed_time = 0;
+        Current_State = AT24_TO_STM8; //flash mcu mode
+      }
+      else if(switch_pressed_time>50) // single pressed 50ms debounce
+      {
+        switch_pressed_time = 0;
+        //do nothing ideal state
+      }
+      break;
+      
+      
+    case AT24_TO_STM8:
+      LED_GREEN_ON(); // GREEN on RED off to indicate flashing mode
+      LED_RED_OFF();
+      if(switch_pressed_time>5000)//was pressed for 5sec
+      {
+        switch_pressed_time = 0;
+        Current_State = AT24_TO_STM8; //read mcu mode
+      }
+      else if(switch_pressed_time>50) //single pressed 50ms debounce
+      {
+        switch_pressed_time = 0;
+        status = AT24C256_To_STM8();
+        if(status)
+        {
+          status =Compare_STM8_And_AT24C256();//after flashing compare with stored data
+        }
+        if(status)
+        {
+          //flashing success, flash GREEN led 10 times to indicate success
+          for(uint8_t i=0; i<10; i++)
+          {
+            LED_GREEN_ON();  
+            delay_ms(100);
+            LED_GREEN_ON();  
+            delay_ms(100);
+          } 
+        }
+      }
+      break;
+      
+      
+    case STM8_TO_AT24:
+      LED_RED_ON();
+      LED_GREEN_OFF(); // GREEN off RED on to indicate reading mode
+      if(switch_pressed_time>5000)//was pressed for 5sec
+      {
+        switch_pressed_time = 0;
+        Current_State = AT24_TO_STM8; //flash the mcu
+      }
+      else if(switch_pressed_time>50) //single pressed 50ms debounce
+      {
+        switch_pressed_time = 0;
+        status = STM8_To_AT24C256();
+        if(status)
+        {
+          status = Compare_STM8_And_AT24C256();
+        }
+        if(status)
+        {
+          //reading success, flash RED led 10 times to indicate success
+          for(uint8_t i=0; i<10; i++)
+          {
+            LED_RED_ON();  
+            delay_ms(100);
+            LED_RED_OFF();  
+            delay_ms(100);
+          }
+        }
+      }
+      break;
+    }
+    
   }
   
 }

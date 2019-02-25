@@ -103,27 +103,6 @@
 #define SWIM_FLASH_DUKR_KEY2   0x56
 #define	SWIM_ROP_OPTIONBYTE    0x4800
 
-#define SWIM_FLASH_START_ADDRESS  0x008000 //to 0x009FFF  (8k)
-#define SWIM_EEPROM_START_ADDRESS 0x004000 //to 0x00407F  (128 bytes) (total 640 bytes unofficial)
-#define SWIM_RAM_START_ADDRESS    0x000000 //to 0x0003FF  (1k)
-
-#define SWIM_OPT0                    0x4800 //Read-out protection (ROP)
-
-#define SWIM_OPT1                    0x4801 //User boot code(UBC)
-#define SWIM_NOPT1                   0x4802 
-
-#define SWIM_OPT2                    0x4803 //Alternate function remapping(AFR)
-#define SWIM_NOPT2                   0x4804 
-
-#define SWIM_OPT3                    0x4805 //Misc. option
-#define SWIM_NOPT3                   0x4806 
-
-#define SWIM_OPT4                    0x4807 //Clock option
-#define SWIM_NOPT4                   0x4808 
-
-#define SWIM_OPT5                    0x4809 //HSE clock startup
-#define SWIM_NOPT5                   0x480A 
-
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -153,7 +132,6 @@ uint8_t SWIM_Enable_Block_Programming(void);
 uint8_t SWIM_Wait_For_Write_Access(void);
 
 uint8_t SWIM_Reset_Device(void);
-
 
 
 
@@ -187,15 +165,6 @@ Bit 0 PRG:         Standard block programming
 
 
 */
-
-
-
-
-
-
-
-
-
 
 
 #endif /* __STM8_SWIM_H */

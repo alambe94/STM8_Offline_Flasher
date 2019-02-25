@@ -17,31 +17,32 @@ void I2C_setup()
   I2C_Cmd(ENABLE);
 }
 
-uint8_t I2C_Start() {
+uint8_t I2C_Start()
+{
   uint8_t timeout=255;
-  
   I2C->CR2 |= (I2C_CR2_START);
   while (!(I2C->SR1 & (I2C_SR1_SB)) && (--timeout));
-    if(timeout)
+  if(timeout)
   {
     return 1;
   }
-    return 0;
+  return 0;
 }
 
-uint8_t I2C_Stop() {
+uint8_t I2C_Stop() 
+{
   uint8_t timeout=255;
-
   I2C->CR2 |= (I2C_CR2_STOP);
   while (!(I2C->SR3 & (I2C_SR3_MSL)) && --timeout);
-   if(timeout)
+  if(timeout)
   {
     return 1;
   }
-    return 0;
+  return 0;
 }
 
-uint8_t I2C_Write_Byte(uint8_t data) {
+uint8_t I2C_Write_Byte(uint8_t data) 
+{
   uint8_t timeout=255;
   I2C->DR = data;
   while (!(I2C->SR1 & (I2C_SR1_TXE)) && --timeout);
@@ -49,34 +50,37 @@ uint8_t I2C_Write_Byte(uint8_t data) {
   {
     return 1;
   }
-    I2C_Stop();
-    return 0;
+  I2C_Stop();
+  return 0;
 }
 
-uint8_t I2C_Write_Address(uint8_t addr) {
+uint8_t I2C_Write_Address(uint8_t addr)
+{
   uint8_t timeout=255;
-  
   I2C->DR = addr;
   while (!(I2C->SR1 & (I2C_SR1_ADDR)) && --timeout);
   (void) I2C->SR3; // clear EV6
   I2C->CR2 |= (I2C_CR2_ACK);
-    if(timeout)
+  if(timeout)
   {
     return 1;
   }
-    I2C_Stop();
-    return 0;
+  I2C_Stop();
+  return 0;
 }
 
-uint8_t I2C_Read_Byte() {
+uint8_t I2C_Read_Byte() 
+{
   I2C->CR2 &= ~(I2C_CR2_ACK);
   I2C_Stop();
   while (!(I2C->SR1 & (I2C_SR1_RXNE)));
   return I2C->DR;
 }
 
-void I2C_Read_Buffer(uint8_t *buf, uint16_t len) {
-  while (len-- > 1) {
+void I2C_Read_Buffer(uint8_t *buf, uint16_t len) 
+{
+  while (len-- > 1) 
+  {
     I2C->CR2 |= (I2C_CR2_ACK);
     while (!(I2C->SR1 & (I2C_SR1_RXNE)));
     *(buf++) = I2C->DR;

@@ -50,6 +50,7 @@ void delay_us(uint16_t time)
     nop();
     nop();
     nop();
+    nop();
   }
 }
 

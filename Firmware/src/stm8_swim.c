@@ -297,15 +297,17 @@ uint8_t SWIM_ROTF(uint32_t addr, uint8_t *buf, uint8_t size)
               }
               
             }
-            SWIM_PIN_OUT();
-            if(!size)
-            {
-              return 1;
-            }
+            
           }
         }
       } 
     }
+  }
+  
+  SWIM_PIN_OUT();
+  if(!size)
+  {
+    return 1;
   }
   
   return 0; 
