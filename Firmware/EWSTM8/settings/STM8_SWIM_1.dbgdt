@@ -773,7 +773,7 @@
                     <item>parity_bit</item>
                     <item>parity_bit</item>
                     <item>tttp</item>
-                    <item></item>
+                    <item />
                 </expressions>
                 <col-names>
                     <item>Expression</item>

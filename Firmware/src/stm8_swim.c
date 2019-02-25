@@ -130,6 +130,15 @@ uint8_t SWIM_Write_Data(uint8_t data)
   uint8_t data_frame[8];
   uint8_t parity = 0;
   
+  /*
+  for(uint8_t i=0; i<=7; i++)
+  {
+   data_frame[i] = data >>i & 0x01;
+   parity += data_frame[i];
+}
+  parity &= 0x01;// XOR of all frame bits
+  */
+  
   //unroll for loop for faster execution
   data_frame[7] = data>>7 & 0x01;
   data_frame[6] = data>>6 & 0x01;
