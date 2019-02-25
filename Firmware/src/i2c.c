@@ -8,7 +8,7 @@ void I2C_setup()
   GPIO_Init(GPIOB, GPIO_PIN_5, GPIO_MODE_OUT_OD_HIZ_FAST);
   
   I2C_DeInit();
-  I2C_Init(400000, 
+  I2C_Init(100000, 
            0xFE, 
            I2C_DUTYCYCLE_2, 
            I2C_ACK_NONE, 

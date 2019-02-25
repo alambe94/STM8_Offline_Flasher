@@ -33,10 +33,10 @@ uint8_t SWIM_Enter()
   uint16_t timeout =0xFFFF;
   
   NRST_PIN_LOW();
-  delay_ms(10);
+  delay_ms(1);
  
   SWIM_PIN_LOW();
-  delay_ms(10);
+  delay_ms(1);
   
   for (uint8_t i=0; i<4; i++) 
   {
@@ -70,7 +70,7 @@ uint8_t SWIM_Enter()
     return 0;
   }
   
-  delay_ms(1);
+  delay_us(500);
   
   uint8_t csr = 0xA0;
   if(!SWIM_WOTF(SWIM_CSR, &csr, 1))
@@ -411,8 +411,8 @@ uint8_t SWIM_Enable_Block_Programming()
   uint8_t temp[2];
   if(SWIM_ROTF(SWIM_FLASH_CR2,temp,2))
   {
-    temp[0]|=0x01;  //Flash_CR2  standard block programming
-    temp[1]&=0xFE;  //Flash_NCR2
+    temp[0] = 0x01;  //Flash_CR2  standard block programming
+    temp[1] = 0xFE;  //Flash_NCR2
     return SWIM_WOTF(SWIM_FLASH_CR2,temp,2); 
   }
   return 0;

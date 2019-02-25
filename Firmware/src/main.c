@@ -521,7 +521,6 @@ void main(void)
   GPIO_Init(LED_GREEN_PORT, LED_GREEN_PIN, GPIO_MODE_OUT_PP_HIGH_SLOW);
   GPIO_Init(PROG_SWITCH_PORT, PROG_SWITCH_PIN, GPIO_MODE_IN_PU_NO_IT);
   
-  
   while(1)
   {
   status = AT24C256_To_STM8();
