@@ -130,7 +130,7 @@
                 <debug>1</debug>
                 <option>
                     <name>IccRequirePrototypes</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>IccLanguageConformance</name>

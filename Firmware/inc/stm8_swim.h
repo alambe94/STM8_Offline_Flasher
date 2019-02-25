@@ -16,13 +16,13 @@
 #define NRST_PIN_HIGH()        NRST_PORT->ODR |=  NRST_PIN     
 #define NRST_PIN_LOW()         NRST_PORT->ODR &=  ~NRST_PIN   
 
-#define SWIM_PIN_OUT()        SWIM_PORT->ODR |=  SWIM_PIN;\
-                              SWIM_PORT->CR1 &= ~SWIM_PIN;\
-                              SWIM_PORT->DDR |=  SWIM_PIN
+#define SWIM_PIN_OUT()         SWIM_PORT->ODR |=  SWIM_PIN;\
+                               SWIM_PORT->CR1 &= ~SWIM_PIN;\
+                               SWIM_PORT->DDR |=  SWIM_PIN
 
-#define SWIM_PIN_IN_INT()     SWIM_PORT->DDR &=  ~SWIM_PIN;\
-                              SWIM_PORT->CR1 |=   SWIM_PIN;\
-                              SWIM_PORT->CR2 |=   SWIM_PIN 
+#define SWIM_PIN_IN_INT()      SWIM_PORT->DDR &=  ~SWIM_PIN;\
+                               SWIM_PORT->CR1 |=   SWIM_PIN;\
+                               SWIM_PORT->CR2 |=   SWIM_PIN 
 
 
 #define SWIM_PIN               GPIO_PIN_5   
@@ -42,9 +42,40 @@
                                SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT()
 
 
+//inline did not work
+//function call overhead causing timing issues
+#define SWIM_Write_Bit(bit)\
+{\
+  if(bit)\
+  {\
+    SWIM_PIN_LOW();\
+    SWIM_DELAY_1_BIT();\
+    SWIM_PIN_HIGH();\
+    SWIM_DELAY_0_BIT();\
+  }else\
+  {\
+    SWIM_PIN_LOW();\
+    SWIM_DELAY_0_BIT();\
+    SWIM_PIN_HIGH();\
+    SWIM_DELAY_1_BIT();\
+  }\
+}
 
-
-
+//parity or ack bit
+#define SWIM_Write_Parity_Ack_Bit(bit)\
+{\
+  if(bit)\
+  {\
+    SWIM_PIN_LOW();\
+    SWIM_DELAY_1_BIT();\
+    SWIM_PIN_IN_INT();\
+  }else\
+  {\
+    SWIM_PIN_LOW();\
+    SWIM_DELAY_0_BIT();\
+    SWIM_PIN_IN_INT();\
+  }\
+}
 
 
 #define SWIM_CMD_LEN                    3
@@ -96,14 +127,19 @@
 
 /* Private function prototypes -----------------------------------------------*/
 
-void SWIM_Setup();
+void SWIM_Setup(void);
+
+uint8_t SWIM_Write_Cammand(uint8_t cammand);
+uint8_t SWIM_Write_Data(uint8_t data);
 
 uint8_t SWIM_Enter(void);
-uint8_t SWIM_Soft_Reset(void);
+
 uint8_t SWIM_WOTF(uint32_t addr, uint8_t *buf, uint8_t size);
 uint8_t SWIM_ROTF(uint32_t addr, uint8_t *buf, uint8_t size);
 
+uint8_t SWIM_Soft_Reset(void);
 uint8_t SWIM_Stall_CPU(void);
+
 uint8_t SWIM_Unlock_OptionByte(void);
 uint8_t SWIM_Lock_OptionByte(void);
 
@@ -113,51 +149,10 @@ uint8_t SWIM_Lock_EEPROM(void);
 uint8_t SWIM_Unlock_Flash(void);
 uint8_t SWIM_Lock_Flash(void);
 
-uint8_t SWIM_Wait_For_Write(void);
 uint8_t SWIM_Enable_Block_Programming(void);
+uint8_t SWIM_Wait_For_Write_Access(void);
+
 uint8_t SWIM_Reset_Device(void);
-
-
-
-uint8_t SWIM_Write_Data(uint8_t data);
-uint8_t SWIM_Write_Cammand(uint8_t cammand);
-
-//inline did not work
-//function call overhead causing timing issues
-#define SWIM_Write_Bit(bit)\
-{\
-  if(bit)\
-  {\
-    SWIM_PIN_LOW();\
-    SWIM_DELAY_1_BIT();\
-    SWIM_PIN_HIGH();\
-    SWIM_DELAY_0_BIT();\
-  }else\
-  {\
-    SWIM_PIN_LOW();\
-    SWIM_DELAY_0_BIT();\
-    SWIM_PIN_HIGH();\
-    SWIM_DELAY_1_BIT();\
-  }\
-}
-
-//parity or ack bit
-#define SWIM_Write_Parity_Ack_Bit(bit)\
-{\
-  if(bit)\
-  {\
-    SWIM_PIN_LOW();\
-    SWIM_DELAY_1_BIT();\
-    SWIM_PIN_IN_INT();\
-  }else\
-  {\
-    SWIM_PIN_LOW();\
-    SWIM_DELAY_0_BIT();\
-    SWIM_PIN_IN_INT();\
-  }\
-}
-
-
 
 
 

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <settings>
     <DebugChecksum>
-        <Checksum>3935399225</Checksum>
+        <Checksum>1499479495</Checksum>
     </DebugChecksum>
     <Stack>
         <FillEnabled>0</FillEnabled>
@@ -17,6 +17,9 @@
     <CallStack>
         <ShowArgs>0</ShowArgs>
     </CallStack>
+    <Disassembly>
+        <MixedMode>1</MixedMode>
+    </Disassembly>
     <watch_formats>
         <Fmt0>{W}1:INT_Count	3	0</Fmt0>
         <Fmt1>{W}1:size	3	0</Fmt1>
@@ -36,8 +39,10 @@
         <LogFile>_ ""</LogFile>
     </TermIOLog>
     <Breakpoints>
-        <Bp0>_ "STD_CODE" "{$PROJ_DIR$\..\src\stm8_swim.c}.421.1" 0 0 0 0 "" 0 ""</Bp0>
-        <Count>1</Count>
+        <Bp0>_ "STD_CODE" "{$PROJ_DIR$\..\src\stm8_swim.c}.456.1" 0 0 0 0 "" 0 ""</Bp0>
+        <Bp1>_ "STD_CODE" "{$PROJ_DIR$\..\src\main.c}.335.3" 1 0 0 0 "" 0 ""</Bp1>
+        <Bp2>_ "STD_CODE" "{$PROJ_DIR$\..\src\main.c}.94.10" 1 0 0 0 "" 0 ""</Bp2>
+        <Count>3</Count>
     </Breakpoints>
     <Aliases>
         <Count>0</Count>

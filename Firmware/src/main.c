@@ -35,10 +35,6 @@
 #include "at24cxx.h"
 
 
-
-
-
-
 /* Private defines -----------------------------------------------------------*/
 
 #define PROG_SWITCH_pressed             0
@@ -84,25 +80,20 @@ uint8_t state_change_flag=0;
 
 
 /* Private function prototypes -----------------------------------------------*/
-void STM8_Flash_Read(void);   /*Read from stm8 device and store in 24cxx */
-void STM8_Flash_Write(void);  /*Read from 24cxx and flash stm8*/
-void STM8_Flash_Compare(void);
-void STM8_24Cxx_Read(void);  /*Read from 24cxx and store 24cxx*/ //todo
+uint8_t STM8_To_AT24C256(void);   /*Read from stm8 device and store in 24cxx */
+uint8_t AT24C256_To_STM8(void);  /*Read from 24cxx and flash stm8*/
+uint8_t Compare_STM8_And_AT24C256(void);
+uint8_t STM8_24Cxx_Read(void);  /*Read from 24cxx and store 24cxx*/ //todo
 
 
 /* Private functions ---------------------------------------------------------*/
-void STM8_Flash_Read(void)
+uint8_t STM8_To_AT24C256(void)
 {
   uint8_t status,blk;
   
   status=SWIM_Enter();
   
   delay_ms(1);
-  
-  if(status)
-  {
-    status=SWIM_Soft_Reset();
-  }
   
   if(status)
   {
@@ -182,32 +173,20 @@ void STM8_Flash_Read(void)
     status=SWIM_Reset_Device();
   }
   
-  if(status)
-  {
-    LED_GREEN_on();
-  }
+  return status;
   
 }
 /*************************************************************************************/
 
 
-
-
-
-
-void STM8_Flash_Write(void)
+uint8_t AT24C256_To_STM8(void)
 {
   uint8_t status,blk;
   
   status=SWIM_Enter();
   
   delay_ms(1);
-  
-  if(status)
-  {
-    status=SWIM_Soft_Reset();
-  }
-  
+ 
   if(status)
   {
     status=SWIM_Stall_CPU();
@@ -223,7 +202,7 @@ void STM8_Flash_Write(void)
     
     if(status)
     {
-      status=AT24CXX_Read_Buffer(FLASH_STORE_ADDRESS+(blk*64),RAM_BUFFER,64); 
+     status=AT24CXX_Read_Buffer(FLASH_STORE_ADDRESS+(blk*64),RAM_BUFFER,64); 
     }  
     
     if(status)
@@ -296,13 +275,12 @@ void STM8_Flash_Write(void)
   
   /*************************************************************************************/
   
-  
   /************************write Option bytes data to stm8******************************/
   if(status)
   {
     status=SWIM_Unlock_OptionByte();
   }
-  
+
   if(status)
   {
     status=SWIM_Unlock_EEPROM();//same sequence for option bytes
@@ -316,30 +294,30 @@ void STM8_Flash_Write(void)
   if(status)
   {
     status=SWIM_WOTF(SWIM_OPT1,RAM_BUFFER,2);
-    delay_ms(10);
+    delay_ms(5);
   }
   
   if(status)
   {
     status=SWIM_WOTF(SWIM_OPT2,RAM_BUFFER+2,2);
-    delay_ms(10);
+    delay_ms(5);
   }
   
   if(status)
   {
     status=SWIM_WOTF(SWIM_OPT3,RAM_BUFFER+4,2);
-    delay_ms(10);
+   delay_ms(5);
   }
   
   if(status)
   {
     status=SWIM_WOTF(SWIM_OPT4,RAM_BUFFER+6,2);
-    delay_ms(10);
+    delay_ms(5);
   }
   if(status)
   {
     status=SWIM_WOTF(SWIM_OPT5,RAM_BUFFER+8,2);
-    delay_ms(10);
+    delay_ms(5);
   }
   
   if(status)
@@ -354,39 +332,23 @@ void STM8_Flash_Write(void)
   
   /*************************************************************************************/
   
-  if(status==0)
-  {
-    LED_GREEN_on();
-    LED_RED_on();
-  }
-  
   if(status)
   {
     status=SWIM_Reset_Device();
   }
   
-  if(status)
-  {
-    LED_RED_on();
-  }
-  
+  return status;
 }
 
 
 
-void STM8_Flash_Compare(void)
+uint8_t Compare_STM8_And_AT24C256(void)
 {
   uint8_t status;
   
   status=SWIM_Enter();
   
-  
   delay_ms(1);
-  
-  if(status)
-  {
-    status=SWIM_Soft_Reset();
-  }
   
   if(status)
   {
@@ -486,25 +448,12 @@ void STM8_Flash_Compare(void)
   }
   /*************************************************************************************/
   
-  
   if(status)
   {
     status=SWIM_Reset_Device();
   }
   
-  if(status)
-  {
-    for(uint8_t j=0;j<10;j++)
-    {
-      LED_RED_on();
-      LED_GREEN_off();
-      delay_ms(100);
-      LED_RED_off();
-      LED_GREEN_on();
-      delay_ms(100);
-      
-    }
-  }
+return status;
   
 }
 
@@ -522,93 +471,18 @@ void main(void)
   GPIO_Init(PROG_SWITCH_port, PROG_SWITCH_pin, GPIO_MODE_IN_PU_NO_IT);
   
   
+  STM8_To_AT24C256();
+
+  
+  AT24C256_To_STM8();
+  Compare_STM8_And_AT24C256();
+  
+ 
   /* Infinite loop */
   while (1)
   {
-    uint32_t timeout=0;
-    if(PROG_SWITCH_read()==PROG_SWITCH_pressed)
-    {
-      state_change_flag=0;
-      while(PROG_SWITCH_read()==PROG_SWITCH_pressed)
-      {
-        timeout++;
-        if(timeout>500000)
-        {
-          timeout=0;
-          state_machine++;
-          state_change_flag=1;
-          if(state_machine>5)
-          {
-            state_machine=0;
-          }
-          if(state_machine==1)
-          {
-            LED_RED_on();
-            LED_GREEN_off();
-          }
-          if(state_machine==5)
-          {
-            LED_RED_off();
-            LED_GREEN_on();
-          }
-          if(state_machine==0)
-          {
-            LED_RED_off();
-            LED_GREEN_off();
-          }
-        }
-      }
-      
-      if(state_change_flag==0)
-      {
-        
-        if(state_machine==0)
-        {
-          LED_RED_on();
-          LED_GREEN_on();
-          delay_ms(100); 
-          LED_RED_off();
-          LED_GREEN_off();
-        }
-        
-        if(state_machine==1)
-        {
-          STM8_Flash_Write();
-          STM8_Flash_Compare(); 
-        }
-        
-        if(state_machine==5)
-        {
-          STM8_Flash_Read();
-          STM8_Flash_Compare();
-        }
-        
-      }
-      
-    }
-    
-    
-    if(state_machine==0)
-    {
-      LED_RED_off();
-      LED_GREEN_off();
-    }
-    
-    if(state_machine==1)
-    {
-      LED_RED_on();
-      LED_GREEN_off();
-    }
-    
-    if(state_machine==5)
-    {
-      LED_RED_off();
-      LED_GREEN_on();
-    }
-    
-    
-    
-    
+
+ 
   }
   
 }
