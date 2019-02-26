@@ -136,7 +136,7 @@ uint8_t STM8_To_AT24C256(void)
     if(status)
     {
       status=AT24CXX_Write_Page(FLASH_STORE_ADDRESS+address_offset, RAM_BUFFER, STM8S003_BLOCK_SIZE); 
-      //delay_ms(3);// read from stm8 takes 2.9ms
+      //delay_ms(1);// read from stm8 takes 2.9ms
     }
     
     if(status)
@@ -162,6 +162,7 @@ uint8_t STM8_To_AT24C256(void)
     if(status)
     {
       status=AT24CXX_Write_Page(EEPROM_STORE_ADDRESS+address_offset, RAM_BUFFER, STM8S003_BLOCK_SIZE);
+      //delay_ms(1);// read from stm8 takes 2.9ms
     }
     
     if(status)
@@ -182,12 +183,9 @@ uint8_t STM8_To_AT24C256(void)
   
   if(status)
   {
+    delay_ms(3);// wait for last EEPROM write
     status=AT24CXX_Write_Page(OPTION_BYTE_STORE_ADDRESS,RAM_BUFFER,10);
-  }
-  
-  if(status)
-  {
-    status=SWIM_Reset_Device();
+    delay_ms(3);//
   }
   
   return status;
@@ -203,9 +201,7 @@ uint8_t AT24C256_To_STM8(void)
 {
   uint8_t status;
   uint16_t address_offset = 0;
-  
-  status = SWIM_Reset_Device();
-  
+    
   status = SWIM_Enter();
   
   delay_ms(5);
@@ -233,7 +229,7 @@ uint8_t AT24C256_To_STM8(void)
     if(status)
     {
       status = SWIM_WOTF(STM8_FLASH_START_ADDRESS+address_offset, RAM_BUFFER,STM8S003_BLOCK_SIZE);
-      //delay_ms(5); //5ms delay after block write  //compansated in reading 24cxx
+      delay_ms(4); //5ms delay after block write  //read from 24cxx takes 1.5
     }
    
     if(status)
@@ -274,7 +270,7 @@ uint8_t AT24C256_To_STM8(void)
     if(status)
     {
       status=SWIM_WOTF(STM8_EEPROM_START_ADDRESS+address_offset, RAM_BUFFER, STM8S003_BLOCK_SIZE);
-      delay_ms(5); //5ms delay after block write  
+      delay_ms(4); //5ms delay after block write  //read from 24cxx takes 1.5
     }
     
     if(status)
@@ -293,6 +289,9 @@ uint8_t AT24C256_To_STM8(void)
   
   
   /************************write Option bytes data to stm8 start******************************/
+  
+  delay_ms(1); //
+  
   if(status)
   {
     status=SWIM_Unlock_OptionByte();
@@ -349,12 +348,6 @@ uint8_t AT24C256_To_STM8(void)
   }
   /************************write Option bytes data to stm8 end******************************/
   
-  
-  if(status)
-  {
-    status=SWIM_Reset_Device();
-  }
-  
   return status;
 }
 /****************************** AT24C256_To_STM8 end*******************************************/
@@ -366,7 +359,7 @@ uint8_t AT24C256_To_STM8(void)
 /****************************** Compare_STM8_And_AT24C256 start*******************************************/
 uint8_t Compare_STM8_And_AT24C256(void)
 {
-  uint8_t status = 0;
+  uint8_t status = 1;
   uint16_t address_offset = 0;
   
   /****************************************flash compare start**************************/
@@ -461,12 +454,6 @@ uint8_t Compare_STM8_And_AT24C256(void)
   }
   /******************************option byte compare end*************************************/
   
-  
-  if(status)
-  {
-    status=SWIM_Reset_Device();
-  }  
-  
   return status;
 }
 /****************************** Compare_STM8_And_AT24C256 start*******************************************/
@@ -493,11 +480,6 @@ void main(void)
   GPIO_Init(LED_GREEN_PORT, LED_GREEN_PIN, GPIO_MODE_OUT_PP_HIGH_SLOW);
   GPIO_Init(PROG_SWITCH_PORT, PROG_SWITCH_PIN, GPIO_MODE_IN_PU_NO_IT);
   
-  while(1)
-  {
-  status = STM8_To_AT24C256();
-  status = Compare_STM8_And_AT24C256();
-  }
   
   LED_GREEN_ON(); // LED GREEN and RED ON to indicate ideal state
   LED_RED_ON();
@@ -543,8 +525,6 @@ void main(void)
     }
     
     
-    
-    
     if(switch_pressed_time > 50)// 50ms debounce
     {
       switch_pressed_time = 0;
@@ -558,13 +538,35 @@ void main(void)
         
         
       case AT24_TO_STM8:
-        //status = AT24C256_To_STM8();
-        status = Compare_STM8_And_AT24C256();
+        status = AT24C256_To_STM8();
+        if(status)
+        {
+          status = Compare_STM8_And_AT24C256();
+        }
+        if(status)// success 
+        {
+          for(uint8_t i=0; i<10; i++)
+          {
+            LED_RED_TOGGLE();
+            delay_ms(100);
+          }
+        }
         break;
         
       case STM8_TO_AT24:
         status = STM8_To_AT24C256();
+        if(status)
+        {
         status = Compare_STM8_And_AT24C256();
+        }
+        if(status)// success 
+        {
+          for(uint8_t i=0; i<10; i++)
+          {
+            LED_GREEN_TOGGLE();
+            delay_ms(100);
+          }
+        }
         break;
         
       }

@@ -30,7 +30,7 @@ void SWIM_Setup(void)
 
 uint8_t SWIM_Enter()
 {
-  uint16_t timeout =0xFFFF;
+  uint8_t timeout =0xFF;
   
   NRST_PIN_LOW();
   delay_ms(1);
@@ -69,7 +69,7 @@ uint8_t SWIM_Enter()
   
   
   /*4. SWIM sends a synchronization frame to the host 128 x SWIM clocks = 16us */
-  timeout = 0xFFFF;
+  timeout = 0xFF;
   while(!SWIM_PIN_READ() && --timeout);//wait on low
   
   if(!timeout)
