@@ -2,40 +2,26 @@
 #define _AT24CXX_H
 
 #include "stm8s.h"
-#include "i2c.h"
-#include "stm8s.h"
-#include "millis.h"
-#include "stdlib.h"
 
 
-#define EEPROM_ADDR 0xA0
+/******************at24cxx config******************************/
+#define AT24CXX_EEPROM_ADDR      0XA0
 
-#define Address_Width_16 16u 
-#define Address_Width_8  8u
+#define AT24CXX_ADDRESS_WIDTH    16 // 8 or 16
+#define AT24CXX_PAGE_LENGTH      64 // 8 , 16 , 32 or 64
 
-#define Page_Length_8   8u
-#define Page_Length_16  16u
-#define Page_Length_64  64u
+/******************at24cxx config******************************/
 
-#define Address_Width Address_Width_16
-#define Page_Length   Page_Length_64
+#define AT24CXX_OK		1
+#define AT24CXX_ERR		0
 
-void AT24CXX_Write_Byte(uint16_t Address, uint8_t data);
-uint8_t AT24CXX_Read_Byte(uint16_t Address);
+
+void    AT24CXX_Init(void);
+uint8_t AT24CXX_Write_Byte(uint16_t Address, uint8_t data);
+uint8_t AT24CXX_Read_Byte(uint16_t Address, uint8_t* data);
 uint8_t AT24CXX_Write_Page(uint16_t Address, uint8_t *buf, uint16_t len);
 uint8_t AT24CXX_Read_Buffer(uint16_t Address, uint8_t *buf, uint16_t len);
-void AT24CXX_Write_Buffer(uint16_t Address, uint8_t *buf, uint16_t len);
-
-
-
-
-
-
-
-
-
-
-
+uint8_t AT24CXX_Write_Buffer(uint16_t Address, uint8_t *buf, uint16_t len);
 
 
 

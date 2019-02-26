@@ -35,9 +35,11 @@ uint8_t SWIM_Enter()
   NRST_PIN_LOW();
   delay_ms(1);
  
+  /*1. To make the SWIM active, the SWIM pin must be forced low during a period of 16 µs.*/
   SWIM_PIN_LOW();
   delay_ms(1);
   
+  /*2. Four pulses at 1 kHz followed by four pulses at 2 kHz*/
   for (uint8_t i=0; i<4; i++) 
   {
     SWIM_PIN_HIGH();
@@ -52,6 +54,10 @@ uint8_t SWIM_Enter()
     SWIM_PIN_LOW();
     delay_us(250);
   }
+  
+  /*3. After the entry sequence, the SWIM enters in SWIM active state, and the HSI oscillator
+  is automatically turned ON. */
+  
   SWIM_PIN_HIGH();
   // approx 30us to give sync pulse of 16us
   while(SWIM_PIN_READ() && --timeout); //wait on high
@@ -61,7 +67,8 @@ uint8_t SWIM_Enter()
     return 0;
   }
   
-  //sync pulse
+  
+  /*4. SWIM sends a synchronization frame to the host 128 x SWIM clocks = 16us */
   timeout = 0xFFFF;
   while(!SWIM_PIN_READ() && --timeout);//wait on low
   
@@ -70,19 +77,25 @@ uint8_t SWIM_Enter()
     return 0;
   }
   
+  /*5. SWIM line must be released at 1 to guarantee that the SWIM is ready for communication (at least 300 ns).*/
   delay_us(500);
   
+  
+  /*6. Write 0A0h in the SWIM_CSR:*/
   uint8_t csr = 0xA0;
   if(!SWIM_WOTF(SWIM_CSR, &csr, 1))
   {
     return 0;
   }
- 
-  delay_ms(1);
   
+  /*6. Release the reset which starts the option byte loading sequence. Wait 1 ms for
+  stabilization*/  
   NRST_PIN_HIGH();
-  
   delay_ms(1);
+  
+  SWIM_PIN_LOW();
+  delay_us(50);
+  SWIM_PIN_HIGH();
   
   return 1;
   
@@ -351,11 +364,16 @@ uint8_t SWIM_Lock_OptionByte()
   if(SWIM_ROTF(SWIM_FLASH_CR2,temp,2))
   {
     temp[0]&=(uint8_t)(0x7F); // OPT = 0 and NOPT = 1
-    temp[1]|=(uint8_t)(0x80); 
-    return SWIM_WOTF(SWIM_FLASH_CR2,temp,2);
+    temp[1]|=(uint8_t)(0x80); // enable opt
+    
+    if(SWIM_WOTF(SWIM_FLASH_CR2,temp,2))
+    {
+      return  SWIM_Unlock_EEPROM();//opt unlock sequence 
+    }
   }
   return 0;
 }
+
 
 uint8_t SWIM_Unlock_EEPROM()
 {
@@ -399,7 +417,7 @@ uint8_t SWIM_Lock_Flash()
   uint8_t temp[1];
   if(SWIM_ROTF(SWIM_FLASH_IAPSR,temp,1))
   {
-    temp[0]&= (uint8_t)0xFD; //
+    temp[0] &= 0xFD; //
     return SWIM_WOTF(SWIM_FLASH_IAPSR,temp,1);
   }
   return 0;
@@ -411,8 +429,8 @@ uint8_t SWIM_Enable_Block_Programming()
   uint8_t temp[2];
   if(SWIM_ROTF(SWIM_FLASH_CR2,temp,2))
   {
-    temp[0] = 0x01;  //Flash_CR2  standard block programming
-    temp[1] = 0xFE;  //Flash_NCR2
+    temp[0] |= 0x01;  //Flash_CR2  standard block programming
+    temp[1] &= 0xFE;  //Flash_NCR2
     return SWIM_WOTF(SWIM_FLASH_CR2,temp,2); 
   }
   return 0;

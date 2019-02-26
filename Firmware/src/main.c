@@ -31,7 +31,7 @@
 #include "millis.h"
 #include "stdlib.h"
 #include "stm8_swim.h"
-#include "i2c.h"
+#include "soft_i2c.h"
 #include "at24cxx.h"
 
 
@@ -100,7 +100,7 @@ uint8_t COMPARE_BUFFER[STM8S003_BLOCK_SIZE]={0};
 
 enum State
 {
-  IDEAL,
+  IDLE,
   STM8_TO_AT24,
   AT24_TO_STM8
 }Current_State;
@@ -118,15 +118,10 @@ uint8_t STM8_To_AT24C256(void)
 {
   uint8_t status;
   uint16_t address_offset = 0;
-  
+    
   status = SWIM_Enter();
   
-  delay_ms(1);
-  
-  if(status)
-  {
-    status=SWIM_Stall_CPU();
-  }
+  delay_ms(5);
   
   /****************************read flash data from stm8 start********************************/
   for (uint8_t i=0; i<STM8S003_FLASH_PAGES; i++)
@@ -141,17 +136,14 @@ uint8_t STM8_To_AT24C256(void)
     if(status)
     {
       status=AT24CXX_Write_Page(FLASH_STORE_ADDRESS+address_offset, RAM_BUFFER, STM8S003_BLOCK_SIZE); 
+      //delay_ms(3);// read from stm8 takes 2.9ms
     }
     
     if(status)
     {
       LED_GREEN_TOGGLE();     
     } 
-    else
-    {
-      return 0; //failed
-    }
-    
+
   }
   /****************************read flash data from stm8 end********************************/
   
@@ -176,10 +168,7 @@ uint8_t STM8_To_AT24C256(void)
     {
       LED_GREEN_TOGGLE();     
     } 
-    else
-    {
-      return 0; //failed
-    }
+
   }
   /*****************************read EEPROM data from stm8 end************************************/
   
@@ -215,18 +204,12 @@ uint8_t AT24C256_To_STM8(void)
   uint8_t status;
   uint16_t address_offset = 0;
   
-  status=SWIM_Reset_Device();
+  status = SWIM_Reset_Device();
   
-  status=SWIM_Enter();
+  status = SWIM_Enter();
   
-  /** wait atleast 5 ms *********************/
   delay_ms(5);
   
-  if(status)
-  {
-    status=SWIM_Stall_CPU();
-  }
-        
   /********************************write flash data to stm8 start*************************/
   if(status)
   {
@@ -239,18 +222,18 @@ uint8_t AT24C256_To_STM8(void)
     
     if(status)
     {
-      status=AT24CXX_Read_Buffer(FLASH_STORE_ADDRESS+address_offset, RAM_BUFFER, STM8S003_BLOCK_SIZE); 
+      status = AT24CXX_Read_Buffer(FLASH_STORE_ADDRESS+address_offset, RAM_BUFFER, STM8S003_BLOCK_SIZE); 
     }  
     
     if(status)
     {
-      status=SWIM_Enable_Block_Programming(); //standard block programming
+      status = SWIM_Enable_Block_Programming(); //standard block programming
     }
     
     if(status)
     {
-      status=SWIM_WOTF(STM8_FLASH_START_ADDRESS+address_offset, RAM_BUFFER,STM8S003_BLOCK_SIZE);
-      delay_ms(5); //5ms delay after block write  //compansated in reading 24cxx
+      status = SWIM_WOTF(STM8_FLASH_START_ADDRESS+address_offset, RAM_BUFFER,STM8S003_BLOCK_SIZE);
+      //delay_ms(5); //5ms delay after block write  //compansated in reading 24cxx
     }
    
     if(status)
@@ -386,17 +369,6 @@ uint8_t Compare_STM8_And_AT24C256(void)
   uint8_t status = 0;
   uint16_t address_offset = 0;
   
-  status=SWIM_Reset_Device();
-
-  status=SWIM_Enter();
-  
-  delay_ms(5);
-  
-  if(status)
-  {
-    status=SWIM_Stall_CPU();
-  }
-  
   /****************************************flash compare start**************************/
   for(uint8_t i=0; i<STM8S003_FLASH_PAGES; i++)
   {
@@ -514,7 +486,7 @@ void main(void)
   
   SWIM_Setup();
   
-  I2C_setup();
+  Soft_I2C_Init();
   
   /*Initialise LEDs and switch */
   GPIO_Init(LED_RED_PORT, LED_RED_PIN, GPIO_MODE_OUT_PP_HIGH_SLOW);
@@ -523,11 +495,13 @@ void main(void)
   
   while(1)
   {
-  status = AT24C256_To_STM8();
-  
-  status =Compare_STM8_And_AT24C256();//after flashing compare with stored data
-
+  status = STM8_To_AT24C256();
+  status = Compare_STM8_And_AT24C256();
   }
+  
+  LED_GREEN_ON(); // LED GREEN and RED ON to indicate ideal state
+  LED_RED_ON();
+  Current_State = IDLE; //flash mcu mode
   
   /* Infinite loop */
   while (1)
@@ -536,87 +510,66 @@ void main(void)
     {
       delay_ms(1);
       switch_pressed_time++;
+      
+      if(switch_pressed_time > 2000)
+      {
+        switch_pressed_time = 0;
+        
+        switch(Current_State)
+        {
+        case IDLE:
+          Current_State = AT24_TO_STM8; //read mcu mode
+          LED_GREEN_ON(); // GREEN on RED off to indicate flashing mode
+          LED_RED_OFF();
+          break;
+          
+          
+        case AT24_TO_STM8:
+          Current_State = STM8_TO_AT24; //read mcu mode
+          LED_RED_ON();
+          LED_GREEN_OFF(); // GREEN off RED on to indicate reading mode
+          
+          
+          break;
+        case STM8_TO_AT24:
+          Current_State = IDLE; //flash the mcu
+          LED_GREEN_ON(); // LED GREEN and RED ON to indicate ideal state
+          LED_RED_ON();
+          
+          break;
+          
+        }
+      }
     }
     
-    switch(Current_State)
+    
+    
+    
+    if(switch_pressed_time > 50)// 50ms debounce
     {
+      switch_pressed_time = 0;
       
-    case IDEAL:
-      LED_GREEN_ON(); // LED GREEN and RED ON to indicate ideal state
-      LED_RED_ON();
-      if(switch_pressed_time>5000)//was pressed for 5sec
+      switch(Current_State)
       {
-        switch_pressed_time = 0;
-        Current_State = AT24_TO_STM8; //flash mcu mode
-      }
-      else if(switch_pressed_time>50) // single pressed 50ms debounce
-      {
-        switch_pressed_time = 0;
-        //do nothing ideal state
-      }
-      break;
-      
-      
-    case AT24_TO_STM8:
-      LED_GREEN_ON(); // GREEN on RED off to indicate flashing mode
-      LED_RED_OFF();
-      if(switch_pressed_time>5000)//was pressed for 5sec
-      {
-        switch_pressed_time = 0;
-        Current_State = AT24_TO_STM8; //read mcu mode
-      }
-      else if(switch_pressed_time>50) //single pressed 50ms debounce
-      {
-        switch_pressed_time = 0;
-        status = AT24C256_To_STM8();
-        if(status)
-        {
-          status =Compare_STM8_And_AT24C256();//after flashing compare with stored data
-        }
-        if(status)
-        {
-          //flashing success, flash GREEN led 10 times to indicate success
-          for(uint8_t i=0; i<10; i++)
-          {
-            LED_GREEN_ON();  
-            delay_ms(100);
-            LED_GREEN_ON();  
-            delay_ms(100);
-          } 
-        }
-      }
-      break;
-      
-      
-    case STM8_TO_AT24:
-      LED_RED_ON();
-      LED_GREEN_OFF(); // GREEN off RED on to indicate reading mode
-      if(switch_pressed_time>5000)//was pressed for 5sec
-      {
-        switch_pressed_time = 0;
-        Current_State = AT24_TO_STM8; //flash the mcu
-      }
-      else if(switch_pressed_time>50) //single pressed 50ms debounce
-      {
-        switch_pressed_time = 0;
+      case IDLE:
+        LED_GREEN_ON(); // LED GREEN and RED ON to indicate ideal state
+        LED_RED_ON();
+        break;
+        
+        
+      case AT24_TO_STM8:
+        //status = AT24C256_To_STM8();
+        status = Compare_STM8_And_AT24C256();
+        break;
+        
+      case STM8_TO_AT24:
         status = STM8_To_AT24C256();
-        if(status)
-        {
-          status = Compare_STM8_And_AT24C256();
-        }
-        if(status)
-        {
-          //reading success, flash RED led 10 times to indicate success
-          for(uint8_t i=0; i<10; i++)
-          {
-            LED_RED_ON();  
-            delay_ms(100);
-            LED_RED_OFF();  
-            delay_ms(100);
-          }
-        }
+        status = Compare_STM8_And_AT24C256();
+        break;
+        
       }
-      break;
+      
+   
     }
     
   }

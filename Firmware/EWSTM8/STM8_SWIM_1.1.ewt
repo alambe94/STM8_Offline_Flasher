@@ -2121,13 +2121,13 @@
             <name>$PROJ_DIR$\..\src\at24cxx.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\src\i2c.c</name>
-        </file>
-        <file>
             <name>$PROJ_DIR$\..\src\main.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\millis.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\soft_i2c.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\stm8_swim.c</name>
