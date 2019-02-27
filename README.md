@@ -1,3 +1,4 @@
+STM8S003 offline flasher
 
 # STM8_Flasher
 
