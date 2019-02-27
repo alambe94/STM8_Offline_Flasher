@@ -1,0 +1,8 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP FM5324B
+D The FM5324B is an integrated power management IC for mobile power, integrated with lithium battery charge management, USB boost output.
+K PMIC,lithium battery charge management,boost
+$ENDCMP
+#
+#End Doc Library

@@ -1,0 +1,8 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP lm321
+D lm321 Single Opamp Comparator
+K Comparator Single Opamp
+$ENDCMP
+#
+#End Doc Library
