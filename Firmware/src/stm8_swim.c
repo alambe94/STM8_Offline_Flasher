@@ -34,7 +34,7 @@ uint8_t SWIM_Enter()
   
   NRST_PIN_LOW();
   delay_ms(1);
- 
+  
   /*1. To make the SWIM active, the SWIM pin must be forced low during a period of 16 µs.*/
   SWIM_PIN_LOW();
   delay_ms(1);
@@ -111,7 +111,7 @@ uint8_t SWIM_Write_Cammand(uint8_t cammand)
   data_frame[2] = cammand>>2 & 0x01;
   data_frame[1] = cammand>>1 & 0x01;
   data_frame[0] = cammand>>0 & 0x01;
-
+  
   for (uint8_t i = 0; i <=2; i++) 
   {
     parity += data_frame[i];
@@ -249,7 +249,7 @@ uint8_t SWIM_ROTF(uint32_t addr, uint8_t *buf, uint8_t size)
             delay_us(40); //dicard first frame
             SWIM_Write_Parity_Ack_Bit(0);//send nack
             
-            while (size) 
+            while(size) 
             {
               
               while(INT_Count<10 && --timeout);
@@ -291,8 +291,8 @@ uint8_t SWIM_ROTF(uint32_t addr, uint8_t *buf, uint8_t size)
                 parity += RX_Frame[7];
                 parity += RX_Frame[8];
                 parity &= 0x01;// XOR of all frame bits
-                                
-                if(parity_bit == parity_bit && start_bit)
+                
+                if(parity == parity_bit && start_bit)
                 {
                   *buf++ = rx_data;
                   size--;
@@ -352,7 +352,11 @@ uint8_t SWIM_Unlock_OptionByte()
   {
     temp[0]|=(uint8_t)(0x80);  // OPT = 1 and NOPT = 0
     temp[1]&=(uint8_t)(0x7F);
-    return SWIM_WOTF(SWIM_FLASH_CR2,temp,2);
+    
+    if(SWIM_WOTF(SWIM_FLASH_CR2,temp,2))
+    {
+      return  SWIM_Unlock_EEPROM();//opt unlock sequence 
+    }  
   }
   return 0;
 }
@@ -368,7 +372,7 @@ uint8_t SWIM_Lock_OptionByte()
     
     if(SWIM_WOTF(SWIM_FLASH_CR2,temp,2))
     {
-      return  SWIM_Unlock_EEPROM();//opt unlock sequence 
+      return SWIM_Lock_EEPROM();
     }
   }
   return 0;
@@ -437,7 +441,7 @@ uint8_t SWIM_Enable_Block_Programming()
 }
 
 
-uint8_t SWIM_Wait_For_Write_Access()
+uint8_t SWIM_Wait_For_EOP()
 {
   uint8_t flagstatus[1]={0};
   uint16_t timeout = 0xFFFF;

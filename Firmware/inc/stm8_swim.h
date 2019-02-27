@@ -87,7 +87,6 @@
 #define SWIM_CSR               0x7F80
 #define SWIM_DM_CSR2	       0x7F99
 #define SWIM_FLASH             0x00505a
-#define SWIM_PROGRAM           0x008000
 #define SWIM_FLASH_CR1         (SWIM_FLASH + 0x00)
 #define SWIM_FLASH_CR2         (SWIM_FLASH + 0x01)
 #define SWIM_FLASH_NCR2        (SWIM_FLASH + 0x02)
@@ -101,8 +100,6 @@
 #define SWIM_FLASH_PUKR_KEY2   0xae
 #define SWIM_FLASH_DUKR_KEY1   0xae
 #define SWIM_FLASH_DUKR_KEY2   0x56
-#define	SWIM_ROP_OPTIONBYTE    0x4800
-
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -129,7 +126,7 @@ uint8_t SWIM_Unlock_Flash(void);
 uint8_t SWIM_Lock_Flash(void);
 
 uint8_t SWIM_Enable_Block_Programming(void);
-uint8_t SWIM_Wait_For_Write_Access(void);
+uint8_t SWIM_Wait_For_EOP(void);
 
 uint8_t SWIM_Reset_Device(void);
 

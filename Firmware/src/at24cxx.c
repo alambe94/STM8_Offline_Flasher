@@ -212,6 +212,8 @@ uint8_t AT24CXX_Write_Buffer (uint16_t start_address, uint8_t *buf, uint16_t len
     return AT24CXX_ERR;
   }
   
+  delay_ms(3);/*Memory Programming Time approx 5ms*//*3ms for BL24CXX */
+  
   page_counter = ((len - byte_counter) / AT24CXX_PAGE_LENGTH);
   
   for (index = 0; index < (page_counter); index++)
@@ -225,6 +227,7 @@ uint8_t AT24CXX_Write_Buffer (uint16_t start_address, uint8_t *buf, uint16_t len
     {
       return AT24CXX_ERR;
     }
+    delay_ms(3);/*Memory Programming Time approx 5ms*//*3ms for BL24CXX */
   }
   
   offset_address += AT24CXX_PAGE_LENGTH;
@@ -235,6 +238,7 @@ uint8_t AT24CXX_Write_Buffer (uint16_t start_address, uint8_t *buf, uint16_t len
   {
     return AT24CXX_ERR;
   }
+  delay_ms(3);/*Memory Programming Time approx 5ms*//*3ms for BL24CXX */
   
   return AT24CXX_OK;
 }

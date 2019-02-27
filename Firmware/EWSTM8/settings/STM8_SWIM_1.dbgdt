@@ -768,7 +768,7 @@
                     <item>RAM_BUFFER</item>
                     <item>COMPARE_BUFFER</item>
                     <item>status</item>
-                    <item></item>
+                    <item />
                 </expressions>
                 <col-names>
                     <item>Expression</item>

@@ -114,6 +114,8 @@ uint8_t STM8_24Cxx_Read(void);  /*Read from 24cxx and store 24cxx*/ //todo
 
 
 /* Private functions ---------------------------------------------------------*/
+
+
 uint8_t STM8_To_AT24C256(void)
 {
   uint8_t status;
@@ -136,7 +138,7 @@ uint8_t STM8_To_AT24C256(void)
     if(status)
     {
       status=AT24CXX_Write_Page(FLASH_STORE_ADDRESS+address_offset, RAM_BUFFER, STM8S003_BLOCK_SIZE); 
-      //delay_ms(1);// read from stm8 takes 2.9ms
+      //delay_ms(1);// read from stm8 takes 2.9ms // wait for EOP
     }
     
     if(status)
@@ -146,8 +148,6 @@ uint8_t STM8_To_AT24C256(void)
 
   }
   /****************************read flash data from stm8 end********************************/
-  
-  
   
   /*****************************read EEPROM data from stm8 start************************************/
   for (uint8_t i=0; i<STM8S003_EEPROM_PAGES; i++)
@@ -162,7 +162,7 @@ uint8_t STM8_To_AT24C256(void)
     if(status)
     {
       status=AT24CXX_Write_Page(EEPROM_STORE_ADDRESS+address_offset, RAM_BUFFER, STM8S003_BLOCK_SIZE);
-      //delay_ms(1);// read from stm8 takes 2.9ms
+      //delay_ms(1);// read from stm8 takes 2.9ms // wait for EOP
     }
     
     if(status)
@@ -173,8 +173,6 @@ uint8_t STM8_To_AT24C256(void)
   }
   /*****************************read EEPROM data from stm8 end************************************/
   
-  
-  
   /***************************read Option bytes data from stm8 start*************************/
   if(status)
   {
@@ -183,14 +181,20 @@ uint8_t STM8_To_AT24C256(void)
   
   if(status)
   {
-    delay_ms(3);// wait for last EEPROM write
+    delay_ms(3);// wait for last EEPROM write // wait for EOP
     status=AT24CXX_Write_Page(OPTION_BYTE_STORE_ADDRESS,RAM_BUFFER,10);
-    delay_ms(3);//
+    delay_ms(3);// // wait for EOP
   }
   
   return status;
 }
 /***************************read Option bytes data from stm8 end*************************/
+
+
+
+
+
+
 
 
 
@@ -229,7 +233,7 @@ uint8_t AT24C256_To_STM8(void)
     if(status)
     {
       status = SWIM_WOTF(STM8_FLASH_START_ADDRESS+address_offset, RAM_BUFFER,STM8S003_BLOCK_SIZE);
-      delay_ms(4); //5ms delay after block write  //read from 24cxx takes 1.5
+      delay_ms(4); //5ms delay after block write  //read from 24cxx takes 1.5 // wait for EOP
     }
    
     if(status)
@@ -244,8 +248,6 @@ uint8_t AT24C256_To_STM8(void)
     status=SWIM_Lock_Flash();
   }
   /********************************write flash data to stm8 end*************************/
-  
-  
   
   /*************************write EEPROM data to stm8 start*********************************/
   if(status)
@@ -270,7 +272,7 @@ uint8_t AT24C256_To_STM8(void)
     if(status)
     {
       status=SWIM_WOTF(STM8_EEPROM_START_ADDRESS+address_offset, RAM_BUFFER, STM8S003_BLOCK_SIZE);
-      delay_ms(4); //5ms delay after block write  //read from 24cxx takes 1.5
+      delay_ms(4); //5ms delay after block write  //read from 24cxx takes 1.5 // wait for EOP
     }
     
     if(status)
@@ -285,21 +287,14 @@ uint8_t AT24C256_To_STM8(void)
     status=SWIM_Lock_EEPROM();
   }
   /*************************write EEPROM data to stm8 end*********************************/
-  
-  
-  
+ 
   /************************write Option bytes data to stm8 start******************************/
   
-  delay_ms(1); //
+  delay_ms(1); //wait for EOP
   
   if(status)
   {
     status=SWIM_Unlock_OptionByte();
-  }
-  
-  if(status)
-  {
-    status=SWIM_Unlock_EEPROM();//same sequence for option bytes
   }
   
   if(status)
@@ -310,36 +305,31 @@ uint8_t AT24C256_To_STM8(void)
   if(status)
   {
     status=SWIM_WOTF(SWIM_OPT1,RAM_BUFFER,2);
-    delay_ms(10);
+    delay_ms(10);// wait for EOP
   }
   
   if(status)
   {
     status=SWIM_WOTF(SWIM_OPT2,RAM_BUFFER+2,2);
-    delay_ms(10);
+    delay_ms(10);// wait for EOP
   }
   
   if(status)
   {
     status=SWIM_WOTF(SWIM_OPT3,RAM_BUFFER+4,2);
-    delay_ms(10);
+    delay_ms(10);// wait for EOP
   }
   
   if(status)
   {
     status=SWIM_WOTF(SWIM_OPT4,RAM_BUFFER+6,2);
-    delay_ms(10);
+    delay_ms(10);// wait for EOP
   }
   
   if(status)
   {
     status=SWIM_WOTF(SWIM_OPT5,RAM_BUFFER+8,2);
-    delay_ms(10);
-  }
-  
-  if(status)
-  {
-    status=SWIM_Lock_EEPROM();
+    delay_ms(10);// wait for EOP
   }
   
   if(status)
@@ -351,6 +341,10 @@ uint8_t AT24C256_To_STM8(void)
   return status;
 }
 /****************************** AT24C256_To_STM8 end*******************************************/
+
+
+
+
 
 
 
@@ -394,7 +388,6 @@ uint8_t Compare_STM8_And_AT24C256(void)
   }
   /****************************************flash compare end**************************/
   
-  
   /****************************************eeprom compare start**************************/
   for(uint8_t i=0; i<STM8S003_EEPROM_PAGES ;i++)
   {
@@ -426,7 +419,6 @@ uint8_t Compare_STM8_And_AT24C256(void)
     
   }
   /****************************************eeprom compare end**************************/
-  
   
   /******************************option byte compare start*************************************/
   if(status)

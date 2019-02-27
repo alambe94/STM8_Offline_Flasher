@@ -39,15 +39,13 @@
         <LogFile>_ ""</LogFile>
     </TermIOLog>
     <Breakpoints>
-        <Bp0>_ "STD_CODE" "{$PROJ_DIR$\..\src\stm8_swim.c}.476.1" 0 0 0 0 "" 0 ""</Bp0>
-        <Bp1>_ "STD_CODE" "{$PROJ_DIR$\..\src\main.c}.605.1" 0 0 0 0 "" 0 ""</Bp1>
-        <Bp2>_ "STD_CODE" "{$PROJ_DIR$\..\src\main.c}.605.1" 0 0 0 0 "" 0 ""</Bp2>
-        <Bp3>_ "STD_CODE" "{$PROJ_DIR$\..\src\main.c}.605.1" 0 0 0 0 "" 0 ""</Bp3>
-        <Bp4>_ "STD_CODE" "{$PROJ_DIR$\..\src\main.c}.605.1" 0 0 0 0 "" 0 ""</Bp4>
+        <Bp0>_ "STD_CODE" "{$PROJ_DIR$\..\src\stm8_swim.c}.0.1" 0 0 0 0 "" 0 ""</Bp0>
+        <Bp1>_ "STD_CODE" "{$PROJ_DIR$\..\src\main.c}.0.1" 0 0 0 0 "" 0 ""</Bp1>
+        <Bp2>_ "STD_CODE" "{$PROJ_DIR$\..\src\main.c}.0.1" 0 0 0 0 "" 0 ""</Bp2>
+        <Bp3>_ "STD_CODE" "{$PROJ_DIR$\..\src\main.c}.0.1" 0 0 0 0 "" 0 ""</Bp3>
+        <Bp4>_ "STD_CODE" "{$PROJ_DIR$\..\src\main.c}.0.1" 0 0 0 0 "" 0 ""</Bp4>
         <Bp5>_ "STD_CODE" "{$PROJ_DIR$\..\src\i2c.c}.6.3" 0 0 0 0 "" 0 ""</Bp5>
-        <Bp6>_ "STD_CODE" "{$PROJ_DIR$\..\src\main.c}.602.1" 0 0 0 0 "" 0 ""</Bp6>
-        <Bp7>_ "STD_CODE" "{$PROJ_DIR$\..\src\main.c}.602.1" 0 0 0 0 "" 0 ""</Bp7>
-        <Count>8</Count>
+        <Count>6</Count>
     </Breakpoints>
     <Aliases>
         <Count>0</Count>

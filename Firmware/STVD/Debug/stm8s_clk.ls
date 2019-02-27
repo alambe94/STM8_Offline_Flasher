@@ -1,1337 +1,1337 @@
    1                     ; C Compiler for STM8 (COSMIC Software)
-   2                     ; Parser V4.10.2 - 02 Nov 2011
-   3                     ; Generator (Limited) V4.3.7 - 29 Nov 2011
-  17                     .const:	section	.text
-  18  0000               _HSIDivFactor:
-  19  0000 01            	dc.b	1
-  20  0001 02            	dc.b	2
-  21  0002 04            	dc.b	4
-  22  0003 08            	dc.b	8
-  23  0004               _CLKPrescTable:
-  24  0004 01            	dc.b	1
-  25  0005 02            	dc.b	2
-  26  0006 04            	dc.b	4
-  27  0007 08            	dc.b	8
-  28  0008 0a            	dc.b	10
-  29  0009 10            	dc.b	16
-  30  000a 14            	dc.b	20
-  31  000b 28            	dc.b	40
-  60                     ; 66 void CLK_DeInit(void)
-  60                     ; 67 {
-  62                     .text:	section	.text,new
-  63  0000               _CLK_DeInit:
-  67                     ; 69     CLK->ICKR = CLK_ICKR_RESET_VALUE;
-  69  0000 350150c0      	mov	20672,#1
-  70                     ; 70     CLK->ECKR = CLK_ECKR_RESET_VALUE;
-  72  0004 725f50c1      	clr	20673
-  73                     ; 71     CLK->SWR  = CLK_SWR_RESET_VALUE;
-  75  0008 35e150c4      	mov	20676,#225
-  76                     ; 72     CLK->SWCR = CLK_SWCR_RESET_VALUE;
-  78  000c 725f50c5      	clr	20677
-  79                     ; 73     CLK->CKDIVR = CLK_CKDIVR_RESET_VALUE;
-  81  0010 351850c6      	mov	20678,#24
-  82                     ; 74     CLK->PCKENR1 = CLK_PCKENR1_RESET_VALUE;
-  84  0014 35ff50c7      	mov	20679,#255
-  85                     ; 75     CLK->PCKENR2 = CLK_PCKENR2_RESET_VALUE;
-  87  0018 35ff50ca      	mov	20682,#255
-  88                     ; 76     CLK->CSSR = CLK_CSSR_RESET_VALUE;
-  90  001c 725f50c8      	clr	20680
-  91                     ; 77     CLK->CCOR = CLK_CCOR_RESET_VALUE;
-  93  0020 725f50c9      	clr	20681
-  95  0024               L52:
-  96                     ; 78     while ((CLK->CCOR & CLK_CCOR_CCOEN)!= 0)
-  98  0024 c650c9        	ld	a,20681
-  99  0027 a501          	bcp	a,#1
- 100  0029 26f9          	jrne	L52
- 101                     ; 80     CLK->CCOR = CLK_CCOR_RESET_VALUE;
- 103  002b 725f50c9      	clr	20681
- 104                     ; 81     CLK->HSITRIMR = CLK_HSITRIMR_RESET_VALUE;
- 106  002f 725f50cc      	clr	20684
- 107                     ; 82     CLK->SWIMCCR = CLK_SWIMCCR_RESET_VALUE;
- 109  0033 725f50cd      	clr	20685
- 110                     ; 84 }
- 113  0037 81            	ret
- 170                     ; 95 void CLK_FastHaltWakeUpCmd(FunctionalState NewState)
- 170                     ; 96 {
- 171                     .text:	section	.text,new
- 172  0000               _CLK_FastHaltWakeUpCmd:
- 174  0000 88            	push	a
- 175       00000000      OFST:	set	0
- 178                     ; 99     assert_param(IS_FUNCTIONALSTATE_OK(NewState));
- 180  0001 4d            	tnz	a
- 181  0002 2704          	jreq	L21
- 182  0004 a101          	cp	a,#1
- 183  0006 2603          	jrne	L01
- 184  0008               L21:
- 185  0008 4f            	clr	a
- 186  0009 2010          	jra	L41
- 187  000b               L01:
- 188  000b ae0063        	ldw	x,#99
- 189  000e 89            	pushw	x
- 190  000f ae0000        	ldw	x,#0
- 191  0012 89            	pushw	x
- 192  0013 ae000c        	ldw	x,#L75
- 193  0016 cd0000        	call	_assert_failed
- 195  0019 5b04          	addw	sp,#4
- 196  001b               L41:
- 197                     ; 101     if (NewState != DISABLE)
- 199  001b 0d01          	tnz	(OFST+1,sp)
- 200  001d 2706          	jreq	L16
- 201                     ; 104         CLK->ICKR |= CLK_ICKR_FHWU;
- 203  001f 721450c0      	bset	20672,#2
- 205  0023 2004          	jra	L36
- 206  0025               L16:
- 207                     ; 109         CLK->ICKR &= (uint8_t)(~CLK_ICKR_FHWU);
- 209  0025 721550c0      	bres	20672,#2
- 210  0029               L36:
- 211                     ; 112 }
- 214  0029 84            	pop	a
- 215  002a 81            	ret
- 251                     ; 119 void CLK_HSECmd(FunctionalState NewState)
- 251                     ; 120 {
- 252                     .text:	section	.text,new
- 253  0000               _CLK_HSECmd:
- 255  0000 88            	push	a
- 256       00000000      OFST:	set	0
- 259                     ; 123     assert_param(IS_FUNCTIONALSTATE_OK(NewState));
- 261  0001 4d            	tnz	a
- 262  0002 2704          	jreq	L22
- 263  0004 a101          	cp	a,#1
- 264  0006 2603          	jrne	L02
- 265  0008               L22:
- 266  0008 4f            	clr	a
- 267  0009 2010          	jra	L42
- 268  000b               L02:
- 269  000b ae007b        	ldw	x,#123
- 270  000e 89            	pushw	x
- 271  000f ae0000        	ldw	x,#0
- 272  0012 89            	pushw	x
- 273  0013 ae000c        	ldw	x,#L75
- 274  0016 cd0000        	call	_assert_failed
- 276  0019 5b04          	addw	sp,#4
- 277  001b               L42:
- 278                     ; 125     if (NewState != DISABLE)
- 280  001b 0d01          	tnz	(OFST+1,sp)
- 281  001d 2706          	jreq	L301
- 282                     ; 128         CLK->ECKR |= CLK_ECKR_HSEEN;
- 284  001f 721050c1      	bset	20673,#0
- 286  0023 2004          	jra	L501
- 287  0025               L301:
- 288                     ; 133         CLK->ECKR &= (uint8_t)(~CLK_ECKR_HSEEN);
- 290  0025 721150c1      	bres	20673,#0
- 291  0029               L501:
- 292                     ; 136 }
- 295  0029 84            	pop	a
- 296  002a 81            	ret
- 332                     ; 143 void CLK_HSICmd(FunctionalState NewState)
- 332                     ; 144 {
- 333                     .text:	section	.text,new
- 334  0000               _CLK_HSICmd:
- 336  0000 88            	push	a
- 337       00000000      OFST:	set	0
- 340                     ; 147     assert_param(IS_FUNCTIONALSTATE_OK(NewState));
- 342  0001 4d            	tnz	a
- 343  0002 2704          	jreq	L23
- 344  0004 a101          	cp	a,#1
- 345  0006 2603          	jrne	L03
- 346  0008               L23:
- 347  0008 4f            	clr	a
- 348  0009 2010          	jra	L43
- 349  000b               L03:
- 350  000b ae0093        	ldw	x,#147
- 351  000e 89            	pushw	x
- 352  000f ae0000        	ldw	x,#0
- 353  0012 89            	pushw	x
- 354  0013 ae000c        	ldw	x,#L75
- 355  0016 cd0000        	call	_assert_failed
- 357  0019 5b04          	addw	sp,#4
- 358  001b               L43:
- 359                     ; 149     if (NewState != DISABLE)
- 361  001b 0d01          	tnz	(OFST+1,sp)
- 362  001d 2706          	jreq	L521
- 363                     ; 152         CLK->ICKR |= CLK_ICKR_HSIEN;
- 365  001f 721050c0      	bset	20672,#0
- 367  0023 2004          	jra	L721
- 368  0025               L521:
- 369                     ; 157         CLK->ICKR &= (uint8_t)(~CLK_ICKR_HSIEN);
- 371  0025 721150c0      	bres	20672,#0
- 372  0029               L721:
- 373                     ; 160 }
- 376  0029 84            	pop	a
- 377  002a 81            	ret
- 413                     ; 167 void CLK_LSICmd(FunctionalState NewState)
- 413                     ; 168 {
- 414                     .text:	section	.text,new
- 415  0000               _CLK_LSICmd:
- 417  0000 88            	push	a
- 418       00000000      OFST:	set	0
- 421                     ; 171     assert_param(IS_FUNCTIONALSTATE_OK(NewState));
- 423  0001 4d            	tnz	a
- 424  0002 2704          	jreq	L24
- 425  0004 a101          	cp	a,#1
- 426  0006 2603          	jrne	L04
- 427  0008               L24:
- 428  0008 4f            	clr	a
- 429  0009 2010          	jra	L44
- 430  000b               L04:
- 431  000b ae00ab        	ldw	x,#171
- 432  000e 89            	pushw	x
- 433  000f ae0000        	ldw	x,#0
- 434  0012 89            	pushw	x
- 435  0013 ae000c        	ldw	x,#L75
- 436  0016 cd0000        	call	_assert_failed
- 438  0019 5b04          	addw	sp,#4
- 439  001b               L44:
- 440                     ; 173     if (NewState != DISABLE)
- 442  001b 0d01          	tnz	(OFST+1,sp)
- 443  001d 2706          	jreq	L741
- 444                     ; 176         CLK->ICKR |= CLK_ICKR_LSIEN;
- 446  001f 721650c0      	bset	20672,#3
- 448  0023 2004          	jra	L151
- 449  0025               L741:
- 450                     ; 181         CLK->ICKR &= (uint8_t)(~CLK_ICKR_LSIEN);
- 452  0025 721750c0      	bres	20672,#3
- 453  0029               L151:
- 454                     ; 184 }
- 457  0029 84            	pop	a
- 458  002a 81            	ret
- 494                     ; 192 void CLK_CCOCmd(FunctionalState NewState)
- 494                     ; 193 {
- 495                     .text:	section	.text,new
- 496  0000               _CLK_CCOCmd:
- 498  0000 88            	push	a
- 499       00000000      OFST:	set	0
- 502                     ; 196     assert_param(IS_FUNCTIONALSTATE_OK(NewState));
- 504  0001 4d            	tnz	a
- 505  0002 2704          	jreq	L25
- 506  0004 a101          	cp	a,#1
- 507  0006 2603          	jrne	L05
- 508  0008               L25:
- 509  0008 4f            	clr	a
- 510  0009 2010          	jra	L45
- 511  000b               L05:
- 512  000b ae00c4        	ldw	x,#196
- 513  000e 89            	pushw	x
- 514  000f ae0000        	ldw	x,#0
- 515  0012 89            	pushw	x
- 516  0013 ae000c        	ldw	x,#L75
- 517  0016 cd0000        	call	_assert_failed
- 519  0019 5b04          	addw	sp,#4
- 520  001b               L45:
- 521                     ; 198     if (NewState != DISABLE)
- 523  001b 0d01          	tnz	(OFST+1,sp)
- 524  001d 2706          	jreq	L171
- 525                     ; 201         CLK->CCOR |= CLK_CCOR_CCOEN;
- 527  001f 721050c9      	bset	20681,#0
- 529  0023 2004          	jra	L371
- 530  0025               L171:
- 531                     ; 206         CLK->CCOR &= (uint8_t)(~CLK_CCOR_CCOEN);
- 533  0025 721150c9      	bres	20681,#0
- 534  0029               L371:
- 535                     ; 209 }
- 538  0029 84            	pop	a
- 539  002a 81            	ret
- 575                     ; 218 void CLK_ClockSwitchCmd(FunctionalState NewState)
- 575                     ; 219 {
- 576                     .text:	section	.text,new
- 577  0000               _CLK_ClockSwitchCmd:
- 579  0000 88            	push	a
- 580       00000000      OFST:	set	0
- 583                     ; 222     assert_param(IS_FUNCTIONALSTATE_OK(NewState));
- 585  0001 4d            	tnz	a
- 586  0002 2704          	jreq	L26
- 587  0004 a101          	cp	a,#1
- 588  0006 2603          	jrne	L06
- 589  0008               L26:
- 590  0008 4f            	clr	a
- 591  0009 2010          	jra	L46
- 592  000b               L06:
- 593  000b ae00de        	ldw	x,#222
- 594  000e 89            	pushw	x
- 595  000f ae0000        	ldw	x,#0
- 596  0012 89            	pushw	x
- 597  0013 ae000c        	ldw	x,#L75
- 598  0016 cd0000        	call	_assert_failed
- 600  0019 5b04          	addw	sp,#4
- 601  001b               L46:
- 602                     ; 224     if (NewState != DISABLE )
- 604  001b 0d01          	tnz	(OFST+1,sp)
- 605  001d 2706          	jreq	L312
- 606                     ; 227         CLK->SWCR |= CLK_SWCR_SWEN;
- 608  001f 721250c5      	bset	20677,#1
- 610  0023 2004          	jra	L512
- 611  0025               L312:
- 612                     ; 232         CLK->SWCR &= (uint8_t)(~CLK_SWCR_SWEN);
- 614  0025 721350c5      	bres	20677,#1
- 615  0029               L512:
- 616                     ; 235 }
- 619  0029 84            	pop	a
- 620  002a 81            	ret
- 657                     ; 245 void CLK_SlowActiveHaltWakeUpCmd(FunctionalState NewState)
- 657                     ; 246 {
- 658                     .text:	section	.text,new
- 659  0000               _CLK_SlowActiveHaltWakeUpCmd:
- 661  0000 88            	push	a
- 662       00000000      OFST:	set	0
- 665                     ; 249     assert_param(IS_FUNCTIONALSTATE_OK(NewState));
- 667  0001 4d            	tnz	a
- 668  0002 2704          	jreq	L27
- 669  0004 a101          	cp	a,#1
- 670  0006 2603          	jrne	L07
- 671  0008               L27:
- 672  0008 4f            	clr	a
- 673  0009 2010          	jra	L47
- 674  000b               L07:
- 675  000b ae00f9        	ldw	x,#249
- 676  000e 89            	pushw	x
- 677  000f ae0000        	ldw	x,#0
- 678  0012 89            	pushw	x
- 679  0013 ae000c        	ldw	x,#L75
- 680  0016 cd0000        	call	_assert_failed
- 682  0019 5b04          	addw	sp,#4
- 683  001b               L47:
- 684                     ; 251     if (NewState != DISABLE)
- 686  001b 0d01          	tnz	(OFST+1,sp)
- 687  001d 2706          	jreq	L532
- 688                     ; 254         CLK->ICKR |= CLK_ICKR_SWUAH;
- 690  001f 721a50c0      	bset	20672,#5
- 692  0023 2004          	jra	L732
- 693  0025               L532:
- 694                     ; 259         CLK->ICKR &= (uint8_t)(~CLK_ICKR_SWUAH);
- 696  0025 721b50c0      	bres	20672,#5
- 697  0029               L732:
- 698                     ; 262 }
- 701  0029 84            	pop	a
- 702  002a 81            	ret
- 862                     ; 272 void CLK_PeripheralClockConfig(CLK_Peripheral_TypeDef CLK_Peripheral, FunctionalState NewState)
- 862                     ; 273 {
- 863                     .text:	section	.text,new
- 864  0000               _CLK_PeripheralClockConfig:
- 866  0000 89            	pushw	x
- 867       00000000      OFST:	set	0
- 870                     ; 276     assert_param(IS_FUNCTIONALSTATE_OK(NewState));
- 872  0001 9f            	ld	a,xl
- 873  0002 4d            	tnz	a
- 874  0003 2705          	jreq	L201
- 875  0005 9f            	ld	a,xl
- 876  0006 a101          	cp	a,#1
- 877  0008 2603          	jrne	L001
- 878  000a               L201:
- 879  000a 4f            	clr	a
- 880  000b 2010          	jra	L401
- 881  000d               L001:
- 882  000d ae0114        	ldw	x,#276
- 883  0010 89            	pushw	x
- 884  0011 ae0000        	ldw	x,#0
- 885  0014 89            	pushw	x
- 886  0015 ae000c        	ldw	x,#L75
- 887  0018 cd0000        	call	_assert_failed
- 889  001b 5b04          	addw	sp,#4
- 890  001d               L401:
- 891                     ; 277     assert_param(IS_CLK_PERIPHERAL_OK(CLK_Peripheral));
- 893  001d 0d01          	tnz	(OFST+1,sp)
- 894  001f 274e          	jreq	L011
- 895  0021 7b01          	ld	a,(OFST+1,sp)
- 896  0023 a101          	cp	a,#1
- 897  0025 2748          	jreq	L011
- 898  0027 7b01          	ld	a,(OFST+1,sp)
- 899  0029 a103          	cp	a,#3
- 900  002b 2742          	jreq	L011
- 901  002d 7b01          	ld	a,(OFST+1,sp)
- 902  002f a103          	cp	a,#3
- 903  0031 273c          	jreq	L011
- 904  0033 7b01          	ld	a,(OFST+1,sp)
- 905  0035 a103          	cp	a,#3
- 906  0037 2736          	jreq	L011
- 907  0039 7b01          	ld	a,(OFST+1,sp)
- 908  003b a104          	cp	a,#4
- 909  003d 2730          	jreq	L011
- 910  003f 7b01          	ld	a,(OFST+1,sp)
- 911  0041 a105          	cp	a,#5
- 912  0043 272a          	jreq	L011
- 913  0045 7b01          	ld	a,(OFST+1,sp)
- 914  0047 a105          	cp	a,#5
- 915  0049 2724          	jreq	L011
- 916  004b 7b01          	ld	a,(OFST+1,sp)
- 917  004d a104          	cp	a,#4
- 918  004f 271e          	jreq	L011
- 919  0051 7b01          	ld	a,(OFST+1,sp)
- 920  0053 a106          	cp	a,#6
- 921  0055 2718          	jreq	L011
- 922  0057 7b01          	ld	a,(OFST+1,sp)
- 923  0059 a107          	cp	a,#7
- 924  005b 2712          	jreq	L011
- 925  005d 7b01          	ld	a,(OFST+1,sp)
- 926  005f a117          	cp	a,#23
- 927  0061 270c          	jreq	L011
- 928  0063 7b01          	ld	a,(OFST+1,sp)
- 929  0065 a113          	cp	a,#19
- 930  0067 2706          	jreq	L011
- 931  0069 7b01          	ld	a,(OFST+1,sp)
- 932  006b a112          	cp	a,#18
- 933  006d 2603          	jrne	L601
- 934  006f               L011:
- 935  006f 4f            	clr	a
- 936  0070 2010          	jra	L211
- 937  0072               L601:
- 938  0072 ae0115        	ldw	x,#277
- 939  0075 89            	pushw	x
- 940  0076 ae0000        	ldw	x,#0
- 941  0079 89            	pushw	x
- 942  007a ae000c        	ldw	x,#L75
- 943  007d cd0000        	call	_assert_failed
- 945  0080 5b04          	addw	sp,#4
- 946  0082               L211:
- 947                     ; 279     if (((uint8_t)CLK_Peripheral & (uint8_t)0x10) == 0x00)
- 949  0082 7b01          	ld	a,(OFST+1,sp)
- 950  0084 a510          	bcp	a,#16
- 951  0086 2633          	jrne	L323
- 952                     ; 281         if (NewState != DISABLE)
- 954  0088 0d02          	tnz	(OFST+2,sp)
- 955  008a 2717          	jreq	L523
- 956                     ; 284             CLK->PCKENR1 |= (uint8_t)((uint8_t)1 << ((uint8_t)CLK_Peripheral & (uint8_t)0x0F));
- 958  008c 7b01          	ld	a,(OFST+1,sp)
- 959  008e a40f          	and	a,#15
- 960  0090 5f            	clrw	x
- 961  0091 97            	ld	xl,a
- 962  0092 a601          	ld	a,#1
- 963  0094 5d            	tnzw	x
- 964  0095 2704          	jreq	L411
- 965  0097               L611:
- 966  0097 48            	sll	a
- 967  0098 5a            	decw	x
- 968  0099 26fc          	jrne	L611
- 969  009b               L411:
- 970  009b ca50c7        	or	a,20679
- 971  009e c750c7        	ld	20679,a
- 973  00a1 2049          	jra	L133
- 974  00a3               L523:
- 975                     ; 289             CLK->PCKENR1 &= (uint8_t)(~(uint8_t)(((uint8_t)1 << ((uint8_t)CLK_Peripheral & (uint8_t)0x0F))));
- 977  00a3 7b01          	ld	a,(OFST+1,sp)
- 978  00a5 a40f          	and	a,#15
- 979  00a7 5f            	clrw	x
- 980  00a8 97            	ld	xl,a
- 981  00a9 a601          	ld	a,#1
- 982  00ab 5d            	tnzw	x
- 983  00ac 2704          	jreq	L021
- 984  00ae               L221:
- 985  00ae 48            	sll	a
- 986  00af 5a            	decw	x
- 987  00b0 26fc          	jrne	L221
- 988  00b2               L021:
- 989  00b2 43            	cpl	a
- 990  00b3 c450c7        	and	a,20679
- 991  00b6 c750c7        	ld	20679,a
- 992  00b9 2031          	jra	L133
- 993  00bb               L323:
- 994                     ; 294         if (NewState != DISABLE)
- 996  00bb 0d02          	tnz	(OFST+2,sp)
- 997  00bd 2717          	jreq	L333
- 998                     ; 297             CLK->PCKENR2 |= (uint8_t)((uint8_t)1 << ((uint8_t)CLK_Peripheral & (uint8_t)0x0F));
-1000  00bf 7b01          	ld	a,(OFST+1,sp)
-1001  00c1 a40f          	and	a,#15
-1002  00c3 5f            	clrw	x
-1003  00c4 97            	ld	xl,a
-1004  00c5 a601          	ld	a,#1
-1005  00c7 5d            	tnzw	x
-1006  00c8 2704          	jreq	L421
-1007  00ca               L621:
-1008  00ca 48            	sll	a
-1009  00cb 5a            	decw	x
-1010  00cc 26fc          	jrne	L621
-1011  00ce               L421:
-1012  00ce ca50ca        	or	a,20682
-1013  00d1 c750ca        	ld	20682,a
-1015  00d4 2016          	jra	L133
-1016  00d6               L333:
-1017                     ; 302             CLK->PCKENR2 &= (uint8_t)(~(uint8_t)(((uint8_t)1 << ((uint8_t)CLK_Peripheral & (uint8_t)0x0F))));
-1019  00d6 7b01          	ld	a,(OFST+1,sp)
-1020  00d8 a40f          	and	a,#15
-1021  00da 5f            	clrw	x
-1022  00db 97            	ld	xl,a
-1023  00dc a601          	ld	a,#1
-1024  00de 5d            	tnzw	x
-1025  00df 2704          	jreq	L031
-1026  00e1               L231:
-1027  00e1 48            	sll	a
-1028  00e2 5a            	decw	x
-1029  00e3 26fc          	jrne	L231
-1030  00e5               L031:
-1031  00e5 43            	cpl	a
-1032  00e6 c450ca        	and	a,20682
-1033  00e9 c750ca        	ld	20682,a
-1034  00ec               L133:
-1035                     ; 306 }
-1038  00ec 85            	popw	x
-1039  00ed 81            	ret
-1228                     ; 319 ErrorStatus CLK_ClockSwitchConfig(CLK_SwitchMode_TypeDef CLK_SwitchMode, CLK_Source_TypeDef CLK_NewClock, FunctionalState ITState, CLK_CurrentClockState_TypeDef CLK_CurrentClockState)
-1228                     ; 320 {
-1229                     .text:	section	.text,new
-1230  0000               _CLK_ClockSwitchConfig:
-1232  0000 89            	pushw	x
-1233  0001 5204          	subw	sp,#4
-1234       00000004      OFST:	set	4
-1237                     ; 323     uint16_t DownCounter = CLK_TIMEOUT;
-1239  0003 ae0491        	ldw	x,#1169
-1240  0006 1f03          	ldw	(OFST-1,sp),x
-1241                     ; 324     ErrorStatus Swif = ERROR;
-1243                     ; 327     assert_param(IS_CLK_SOURCE_OK(CLK_NewClock));
-1245  0008 7b06          	ld	a,(OFST+2,sp)
-1246  000a a1e1          	cp	a,#225
-1247  000c 270c          	jreq	L041
-1248  000e 7b06          	ld	a,(OFST+2,sp)
-1249  0010 a1d2          	cp	a,#210
-1250  0012 2706          	jreq	L041
-1251  0014 7b06          	ld	a,(OFST+2,sp)
-1252  0016 a1b4          	cp	a,#180
-1253  0018 2603          	jrne	L631
-1254  001a               L041:
-1255  001a 4f            	clr	a
-1256  001b 2010          	jra	L241
-1257  001d               L631:
-1258  001d ae0147        	ldw	x,#327
-1259  0020 89            	pushw	x
-1260  0021 ae0000        	ldw	x,#0
-1261  0024 89            	pushw	x
-1262  0025 ae000c        	ldw	x,#L75
-1263  0028 cd0000        	call	_assert_failed
-1265  002b 5b04          	addw	sp,#4
-1266  002d               L241:
-1267                     ; 328     assert_param(IS_CLK_SWITCHMODE_OK(CLK_SwitchMode));
-1269  002d 0d05          	tnz	(OFST+1,sp)
-1270  002f 2706          	jreq	L641
-1271  0031 7b05          	ld	a,(OFST+1,sp)
-1272  0033 a101          	cp	a,#1
-1273  0035 2603          	jrne	L441
-1274  0037               L641:
-1275  0037 4f            	clr	a
-1276  0038 2010          	jra	L051
-1277  003a               L441:
-1278  003a ae0148        	ldw	x,#328
-1279  003d 89            	pushw	x
-1280  003e ae0000        	ldw	x,#0
-1281  0041 89            	pushw	x
-1282  0042 ae000c        	ldw	x,#L75
-1283  0045 cd0000        	call	_assert_failed
-1285  0048 5b04          	addw	sp,#4
-1286  004a               L051:
-1287                     ; 329     assert_param(IS_FUNCTIONALSTATE_OK(ITState));
-1289  004a 0d09          	tnz	(OFST+5,sp)
-1290  004c 2706          	jreq	L451
-1291  004e 7b09          	ld	a,(OFST+5,sp)
-1292  0050 a101          	cp	a,#1
-1293  0052 2603          	jrne	L251
-1294  0054               L451:
-1295  0054 4f            	clr	a
-1296  0055 2010          	jra	L651
-1297  0057               L251:
-1298  0057 ae0149        	ldw	x,#329
-1299  005a 89            	pushw	x
-1300  005b ae0000        	ldw	x,#0
-1301  005e 89            	pushw	x
-1302  005f ae000c        	ldw	x,#L75
-1303  0062 cd0000        	call	_assert_failed
-1305  0065 5b04          	addw	sp,#4
-1306  0067               L651:
-1307                     ; 330     assert_param(IS_CLK_CURRENTCLOCKSTATE_OK(CLK_CurrentClockState));
-1309  0067 0d0a          	tnz	(OFST+6,sp)
-1310  0069 2706          	jreq	L261
-1311  006b 7b0a          	ld	a,(OFST+6,sp)
-1312  006d a101          	cp	a,#1
-1313  006f 2603          	jrne	L061
-1314  0071               L261:
-1315  0071 4f            	clr	a
-1316  0072 2010          	jra	L461
-1317  0074               L061:
-1318  0074 ae014a        	ldw	x,#330
-1319  0077 89            	pushw	x
-1320  0078 ae0000        	ldw	x,#0
-1321  007b 89            	pushw	x
-1322  007c ae000c        	ldw	x,#L75
-1323  007f cd0000        	call	_assert_failed
-1325  0082 5b04          	addw	sp,#4
-1326  0084               L461:
-1327                     ; 333     clock_master = (CLK_Source_TypeDef)CLK->CMSR;
-1329  0084 c650c3        	ld	a,20675
-1330  0087 6b01          	ld	(OFST-3,sp),a
+   2                     ; Parser V4.11.12 - 20 Jun 2018
+   3                     ; Generator (Limited) V4.4.8 - 20 Jun 2018
+  15                     .const:	section	.text
+  16  0000               _HSIDivFactor:
+  17  0000 01            	dc.b	1
+  18  0001 02            	dc.b	2
+  19  0002 04            	dc.b	4
+  20  0003 08            	dc.b	8
+  21  0004               _CLKPrescTable:
+  22  0004 01            	dc.b	1
+  23  0005 02            	dc.b	2
+  24  0006 04            	dc.b	4
+  25  0007 08            	dc.b	8
+  26  0008 0a            	dc.b	10
+  27  0009 10            	dc.b	16
+  28  000a 14            	dc.b	20
+  29  000b 28            	dc.b	40
+  58                     ; 66 void CLK_DeInit(void)
+  58                     ; 67 {
+  60                     	switch	.text
+  61  0000               _CLK_DeInit:
+  65                     ; 69     CLK->ICKR = CLK_ICKR_RESET_VALUE;
+  67  0000 350150c0      	mov	20672,#1
+  68                     ; 70     CLK->ECKR = CLK_ECKR_RESET_VALUE;
+  70  0004 725f50c1      	clr	20673
+  71                     ; 71     CLK->SWR  = CLK_SWR_RESET_VALUE;
+  73  0008 35e150c4      	mov	20676,#225
+  74                     ; 72     CLK->SWCR = CLK_SWCR_RESET_VALUE;
+  76  000c 725f50c5      	clr	20677
+  77                     ; 73     CLK->CKDIVR = CLK_CKDIVR_RESET_VALUE;
+  79  0010 351850c6      	mov	20678,#24
+  80                     ; 74     CLK->PCKENR1 = CLK_PCKENR1_RESET_VALUE;
+  82  0014 35ff50c7      	mov	20679,#255
+  83                     ; 75     CLK->PCKENR2 = CLK_PCKENR2_RESET_VALUE;
+  85  0018 35ff50ca      	mov	20682,#255
+  86                     ; 76     CLK->CSSR = CLK_CSSR_RESET_VALUE;
+  88  001c 725f50c8      	clr	20680
+  89                     ; 77     CLK->CCOR = CLK_CCOR_RESET_VALUE;
+  91  0020 725f50c9      	clr	20681
+  93  0024               L52:
+  94                     ; 78     while ((CLK->CCOR & CLK_CCOR_CCOEN)!= 0)
+  96  0024 c650c9        	ld	a,20681
+  97  0027 a501          	bcp	a,#1
+  98  0029 26f9          	jrne	L52
+  99                     ; 80     CLK->CCOR = CLK_CCOR_RESET_VALUE;
+ 101  002b 725f50c9      	clr	20681
+ 102                     ; 81     CLK->HSITRIMR = CLK_HSITRIMR_RESET_VALUE;
+ 104  002f 725f50cc      	clr	20684
+ 105                     ; 82     CLK->SWIMCCR = CLK_SWIMCCR_RESET_VALUE;
+ 107  0033 725f50cd      	clr	20685
+ 108                     ; 84 }
+ 111  0037 81            	ret
+ 168                     ; 95 void CLK_FastHaltWakeUpCmd(FunctionalState NewState)
+ 168                     ; 96 {
+ 169                     	switch	.text
+ 170  0038               _CLK_FastHaltWakeUpCmd:
+ 172  0038 88            	push	a
+ 173       00000000      OFST:	set	0
+ 176                     ; 99     assert_param(IS_FUNCTIONALSTATE_OK(NewState));
+ 178  0039 4d            	tnz	a
+ 179  003a 2704          	jreq	L21
+ 180  003c a101          	cp	a,#1
+ 181  003e 2603          	jrne	L01
+ 182  0040               L21:
+ 183  0040 4f            	clr	a
+ 184  0041 2010          	jra	L41
+ 185  0043               L01:
+ 186  0043 ae0063        	ldw	x,#99
+ 187  0046 89            	pushw	x
+ 188  0047 ae0000        	ldw	x,#0
+ 189  004a 89            	pushw	x
+ 190  004b ae000c        	ldw	x,#L75
+ 191  004e cd0000        	call	_assert_failed
+ 193  0051 5b04          	addw	sp,#4
+ 194  0053               L41:
+ 195                     ; 101     if (NewState != DISABLE)
+ 197  0053 0d01          	tnz	(OFST+1,sp)
+ 198  0055 2706          	jreq	L16
+ 199                     ; 104         CLK->ICKR |= CLK_ICKR_FHWU;
+ 201  0057 721450c0      	bset	20672,#2
+ 203  005b 2004          	jra	L36
+ 204  005d               L16:
+ 205                     ; 109         CLK->ICKR &= (uint8_t)(~CLK_ICKR_FHWU);
+ 207  005d 721550c0      	bres	20672,#2
+ 208  0061               L36:
+ 209                     ; 112 }
+ 212  0061 84            	pop	a
+ 213  0062 81            	ret
+ 249                     ; 119 void CLK_HSECmd(FunctionalState NewState)
+ 249                     ; 120 {
+ 250                     	switch	.text
+ 251  0063               _CLK_HSECmd:
+ 253  0063 88            	push	a
+ 254       00000000      OFST:	set	0
+ 257                     ; 123     assert_param(IS_FUNCTIONALSTATE_OK(NewState));
+ 259  0064 4d            	tnz	a
+ 260  0065 2704          	jreq	L22
+ 261  0067 a101          	cp	a,#1
+ 262  0069 2603          	jrne	L02
+ 263  006b               L22:
+ 264  006b 4f            	clr	a
+ 265  006c 2010          	jra	L42
+ 266  006e               L02:
+ 267  006e ae007b        	ldw	x,#123
+ 268  0071 89            	pushw	x
+ 269  0072 ae0000        	ldw	x,#0
+ 270  0075 89            	pushw	x
+ 271  0076 ae000c        	ldw	x,#L75
+ 272  0079 cd0000        	call	_assert_failed
+ 274  007c 5b04          	addw	sp,#4
+ 275  007e               L42:
+ 276                     ; 125     if (NewState != DISABLE)
+ 278  007e 0d01          	tnz	(OFST+1,sp)
+ 279  0080 2706          	jreq	L301
+ 280                     ; 128         CLK->ECKR |= CLK_ECKR_HSEEN;
+ 282  0082 721050c1      	bset	20673,#0
+ 284  0086 2004          	jra	L501
+ 285  0088               L301:
+ 286                     ; 133         CLK->ECKR &= (uint8_t)(~CLK_ECKR_HSEEN);
+ 288  0088 721150c1      	bres	20673,#0
+ 289  008c               L501:
+ 290                     ; 136 }
+ 293  008c 84            	pop	a
+ 294  008d 81            	ret
+ 330                     ; 143 void CLK_HSICmd(FunctionalState NewState)
+ 330                     ; 144 {
+ 331                     	switch	.text
+ 332  008e               _CLK_HSICmd:
+ 334  008e 88            	push	a
+ 335       00000000      OFST:	set	0
+ 338                     ; 147     assert_param(IS_FUNCTIONALSTATE_OK(NewState));
+ 340  008f 4d            	tnz	a
+ 341  0090 2704          	jreq	L23
+ 342  0092 a101          	cp	a,#1
+ 343  0094 2603          	jrne	L03
+ 344  0096               L23:
+ 345  0096 4f            	clr	a
+ 346  0097 2010          	jra	L43
+ 347  0099               L03:
+ 348  0099 ae0093        	ldw	x,#147
+ 349  009c 89            	pushw	x
+ 350  009d ae0000        	ldw	x,#0
+ 351  00a0 89            	pushw	x
+ 352  00a1 ae000c        	ldw	x,#L75
+ 353  00a4 cd0000        	call	_assert_failed
+ 355  00a7 5b04          	addw	sp,#4
+ 356  00a9               L43:
+ 357                     ; 149     if (NewState != DISABLE)
+ 359  00a9 0d01          	tnz	(OFST+1,sp)
+ 360  00ab 2706          	jreq	L521
+ 361                     ; 152         CLK->ICKR |= CLK_ICKR_HSIEN;
+ 363  00ad 721050c0      	bset	20672,#0
+ 365  00b1 2004          	jra	L721
+ 366  00b3               L521:
+ 367                     ; 157         CLK->ICKR &= (uint8_t)(~CLK_ICKR_HSIEN);
+ 369  00b3 721150c0      	bres	20672,#0
+ 370  00b7               L721:
+ 371                     ; 160 }
+ 374  00b7 84            	pop	a
+ 375  00b8 81            	ret
+ 411                     ; 167 void CLK_LSICmd(FunctionalState NewState)
+ 411                     ; 168 {
+ 412                     	switch	.text
+ 413  00b9               _CLK_LSICmd:
+ 415  00b9 88            	push	a
+ 416       00000000      OFST:	set	0
+ 419                     ; 171     assert_param(IS_FUNCTIONALSTATE_OK(NewState));
+ 421  00ba 4d            	tnz	a
+ 422  00bb 2704          	jreq	L24
+ 423  00bd a101          	cp	a,#1
+ 424  00bf 2603          	jrne	L04
+ 425  00c1               L24:
+ 426  00c1 4f            	clr	a
+ 427  00c2 2010          	jra	L44
+ 428  00c4               L04:
+ 429  00c4 ae00ab        	ldw	x,#171
+ 430  00c7 89            	pushw	x
+ 431  00c8 ae0000        	ldw	x,#0
+ 432  00cb 89            	pushw	x
+ 433  00cc ae000c        	ldw	x,#L75
+ 434  00cf cd0000        	call	_assert_failed
+ 436  00d2 5b04          	addw	sp,#4
+ 437  00d4               L44:
+ 438                     ; 173     if (NewState != DISABLE)
+ 440  00d4 0d01          	tnz	(OFST+1,sp)
+ 441  00d6 2706          	jreq	L741
+ 442                     ; 176         CLK->ICKR |= CLK_ICKR_LSIEN;
+ 444  00d8 721650c0      	bset	20672,#3
+ 446  00dc 2004          	jra	L151
+ 447  00de               L741:
+ 448                     ; 181         CLK->ICKR &= (uint8_t)(~CLK_ICKR_LSIEN);
+ 450  00de 721750c0      	bres	20672,#3
+ 451  00e2               L151:
+ 452                     ; 184 }
+ 455  00e2 84            	pop	a
+ 456  00e3 81            	ret
+ 492                     ; 192 void CLK_CCOCmd(FunctionalState NewState)
+ 492                     ; 193 {
+ 493                     	switch	.text
+ 494  00e4               _CLK_CCOCmd:
+ 496  00e4 88            	push	a
+ 497       00000000      OFST:	set	0
+ 500                     ; 196     assert_param(IS_FUNCTIONALSTATE_OK(NewState));
+ 502  00e5 4d            	tnz	a
+ 503  00e6 2704          	jreq	L25
+ 504  00e8 a101          	cp	a,#1
+ 505  00ea 2603          	jrne	L05
+ 506  00ec               L25:
+ 507  00ec 4f            	clr	a
+ 508  00ed 2010          	jra	L45
+ 509  00ef               L05:
+ 510  00ef ae00c4        	ldw	x,#196
+ 511  00f2 89            	pushw	x
+ 512  00f3 ae0000        	ldw	x,#0
+ 513  00f6 89            	pushw	x
+ 514  00f7 ae000c        	ldw	x,#L75
+ 515  00fa cd0000        	call	_assert_failed
+ 517  00fd 5b04          	addw	sp,#4
+ 518  00ff               L45:
+ 519                     ; 198     if (NewState != DISABLE)
+ 521  00ff 0d01          	tnz	(OFST+1,sp)
+ 522  0101 2706          	jreq	L171
+ 523                     ; 201         CLK->CCOR |= CLK_CCOR_CCOEN;
+ 525  0103 721050c9      	bset	20681,#0
+ 527  0107 2004          	jra	L371
+ 528  0109               L171:
+ 529                     ; 206         CLK->CCOR &= (uint8_t)(~CLK_CCOR_CCOEN);
+ 531  0109 721150c9      	bres	20681,#0
+ 532  010d               L371:
+ 533                     ; 209 }
+ 536  010d 84            	pop	a
+ 537  010e 81            	ret
+ 573                     ; 218 void CLK_ClockSwitchCmd(FunctionalState NewState)
+ 573                     ; 219 {
+ 574                     	switch	.text
+ 575  010f               _CLK_ClockSwitchCmd:
+ 577  010f 88            	push	a
+ 578       00000000      OFST:	set	0
+ 581                     ; 222     assert_param(IS_FUNCTIONALSTATE_OK(NewState));
+ 583  0110 4d            	tnz	a
+ 584  0111 2704          	jreq	L26
+ 585  0113 a101          	cp	a,#1
+ 586  0115 2603          	jrne	L06
+ 587  0117               L26:
+ 588  0117 4f            	clr	a
+ 589  0118 2010          	jra	L46
+ 590  011a               L06:
+ 591  011a ae00de        	ldw	x,#222
+ 592  011d 89            	pushw	x
+ 593  011e ae0000        	ldw	x,#0
+ 594  0121 89            	pushw	x
+ 595  0122 ae000c        	ldw	x,#L75
+ 596  0125 cd0000        	call	_assert_failed
+ 598  0128 5b04          	addw	sp,#4
+ 599  012a               L46:
+ 600                     ; 224     if (NewState != DISABLE )
+ 602  012a 0d01          	tnz	(OFST+1,sp)
+ 603  012c 2706          	jreq	L312
+ 604                     ; 227         CLK->SWCR |= CLK_SWCR_SWEN;
+ 606  012e 721250c5      	bset	20677,#1
+ 608  0132 2004          	jra	L512
+ 609  0134               L312:
+ 610                     ; 232         CLK->SWCR &= (uint8_t)(~CLK_SWCR_SWEN);
+ 612  0134 721350c5      	bres	20677,#1
+ 613  0138               L512:
+ 614                     ; 235 }
+ 617  0138 84            	pop	a
+ 618  0139 81            	ret
+ 655                     ; 245 void CLK_SlowActiveHaltWakeUpCmd(FunctionalState NewState)
+ 655                     ; 246 {
+ 656                     	switch	.text
+ 657  013a               _CLK_SlowActiveHaltWakeUpCmd:
+ 659  013a 88            	push	a
+ 660       00000000      OFST:	set	0
+ 663                     ; 249     assert_param(IS_FUNCTIONALSTATE_OK(NewState));
+ 665  013b 4d            	tnz	a
+ 666  013c 2704          	jreq	L27
+ 667  013e a101          	cp	a,#1
+ 668  0140 2603          	jrne	L07
+ 669  0142               L27:
+ 670  0142 4f            	clr	a
+ 671  0143 2010          	jra	L47
+ 672  0145               L07:
+ 673  0145 ae00f9        	ldw	x,#249
+ 674  0148 89            	pushw	x
+ 675  0149 ae0000        	ldw	x,#0
+ 676  014c 89            	pushw	x
+ 677  014d ae000c        	ldw	x,#L75
+ 678  0150 cd0000        	call	_assert_failed
+ 680  0153 5b04          	addw	sp,#4
+ 681  0155               L47:
+ 682                     ; 251     if (NewState != DISABLE)
+ 684  0155 0d01          	tnz	(OFST+1,sp)
+ 685  0157 2706          	jreq	L532
+ 686                     ; 254         CLK->ICKR |= CLK_ICKR_SWUAH;
+ 688  0159 721a50c0      	bset	20672,#5
+ 690  015d 2004          	jra	L732
+ 691  015f               L532:
+ 692                     ; 259         CLK->ICKR &= (uint8_t)(~CLK_ICKR_SWUAH);
+ 694  015f 721b50c0      	bres	20672,#5
+ 695  0163               L732:
+ 696                     ; 262 }
+ 699  0163 84            	pop	a
+ 700  0164 81            	ret
+ 860                     ; 272 void CLK_PeripheralClockConfig(CLK_Peripheral_TypeDef CLK_Peripheral, FunctionalState NewState)
+ 860                     ; 273 {
+ 861                     	switch	.text
+ 862  0165               _CLK_PeripheralClockConfig:
+ 864  0165 89            	pushw	x
+ 865       00000000      OFST:	set	0
+ 868                     ; 276     assert_param(IS_FUNCTIONALSTATE_OK(NewState));
+ 870  0166 9f            	ld	a,xl
+ 871  0167 4d            	tnz	a
+ 872  0168 2705          	jreq	L201
+ 873  016a 9f            	ld	a,xl
+ 874  016b a101          	cp	a,#1
+ 875  016d 2603          	jrne	L001
+ 876  016f               L201:
+ 877  016f 4f            	clr	a
+ 878  0170 2010          	jra	L401
+ 879  0172               L001:
+ 880  0172 ae0114        	ldw	x,#276
+ 881  0175 89            	pushw	x
+ 882  0176 ae0000        	ldw	x,#0
+ 883  0179 89            	pushw	x
+ 884  017a ae000c        	ldw	x,#L75
+ 885  017d cd0000        	call	_assert_failed
+ 887  0180 5b04          	addw	sp,#4
+ 888  0182               L401:
+ 889                     ; 277     assert_param(IS_CLK_PERIPHERAL_OK(CLK_Peripheral));
+ 891  0182 0d01          	tnz	(OFST+1,sp)
+ 892  0184 274e          	jreq	L011
+ 893  0186 7b01          	ld	a,(OFST+1,sp)
+ 894  0188 a101          	cp	a,#1
+ 895  018a 2748          	jreq	L011
+ 896  018c 7b01          	ld	a,(OFST+1,sp)
+ 897  018e a103          	cp	a,#3
+ 898  0190 2742          	jreq	L011
+ 899  0192 7b01          	ld	a,(OFST+1,sp)
+ 900  0194 a103          	cp	a,#3
+ 901  0196 273c          	jreq	L011
+ 902  0198 7b01          	ld	a,(OFST+1,sp)
+ 903  019a a103          	cp	a,#3
+ 904  019c 2736          	jreq	L011
+ 905  019e 7b01          	ld	a,(OFST+1,sp)
+ 906  01a0 a104          	cp	a,#4
+ 907  01a2 2730          	jreq	L011
+ 908  01a4 7b01          	ld	a,(OFST+1,sp)
+ 909  01a6 a105          	cp	a,#5
+ 910  01a8 272a          	jreq	L011
+ 911  01aa 7b01          	ld	a,(OFST+1,sp)
+ 912  01ac a105          	cp	a,#5
+ 913  01ae 2724          	jreq	L011
+ 914  01b0 7b01          	ld	a,(OFST+1,sp)
+ 915  01b2 a104          	cp	a,#4
+ 916  01b4 271e          	jreq	L011
+ 917  01b6 7b01          	ld	a,(OFST+1,sp)
+ 918  01b8 a106          	cp	a,#6
+ 919  01ba 2718          	jreq	L011
+ 920  01bc 7b01          	ld	a,(OFST+1,sp)
+ 921  01be a107          	cp	a,#7
+ 922  01c0 2712          	jreq	L011
+ 923  01c2 7b01          	ld	a,(OFST+1,sp)
+ 924  01c4 a117          	cp	a,#23
+ 925  01c6 270c          	jreq	L011
+ 926  01c8 7b01          	ld	a,(OFST+1,sp)
+ 927  01ca a113          	cp	a,#19
+ 928  01cc 2706          	jreq	L011
+ 929  01ce 7b01          	ld	a,(OFST+1,sp)
+ 930  01d0 a112          	cp	a,#18
+ 931  01d2 2603          	jrne	L601
+ 932  01d4               L011:
+ 933  01d4 4f            	clr	a
+ 934  01d5 2010          	jra	L211
+ 935  01d7               L601:
+ 936  01d7 ae0115        	ldw	x,#277
+ 937  01da 89            	pushw	x
+ 938  01db ae0000        	ldw	x,#0
+ 939  01de 89            	pushw	x
+ 940  01df ae000c        	ldw	x,#L75
+ 941  01e2 cd0000        	call	_assert_failed
+ 943  01e5 5b04          	addw	sp,#4
+ 944  01e7               L211:
+ 945                     ; 279     if (((uint8_t)CLK_Peripheral & (uint8_t)0x10) == 0x00)
+ 947  01e7 7b01          	ld	a,(OFST+1,sp)
+ 948  01e9 a510          	bcp	a,#16
+ 949  01eb 2633          	jrne	L323
+ 950                     ; 281         if (NewState != DISABLE)
+ 952  01ed 0d02          	tnz	(OFST+2,sp)
+ 953  01ef 2717          	jreq	L523
+ 954                     ; 284             CLK->PCKENR1 |= (uint8_t)((uint8_t)1 << ((uint8_t)CLK_Peripheral & (uint8_t)0x0F));
+ 956  01f1 7b01          	ld	a,(OFST+1,sp)
+ 957  01f3 a40f          	and	a,#15
+ 958  01f5 5f            	clrw	x
+ 959  01f6 97            	ld	xl,a
+ 960  01f7 a601          	ld	a,#1
+ 961  01f9 5d            	tnzw	x
+ 962  01fa 2704          	jreq	L411
+ 963  01fc               L611:
+ 964  01fc 48            	sll	a
+ 965  01fd 5a            	decw	x
+ 966  01fe 26fc          	jrne	L611
+ 967  0200               L411:
+ 968  0200 ca50c7        	or	a,20679
+ 969  0203 c750c7        	ld	20679,a
+ 971  0206 2049          	jra	L133
+ 972  0208               L523:
+ 973                     ; 289             CLK->PCKENR1 &= (uint8_t)(~(uint8_t)(((uint8_t)1 << ((uint8_t)CLK_Peripheral & (uint8_t)0x0F))));
+ 975  0208 7b01          	ld	a,(OFST+1,sp)
+ 976  020a a40f          	and	a,#15
+ 977  020c 5f            	clrw	x
+ 978  020d 97            	ld	xl,a
+ 979  020e a601          	ld	a,#1
+ 980  0210 5d            	tnzw	x
+ 981  0211 2704          	jreq	L021
+ 982  0213               L221:
+ 983  0213 48            	sll	a
+ 984  0214 5a            	decw	x
+ 985  0215 26fc          	jrne	L221
+ 986  0217               L021:
+ 987  0217 43            	cpl	a
+ 988  0218 c450c7        	and	a,20679
+ 989  021b c750c7        	ld	20679,a
+ 990  021e 2031          	jra	L133
+ 991  0220               L323:
+ 992                     ; 294         if (NewState != DISABLE)
+ 994  0220 0d02          	tnz	(OFST+2,sp)
+ 995  0222 2717          	jreq	L333
+ 996                     ; 297             CLK->PCKENR2 |= (uint8_t)((uint8_t)1 << ((uint8_t)CLK_Peripheral & (uint8_t)0x0F));
+ 998  0224 7b01          	ld	a,(OFST+1,sp)
+ 999  0226 a40f          	and	a,#15
+1000  0228 5f            	clrw	x
+1001  0229 97            	ld	xl,a
+1002  022a a601          	ld	a,#1
+1003  022c 5d            	tnzw	x
+1004  022d 2704          	jreq	L421
+1005  022f               L621:
+1006  022f 48            	sll	a
+1007  0230 5a            	decw	x
+1008  0231 26fc          	jrne	L621
+1009  0233               L421:
+1010  0233 ca50ca        	or	a,20682
+1011  0236 c750ca        	ld	20682,a
+1013  0239 2016          	jra	L133
+1014  023b               L333:
+1015                     ; 302             CLK->PCKENR2 &= (uint8_t)(~(uint8_t)(((uint8_t)1 << ((uint8_t)CLK_Peripheral & (uint8_t)0x0F))));
+1017  023b 7b01          	ld	a,(OFST+1,sp)
+1018  023d a40f          	and	a,#15
+1019  023f 5f            	clrw	x
+1020  0240 97            	ld	xl,a
+1021  0241 a601          	ld	a,#1
+1022  0243 5d            	tnzw	x
+1023  0244 2704          	jreq	L031
+1024  0246               L231:
+1025  0246 48            	sll	a
+1026  0247 5a            	decw	x
+1027  0248 26fc          	jrne	L231
+1028  024a               L031:
+1029  024a 43            	cpl	a
+1030  024b c450ca        	and	a,20682
+1031  024e c750ca        	ld	20682,a
+1032  0251               L133:
+1033                     ; 306 }
+1036  0251 85            	popw	x
+1037  0252 81            	ret
+1226                     ; 319 ErrorStatus CLK_ClockSwitchConfig(CLK_SwitchMode_TypeDef CLK_SwitchMode, CLK_Source_TypeDef CLK_NewClock, FunctionalState ITState, CLK_CurrentClockState_TypeDef CLK_CurrentClockState)
+1226                     ; 320 {
+1227                     	switch	.text
+1228  0253               _CLK_ClockSwitchConfig:
+1230  0253 89            	pushw	x
+1231  0254 5204          	subw	sp,#4
+1232       00000004      OFST:	set	4
+1235                     ; 323     uint16_t DownCounter = CLK_TIMEOUT;
+1237  0256 ae0491        	ldw	x,#1169
+1238  0259 1f03          	ldw	(OFST-1,sp),x
+1240                     ; 324     ErrorStatus Swif = ERROR;
+1242                     ; 327     assert_param(IS_CLK_SOURCE_OK(CLK_NewClock));
+1244  025b 7b06          	ld	a,(OFST+2,sp)
+1245  025d a1e1          	cp	a,#225
+1246  025f 270c          	jreq	L041
+1247  0261 7b06          	ld	a,(OFST+2,sp)
+1248  0263 a1d2          	cp	a,#210
+1249  0265 2706          	jreq	L041
+1250  0267 7b06          	ld	a,(OFST+2,sp)
+1251  0269 a1b4          	cp	a,#180
+1252  026b 2603          	jrne	L631
+1253  026d               L041:
+1254  026d 4f            	clr	a
+1255  026e 2010          	jra	L241
+1256  0270               L631:
+1257  0270 ae0147        	ldw	x,#327
+1258  0273 89            	pushw	x
+1259  0274 ae0000        	ldw	x,#0
+1260  0277 89            	pushw	x
+1261  0278 ae000c        	ldw	x,#L75
+1262  027b cd0000        	call	_assert_failed
+1264  027e 5b04          	addw	sp,#4
+1265  0280               L241:
+1266                     ; 328     assert_param(IS_CLK_SWITCHMODE_OK(CLK_SwitchMode));
+1268  0280 0d05          	tnz	(OFST+1,sp)
+1269  0282 2706          	jreq	L641
+1270  0284 7b05          	ld	a,(OFST+1,sp)
+1271  0286 a101          	cp	a,#1
+1272  0288 2603          	jrne	L441
+1273  028a               L641:
+1274  028a 4f            	clr	a
+1275  028b 2010          	jra	L051
+1276  028d               L441:
+1277  028d ae0148        	ldw	x,#328
+1278  0290 89            	pushw	x
+1279  0291 ae0000        	ldw	x,#0
+1280  0294 89            	pushw	x
+1281  0295 ae000c        	ldw	x,#L75
+1282  0298 cd0000        	call	_assert_failed
+1284  029b 5b04          	addw	sp,#4
+1285  029d               L051:
+1286                     ; 329     assert_param(IS_FUNCTIONALSTATE_OK(ITState));
+1288  029d 0d09          	tnz	(OFST+5,sp)
+1289  029f 2706          	jreq	L451
+1290  02a1 7b09          	ld	a,(OFST+5,sp)
+1291  02a3 a101          	cp	a,#1
+1292  02a5 2603          	jrne	L251
+1293  02a7               L451:
+1294  02a7 4f            	clr	a
+1295  02a8 2010          	jra	L651
+1296  02aa               L251:
+1297  02aa ae0149        	ldw	x,#329
+1298  02ad 89            	pushw	x
+1299  02ae ae0000        	ldw	x,#0
+1300  02b1 89            	pushw	x
+1301  02b2 ae000c        	ldw	x,#L75
+1302  02b5 cd0000        	call	_assert_failed
+1304  02b8 5b04          	addw	sp,#4
+1305  02ba               L651:
+1306                     ; 330     assert_param(IS_CLK_CURRENTCLOCKSTATE_OK(CLK_CurrentClockState));
+1308  02ba 0d0a          	tnz	(OFST+6,sp)
+1309  02bc 2706          	jreq	L261
+1310  02be 7b0a          	ld	a,(OFST+6,sp)
+1311  02c0 a101          	cp	a,#1
+1312  02c2 2603          	jrne	L061
+1313  02c4               L261:
+1314  02c4 4f            	clr	a
+1315  02c5 2010          	jra	L461
+1316  02c7               L061:
+1317  02c7 ae014a        	ldw	x,#330
+1318  02ca 89            	pushw	x
+1319  02cb ae0000        	ldw	x,#0
+1320  02ce 89            	pushw	x
+1321  02cf ae000c        	ldw	x,#L75
+1322  02d2 cd0000        	call	_assert_failed
+1324  02d5 5b04          	addw	sp,#4
+1325  02d7               L461:
+1326                     ; 333     clock_master = (CLK_Source_TypeDef)CLK->CMSR;
+1328  02d7 c650c3        	ld	a,20675
+1329  02da 6b01          	ld	(OFST-3,sp),a
 1331                     ; 336     if (CLK_SwitchMode == CLK_SWITCHMODE_AUTO)
-1333  0089 7b05          	ld	a,(OFST+1,sp)
-1334  008b a101          	cp	a,#1
-1335  008d 2639          	jrne	L744
+1333  02dc 7b05          	ld	a,(OFST+1,sp)
+1334  02de a101          	cp	a,#1
+1335  02e0 2639          	jrne	L744
 1336                     ; 340         CLK->SWCR |= CLK_SWCR_SWEN;
-1338  008f 721250c5      	bset	20677,#1
+1338  02e2 721250c5      	bset	20677,#1
 1339                     ; 343         if (ITState != DISABLE)
-1341  0093 0d09          	tnz	(OFST+5,sp)
-1342  0095 2706          	jreq	L154
+1341  02e6 0d09          	tnz	(OFST+5,sp)
+1342  02e8 2706          	jreq	L154
 1343                     ; 345             CLK->SWCR |= CLK_SWCR_SWIEN;
-1345  0097 721450c5      	bset	20677,#2
-1347  009b 2004          	jra	L354
-1348  009d               L154:
+1345  02ea 721450c5      	bset	20677,#2
+1347  02ee 2004          	jra	L354
+1348  02f0               L154:
 1349                     ; 349             CLK->SWCR &= (uint8_t)(~CLK_SWCR_SWIEN);
-1351  009d 721550c5      	bres	20677,#2
-1352  00a1               L354:
+1351  02f0 721550c5      	bres	20677,#2
+1352  02f4               L354:
 1353                     ; 353         CLK->SWR = (uint8_t)CLK_NewClock;
-1355  00a1 7b06          	ld	a,(OFST+2,sp)
-1356  00a3 c750c4        	ld	20676,a
-1358  00a6 2007          	jra	L164
-1359  00a8               L554:
+1355  02f4 7b06          	ld	a,(OFST+2,sp)
+1356  02f6 c750c4        	ld	20676,a
+1358  02f9 2007          	jra	L164
+1359  02fb               L554:
 1360                     ; 357             DownCounter--;
-1362  00a8 1e03          	ldw	x,(OFST-1,sp)
-1363  00aa 1d0001        	subw	x,#1
-1364  00ad 1f03          	ldw	(OFST-1,sp),x
-1365  00af               L164:
-1366                     ; 355         while ((((CLK->SWCR & CLK_SWCR_SWBSY) != 0 )&& (DownCounter != 0)))
-1368  00af c650c5        	ld	a,20677
-1369  00b2 a501          	bcp	a,#1
-1370  00b4 2704          	jreq	L564
-1372  00b6 1e03          	ldw	x,(OFST-1,sp)
-1373  00b8 26ee          	jrne	L554
-1374  00ba               L564:
-1375                     ; 360         if (DownCounter != 0)
-1377  00ba 1e03          	ldw	x,(OFST-1,sp)
-1378  00bc 2706          	jreq	L764
-1379                     ; 362             Swif = SUCCESS;
-1381  00be a601          	ld	a,#1
-1382  00c0 6b02          	ld	(OFST-2,sp),a
-1384  00c2 201b          	jra	L374
-1385  00c4               L764:
-1386                     ; 366             Swif = ERROR;
-1388  00c4 0f02          	clr	(OFST-2,sp)
-1389  00c6 2017          	jra	L374
-1390  00c8               L744:
-1391                     ; 374         if (ITState != DISABLE)
-1393  00c8 0d09          	tnz	(OFST+5,sp)
-1394  00ca 2706          	jreq	L574
-1395                     ; 376             CLK->SWCR |= CLK_SWCR_SWIEN;
-1397  00cc 721450c5      	bset	20677,#2
-1399  00d0 2004          	jra	L774
-1400  00d2               L574:
-1401                     ; 380             CLK->SWCR &= (uint8_t)(~CLK_SWCR_SWIEN);
-1403  00d2 721550c5      	bres	20677,#2
-1404  00d6               L774:
-1405                     ; 384         CLK->SWR = (uint8_t)CLK_NewClock;
-1407  00d6 7b06          	ld	a,(OFST+2,sp)
-1408  00d8 c750c4        	ld	20676,a
-1409                     ; 388         Swif = SUCCESS;
-1411  00db a601          	ld	a,#1
-1412  00dd 6b02          	ld	(OFST-2,sp),a
-1413  00df               L374:
-1414                     ; 393     if ((CLK_CurrentClockState == CLK_CURRENTCLOCKSTATE_DISABLE) && ( clock_master == CLK_SOURCE_HSI))
-1416  00df 0d0a          	tnz	(OFST+6,sp)
-1417  00e1 260c          	jrne	L105
-1419  00e3 7b01          	ld	a,(OFST-3,sp)
-1420  00e5 a1e1          	cp	a,#225
-1421  00e7 2606          	jrne	L105
-1422                     ; 395         CLK->ICKR &= (uint8_t)(~CLK_ICKR_HSIEN);
-1424  00e9 721150c0      	bres	20672,#0
-1426  00ed 201e          	jra	L305
-1427  00ef               L105:
-1428                     ; 397     else if ((CLK_CurrentClockState == CLK_CURRENTCLOCKSTATE_DISABLE) && ( clock_master == CLK_SOURCE_LSI))
-1430  00ef 0d0a          	tnz	(OFST+6,sp)
-1431  00f1 260c          	jrne	L505
-1433  00f3 7b01          	ld	a,(OFST-3,sp)
-1434  00f5 a1d2          	cp	a,#210
-1435  00f7 2606          	jrne	L505
-1436                     ; 399         CLK->ICKR &= (uint8_t)(~CLK_ICKR_LSIEN);
-1438  00f9 721750c0      	bres	20672,#3
-1440  00fd 200e          	jra	L305
-1441  00ff               L505:
-1442                     ; 401     else if ((CLK_CurrentClockState == CLK_CURRENTCLOCKSTATE_DISABLE) && ( clock_master == CLK_SOURCE_HSE))
-1444  00ff 0d0a          	tnz	(OFST+6,sp)
-1445  0101 260a          	jrne	L305
-1447  0103 7b01          	ld	a,(OFST-3,sp)
-1448  0105 a1b4          	cp	a,#180
-1449  0107 2604          	jrne	L305
-1450                     ; 403         CLK->ECKR &= (uint8_t)(~CLK_ECKR_HSEEN);
-1452  0109 721150c1      	bres	20673,#0
-1453  010d               L305:
-1454                     ; 406     return(Swif);
-1456  010d 7b02          	ld	a,(OFST-2,sp)
-1459  010f 5b06          	addw	sp,#6
-1460  0111 81            	ret
-1599                     ; 416 void CLK_HSIPrescalerConfig(CLK_Prescaler_TypeDef HSIPrescaler)
-1599                     ; 417 {
-1600                     .text:	section	.text,new
-1601  0000               _CLK_HSIPrescalerConfig:
-1603  0000 88            	push	a
-1604       00000000      OFST:	set	0
-1607                     ; 420     assert_param(IS_CLK_HSIPRESCALER_OK(HSIPrescaler));
-1609  0001 4d            	tnz	a
-1610  0002 270c          	jreq	L271
-1611  0004 a108          	cp	a,#8
-1612  0006 2708          	jreq	L271
-1613  0008 a110          	cp	a,#16
-1614  000a 2704          	jreq	L271
-1615  000c a118          	cp	a,#24
-1616  000e 2603          	jrne	L071
-1617  0010               L271:
-1618  0010 4f            	clr	a
-1619  0011 2010          	jra	L471
-1620  0013               L071:
-1621  0013 ae01a4        	ldw	x,#420
-1622  0016 89            	pushw	x
-1623  0017 ae0000        	ldw	x,#0
-1624  001a 89            	pushw	x
-1625  001b ae000c        	ldw	x,#L75
-1626  001e cd0000        	call	_assert_failed
-1628  0021 5b04          	addw	sp,#4
-1629  0023               L471:
-1630                     ; 423     CLK->CKDIVR &= (uint8_t)(~CLK_CKDIVR_HSIDIV);
-1632  0023 c650c6        	ld	a,20678
-1633  0026 a4e7          	and	a,#231
-1634  0028 c750c6        	ld	20678,a
-1635                     ; 426     CLK->CKDIVR |= (uint8_t)HSIPrescaler;
-1637  002b c650c6        	ld	a,20678
-1638  002e 1a01          	or	a,(OFST+1,sp)
-1639  0030 c750c6        	ld	20678,a
-1640                     ; 428 }
-1643  0033 84            	pop	a
-1644  0034 81            	ret
-1780                     ; 439 void CLK_CCOConfig(CLK_Output_TypeDef CLK_CCO)
-1780                     ; 440 {
-1781                     .text:	section	.text,new
-1782  0000               _CLK_CCOConfig:
-1784  0000 88            	push	a
-1785       00000000      OFST:	set	0
-1788                     ; 443     assert_param(IS_CLK_OUTPUT_OK(CLK_CCO));
-1790  0001 4d            	tnz	a
-1791  0002 2730          	jreq	L202
-1792  0004 a104          	cp	a,#4
-1793  0006 272c          	jreq	L202
-1794  0008 a102          	cp	a,#2
-1795  000a 2728          	jreq	L202
-1796  000c a108          	cp	a,#8
-1797  000e 2724          	jreq	L202
-1798  0010 a10a          	cp	a,#10
-1799  0012 2720          	jreq	L202
-1800  0014 a10c          	cp	a,#12
-1801  0016 271c          	jreq	L202
-1802  0018 a10e          	cp	a,#14
-1803  001a 2718          	jreq	L202
-1804  001c a110          	cp	a,#16
-1805  001e 2714          	jreq	L202
-1806  0020 a112          	cp	a,#18
-1807  0022 2710          	jreq	L202
-1808  0024 a114          	cp	a,#20
-1809  0026 270c          	jreq	L202
-1810  0028 a116          	cp	a,#22
-1811  002a 2708          	jreq	L202
-1812  002c a118          	cp	a,#24
-1813  002e 2704          	jreq	L202
-1814  0030 a11a          	cp	a,#26
-1815  0032 2603          	jrne	L002
-1816  0034               L202:
-1817  0034 4f            	clr	a
-1818  0035 2010          	jra	L402
-1819  0037               L002:
-1820  0037 ae01bb        	ldw	x,#443
-1821  003a 89            	pushw	x
-1822  003b ae0000        	ldw	x,#0
-1823  003e 89            	pushw	x
-1824  003f ae000c        	ldw	x,#L75
-1825  0042 cd0000        	call	_assert_failed
-1827  0045 5b04          	addw	sp,#4
-1828  0047               L402:
-1829                     ; 446     CLK->CCOR &= (uint8_t)(~CLK_CCOR_CCOSEL);
-1831  0047 c650c9        	ld	a,20681
-1832  004a a4e1          	and	a,#225
-1833  004c c750c9        	ld	20681,a
-1834                     ; 449     CLK->CCOR |= (uint8_t)CLK_CCO;
-1836  004f c650c9        	ld	a,20681
-1837  0052 1a01          	or	a,(OFST+1,sp)
-1838  0054 c750c9        	ld	20681,a
-1839                     ; 452     CLK->CCOR |= CLK_CCOR_CCOEN;
-1841  0057 721050c9      	bset	20681,#0
-1842                     ; 454 }
-1845  005b 84            	pop	a
-1846  005c 81            	ret
-1912                     ; 464 void CLK_ITConfig(CLK_IT_TypeDef CLK_IT, FunctionalState NewState)
-1912                     ; 465 {
-1913                     .text:	section	.text,new
-1914  0000               _CLK_ITConfig:
-1916  0000 89            	pushw	x
-1917       00000000      OFST:	set	0
-1920                     ; 468     assert_param(IS_FUNCTIONALSTATE_OK(NewState));
-1922  0001 9f            	ld	a,xl
-1923  0002 4d            	tnz	a
-1924  0003 2705          	jreq	L212
-1925  0005 9f            	ld	a,xl
-1926  0006 a101          	cp	a,#1
-1927  0008 2603          	jrne	L012
-1928  000a               L212:
-1929  000a 4f            	clr	a
-1930  000b 2010          	jra	L412
-1931  000d               L012:
-1932  000d ae01d4        	ldw	x,#468
-1933  0010 89            	pushw	x
-1934  0011 ae0000        	ldw	x,#0
-1935  0014 89            	pushw	x
-1936  0015 ae000c        	ldw	x,#L75
-1937  0018 cd0000        	call	_assert_failed
-1939  001b 5b04          	addw	sp,#4
-1940  001d               L412:
-1941                     ; 469     assert_param(IS_CLK_IT_OK(CLK_IT));
-1943  001d 7b01          	ld	a,(OFST+1,sp)
-1944  001f a10c          	cp	a,#12
-1945  0021 2706          	jreq	L022
-1946  0023 7b01          	ld	a,(OFST+1,sp)
-1947  0025 a11c          	cp	a,#28
-1948  0027 2603          	jrne	L612
-1949  0029               L022:
-1950  0029 4f            	clr	a
-1951  002a 2010          	jra	L222
-1952  002c               L612:
-1953  002c ae01d5        	ldw	x,#469
-1954  002f 89            	pushw	x
-1955  0030 ae0000        	ldw	x,#0
-1956  0033 89            	pushw	x
-1957  0034 ae000c        	ldw	x,#L75
-1958  0037 cd0000        	call	_assert_failed
-1960  003a 5b04          	addw	sp,#4
-1961  003c               L222:
-1962                     ; 471     if (NewState != DISABLE)
-1964  003c 0d02          	tnz	(OFST+2,sp)
-1965  003e 271a          	jreq	L707
-1966                     ; 473         switch (CLK_IT)
-1968  0040 7b01          	ld	a,(OFST+1,sp)
-1970                     ; 481         default:
-1970                     ; 482             break;
-1971  0042 a00c          	sub	a,#12
-1972  0044 270a          	jreq	L346
-1973  0046 a010          	sub	a,#16
-1974  0048 2624          	jrne	L517
-1975                     ; 475         case CLK_IT_SWIF: /* Enable the clock switch interrupt */
-1975                     ; 476             CLK->SWCR |= CLK_SWCR_SWIEN;
-1977  004a 721450c5      	bset	20677,#2
-1978                     ; 477             break;
-1980  004e 201e          	jra	L517
-1981  0050               L346:
-1982                     ; 478         case CLK_IT_CSSD: /* Enable the clock security system detection interrupt */
-1982                     ; 479             CLK->CSSR |= CLK_CSSR_CSSDIE;
-1984  0050 721450c8      	bset	20680,#2
-1985                     ; 480             break;
-1987  0054 2018          	jra	L517
-1988  0056               L546:
-1989                     ; 481         default:
-1989                     ; 482             break;
-1991  0056 2016          	jra	L517
-1992  0058               L317:
-1994  0058 2014          	jra	L517
-1995  005a               L707:
-1996                     ; 487         switch (CLK_IT)
-1998  005a 7b01          	ld	a,(OFST+1,sp)
-2000                     ; 495         default:
-2000                     ; 496             break;
-2001  005c a00c          	sub	a,#12
-2002  005e 270a          	jreq	L156
-2003  0060 a010          	sub	a,#16
-2004  0062 260a          	jrne	L517
-2005                     ; 489         case CLK_IT_SWIF: /* Disable the clock switch interrupt */
-2005                     ; 490             CLK->SWCR  &= (uint8_t)(~CLK_SWCR_SWIEN);
-2007  0064 721550c5      	bres	20677,#2
-2008                     ; 491             break;
-2010  0068 2004          	jra	L517
-2011  006a               L156:
-2012                     ; 492         case CLK_IT_CSSD: /* Disable the clock security system detection interrupt */
-2012                     ; 493             CLK->CSSR &= (uint8_t)(~CLK_CSSR_CSSDIE);
-2014  006a 721550c8      	bres	20680,#2
-2015                     ; 494             break;
-2016  006e               L517:
-2017                     ; 500 }
-2020  006e 85            	popw	x
-2021  006f 81            	ret
-2022  0070               L356:
-2023                     ; 495         default:
-2023                     ; 496             break;
-2025  0070 20fc          	jra	L517
-2026  0072               L127:
-2027  0072 20fa          	jra	L517
-2063                     ; 507 void CLK_SYSCLKConfig(CLK_Prescaler_TypeDef CLK_Prescaler)
-2063                     ; 508 {
-2064                     .text:	section	.text,new
-2065  0000               _CLK_SYSCLKConfig:
-2067  0000 88            	push	a
-2068       00000000      OFST:	set	0
-2071                     ; 511     assert_param(IS_CLK_PRESCALER_OK(CLK_Prescaler));
-2073  0001 4d            	tnz	a
-2074  0002 272c          	jreq	L032
-2075  0004 a108          	cp	a,#8
-2076  0006 2728          	jreq	L032
-2077  0008 a110          	cp	a,#16
-2078  000a 2724          	jreq	L032
-2079  000c a118          	cp	a,#24
-2080  000e 2720          	jreq	L032
-2081  0010 a180          	cp	a,#128
-2082  0012 271c          	jreq	L032
-2083  0014 a181          	cp	a,#129
-2084  0016 2718          	jreq	L032
-2085  0018 a182          	cp	a,#130
-2086  001a 2714          	jreq	L032
-2087  001c a183          	cp	a,#131
-2088  001e 2710          	jreq	L032
-2089  0020 a184          	cp	a,#132
-2090  0022 270c          	jreq	L032
-2091  0024 a185          	cp	a,#133
-2092  0026 2708          	jreq	L032
-2093  0028 a186          	cp	a,#134
-2094  002a 2704          	jreq	L032
-2095  002c a187          	cp	a,#135
-2096  002e 2603          	jrne	L622
-2097  0030               L032:
-2098  0030 4f            	clr	a
-2099  0031 2010          	jra	L232
-2100  0033               L622:
-2101  0033 ae01ff        	ldw	x,#511
-2102  0036 89            	pushw	x
-2103  0037 ae0000        	ldw	x,#0
-2104  003a 89            	pushw	x
-2105  003b ae000c        	ldw	x,#L75
-2106  003e cd0000        	call	_assert_failed
-2108  0041 5b04          	addw	sp,#4
-2109  0043               L232:
-2110                     ; 513     if (((uint8_t)CLK_Prescaler & (uint8_t)0x80) == 0x00) /* Bit7 = 0 means HSI divider */
-2112  0043 7b01          	ld	a,(OFST+1,sp)
-2113  0045 a580          	bcp	a,#128
-2114  0047 2614          	jrne	L147
-2115                     ; 515         CLK->CKDIVR &= (uint8_t)(~CLK_CKDIVR_HSIDIV);
-2117  0049 c650c6        	ld	a,20678
-2118  004c a4e7          	and	a,#231
-2119  004e c750c6        	ld	20678,a
-2120                     ; 516         CLK->CKDIVR |= (uint8_t)((uint8_t)CLK_Prescaler & (uint8_t)CLK_CKDIVR_HSIDIV);
-2122  0051 7b01          	ld	a,(OFST+1,sp)
-2123  0053 a418          	and	a,#24
-2124  0055 ca50c6        	or	a,20678
-2125  0058 c750c6        	ld	20678,a
-2127  005b 2012          	jra	L347
-2128  005d               L147:
-2129                     ; 520         CLK->CKDIVR &= (uint8_t)(~CLK_CKDIVR_CPUDIV);
-2131  005d c650c6        	ld	a,20678
-2132  0060 a4f8          	and	a,#248
-2133  0062 c750c6        	ld	20678,a
-2134                     ; 521         CLK->CKDIVR |= (uint8_t)((uint8_t)CLK_Prescaler & (uint8_t)CLK_CKDIVR_CPUDIV);
-2136  0065 7b01          	ld	a,(OFST+1,sp)
-2137  0067 a407          	and	a,#7
-2138  0069 ca50c6        	or	a,20678
-2139  006c c750c6        	ld	20678,a
-2140  006f               L347:
-2141                     ; 524 }
-2144  006f 84            	pop	a
-2145  0070 81            	ret
-2202                     ; 531 void CLK_SWIMConfig(CLK_SWIMDivider_TypeDef CLK_SWIMDivider)
-2202                     ; 532 {
-2203                     .text:	section	.text,new
-2204  0000               _CLK_SWIMConfig:
-2206  0000 88            	push	a
-2207       00000000      OFST:	set	0
-2210                     ; 535     assert_param(IS_CLK_SWIMDIVIDER_OK(CLK_SWIMDivider));
-2212  0001 4d            	tnz	a
-2213  0002 2704          	jreq	L042
-2214  0004 a101          	cp	a,#1
-2215  0006 2603          	jrne	L632
-2216  0008               L042:
-2217  0008 4f            	clr	a
-2218  0009 2010          	jra	L242
-2219  000b               L632:
-2220  000b ae0217        	ldw	x,#535
-2221  000e 89            	pushw	x
-2222  000f ae0000        	ldw	x,#0
-2223  0012 89            	pushw	x
-2224  0013 ae000c        	ldw	x,#L75
-2225  0016 cd0000        	call	_assert_failed
-2227  0019 5b04          	addw	sp,#4
-2228  001b               L242:
-2229                     ; 537     if (CLK_SWIMDivider != CLK_SWIMDIVIDER_2)
-2231  001b 0d01          	tnz	(OFST+1,sp)
-2232  001d 2706          	jreq	L377
-2233                     ; 540         CLK->SWIMCCR |= CLK_SWIMCCR_SWIMDIV;
-2235  001f 721050cd      	bset	20685,#0
-2237  0023 2004          	jra	L577
-2238  0025               L377:
-2239                     ; 545         CLK->SWIMCCR &= (uint8_t)(~CLK_SWIMCCR_SWIMDIV);
-2241  0025 721150cd      	bres	20685,#0
-2242  0029               L577:
-2243                     ; 548 }
-2246  0029 84            	pop	a
-2247  002a 81            	ret
-2271                     ; 557 void CLK_ClockSecuritySystemEnable(void)
-2271                     ; 558 {
-2272                     .text:	section	.text,new
-2273  0000               _CLK_ClockSecuritySystemEnable:
-2277                     ; 560     CLK->CSSR |= CLK_CSSR_CSSEN;
-2279  0000 721050c8      	bset	20680,#0
-2280                     ; 561 }
-2283  0004 81            	ret
-2308                     ; 569 CLK_Source_TypeDef CLK_GetSYSCLKSource(void)
-2308                     ; 570 {
-2309                     .text:	section	.text,new
-2310  0000               _CLK_GetSYSCLKSource:
-2314                     ; 571     return((CLK_Source_TypeDef)CLK->CMSR);
-2316  0000 c650c3        	ld	a,20675
-2319  0003 81            	ret
-2382                     ; 579 uint32_t CLK_GetClockFreq(void)
-2382                     ; 580 {
-2383                     .text:	section	.text,new
-2384  0000               _CLK_GetClockFreq:
-2386  0000 5209          	subw	sp,#9
-2387       00000009      OFST:	set	9
-2390                     ; 582     uint32_t clockfrequency = 0;
-2392                     ; 583     CLK_Source_TypeDef clocksource = CLK_SOURCE_HSI;
-2394                     ; 584     uint8_t tmp = 0, presc = 0;
-2398                     ; 587     clocksource = (CLK_Source_TypeDef)CLK->CMSR;
-2400  0002 c650c3        	ld	a,20675
-2401  0005 6b09          	ld	(OFST+0,sp),a
-2402                     ; 589     if (clocksource == CLK_SOURCE_HSI)
-2404  0007 7b09          	ld	a,(OFST+0,sp)
-2405  0009 a1e1          	cp	a,#225
-2406  000b 2641          	jrne	L1501
-2407                     ; 591         tmp = (uint8_t)(CLK->CKDIVR & CLK_CKDIVR_HSIDIV);
-2409  000d c650c6        	ld	a,20678
-2410  0010 a418          	and	a,#24
-2411  0012 6b09          	ld	(OFST+0,sp),a
-2412                     ; 592         tmp = (uint8_t)(tmp >> 3);
-2414  0014 0409          	srl	(OFST+0,sp)
-2415  0016 0409          	srl	(OFST+0,sp)
-2416  0018 0409          	srl	(OFST+0,sp)
-2417                     ; 593         presc = HSIDivFactor[tmp];
-2419  001a 7b09          	ld	a,(OFST+0,sp)
-2420  001c 5f            	clrw	x
-2421  001d 97            	ld	xl,a
-2422  001e d60000        	ld	a,(_HSIDivFactor,x)
-2423  0021 6b09          	ld	(OFST+0,sp),a
-2424                     ; 594         clockfrequency = HSI_VALUE / presc;
-2426  0023 7b09          	ld	a,(OFST+0,sp)
-2427  0025 b703          	ld	c_lreg+3,a
-2428  0027 3f02          	clr	c_lreg+2
-2429  0029 3f01          	clr	c_lreg+1
-2430  002b 3f00          	clr	c_lreg
-2431  002d 96            	ldw	x,sp
-2432  002e 1c0001        	addw	x,#OFST-8
-2433  0031 cd0000        	call	c_rtol
-2435  0034 ae2400        	ldw	x,#9216
-2436  0037 bf02          	ldw	c_lreg+2,x
-2437  0039 ae00f4        	ldw	x,#244
-2438  003c bf00          	ldw	c_lreg,x
-2439  003e 96            	ldw	x,sp
-2440  003f 1c0001        	addw	x,#OFST-8
-2441  0042 cd0000        	call	c_ludv
-2443  0045 96            	ldw	x,sp
-2444  0046 1c0005        	addw	x,#OFST-4
-2445  0049 cd0000        	call	c_rtol
-2448  004c 201c          	jra	L3501
-2449  004e               L1501:
-2450                     ; 596     else if ( clocksource == CLK_SOURCE_LSI)
-2452  004e 7b09          	ld	a,(OFST+0,sp)
-2453  0050 a1d2          	cp	a,#210
-2454  0052 260c          	jrne	L5501
-2455                     ; 598         clockfrequency = LSI_VALUE;
-2457  0054 aef400        	ldw	x,#62464
-2458  0057 1f07          	ldw	(OFST-2,sp),x
-2459  0059 ae0001        	ldw	x,#1
-2460  005c 1f05          	ldw	(OFST-4,sp),x
-2462  005e 200a          	jra	L3501
-2463  0060               L5501:
-2464                     ; 602         clockfrequency = HSE_VALUE;
-2466  0060 ae2400        	ldw	x,#9216
-2467  0063 1f07          	ldw	(OFST-2,sp),x
-2468  0065 ae00f4        	ldw	x,#244
-2469  0068 1f05          	ldw	(OFST-4,sp),x
-2470  006a               L3501:
-2471                     ; 605     return((uint32_t)clockfrequency);
-2473  006a 96            	ldw	x,sp
-2474  006b 1c0005        	addw	x,#OFST-4
-2475  006e cd0000        	call	c_ltor
-2479  0071 5b09          	addw	sp,#9
-2480  0073 81            	ret
-2580                     ; 616 void CLK_AdjustHSICalibrationValue(CLK_HSITrimValue_TypeDef CLK_HSICalibrationValue)
-2580                     ; 617 {
-2581                     .text:	section	.text,new
-2582  0000               _CLK_AdjustHSICalibrationValue:
-2584  0000 88            	push	a
-2585       00000000      OFST:	set	0
-2588                     ; 620     assert_param(IS_CLK_HSITRIMVALUE_OK(CLK_HSICalibrationValue));
-2590  0001 4d            	tnz	a
-2591  0002 271c          	jreq	L652
-2592  0004 a101          	cp	a,#1
-2593  0006 2718          	jreq	L652
-2594  0008 a102          	cp	a,#2
-2595  000a 2714          	jreq	L652
-2596  000c a103          	cp	a,#3
-2597  000e 2710          	jreq	L652
-2598  0010 a104          	cp	a,#4
-2599  0012 270c          	jreq	L652
-2600  0014 a105          	cp	a,#5
-2601  0016 2708          	jreq	L652
-2602  0018 a106          	cp	a,#6
-2603  001a 2704          	jreq	L652
-2604  001c a107          	cp	a,#7
-2605  001e 2603          	jrne	L452
-2606  0020               L652:
-2607  0020 4f            	clr	a
-2608  0021 2010          	jra	L062
-2609  0023               L452:
-2610  0023 ae026c        	ldw	x,#620
-2611  0026 89            	pushw	x
-2612  0027 ae0000        	ldw	x,#0
-2613  002a 89            	pushw	x
-2614  002b ae000c        	ldw	x,#L75
-2615  002e cd0000        	call	_assert_failed
-2617  0031 5b04          	addw	sp,#4
-2618  0033               L062:
-2619                     ; 623     CLK->HSITRIMR = (uint8_t)( (uint8_t)(CLK->HSITRIMR & (uint8_t)(~CLK_HSITRIMR_HSITRIM))|((uint8_t)CLK_HSICalibrationValue));
-2621  0033 c650cc        	ld	a,20684
-2622  0036 a4f8          	and	a,#248
-2623  0038 1a01          	or	a,(OFST+1,sp)
-2624  003a c750cc        	ld	20684,a
-2625                     ; 625 }
-2628  003d 84            	pop	a
-2629  003e 81            	ret
-2653                     ; 636 void CLK_SYSCLKEmergencyClear(void)
-2653                     ; 637 {
-2654                     .text:	section	.text,new
-2655  0000               _CLK_SYSCLKEmergencyClear:
-2659                     ; 638     CLK->SWCR &= (uint8_t)(~CLK_SWCR_SWBSY);
-2661  0000 721150c5      	bres	20677,#0
-2662                     ; 639 }
-2665  0004 81            	ret
-2819                     ; 648 FlagStatus CLK_GetFlagStatus(CLK_Flag_TypeDef CLK_FLAG)
-2819                     ; 649 {
-2820                     .text:	section	.text,new
-2821  0000               _CLK_GetFlagStatus:
-2823  0000 89            	pushw	x
-2824  0001 5203          	subw	sp,#3
-2825       00000003      OFST:	set	3
-2828                     ; 651     uint16_t statusreg = 0;
-2830                     ; 652     uint8_t tmpreg = 0;
-2832                     ; 653     FlagStatus bitstatus = RESET;
-2834                     ; 656     assert_param(IS_CLK_FLAG_OK(CLK_FLAG));
-2836  0003 a30110        	cpw	x,#272
-2837  0006 2728          	jreq	L072
-2838  0008 a30102        	cpw	x,#258
-2839  000b 2723          	jreq	L072
-2840  000d a30202        	cpw	x,#514
-2841  0010 271e          	jreq	L072
-2842  0012 a30308        	cpw	x,#776
-2843  0015 2719          	jreq	L072
-2844  0017 a30301        	cpw	x,#769
-2845  001a 2714          	jreq	L072
-2846  001c a30408        	cpw	x,#1032
-2847  001f 270f          	jreq	L072
-2848  0021 a30402        	cpw	x,#1026
-2849  0024 270a          	jreq	L072
-2850  0026 a30504        	cpw	x,#1284
-2851  0029 2705          	jreq	L072
-2852  002b a30502        	cpw	x,#1282
-2853  002e 2603          	jrne	L662
-2854  0030               L072:
-2855  0030 4f            	clr	a
-2856  0031 2010          	jra	L272
-2857  0033               L662:
-2858  0033 ae0290        	ldw	x,#656
-2859  0036 89            	pushw	x
-2860  0037 ae0000        	ldw	x,#0
-2861  003a 89            	pushw	x
-2862  003b ae000c        	ldw	x,#L75
-2863  003e cd0000        	call	_assert_failed
-2865  0041 5b04          	addw	sp,#4
-2866  0043               L272:
-2867                     ; 659     statusreg = (uint16_t)((uint16_t)CLK_FLAG & (uint16_t)0xFF00);
-2869  0043 7b04          	ld	a,(OFST+1,sp)
-2870  0045 97            	ld	xl,a
-2871  0046 7b05          	ld	a,(OFST+2,sp)
-2872  0048 9f            	ld	a,xl
-2873  0049 a4ff          	and	a,#255
-2874  004b 97            	ld	xl,a
-2875  004c 4f            	clr	a
-2876  004d 02            	rlwa	x,a
-2877  004e 1f01          	ldw	(OFST-2,sp),x
-2878  0050 01            	rrwa	x,a
-2879                     ; 662     if (statusreg == 0x0100) /* The flag to check is in ICKRregister */
-2881  0051 1e01          	ldw	x,(OFST-2,sp)
-2882  0053 a30100        	cpw	x,#256
-2883  0056 2607          	jrne	L3221
-2884                     ; 664         tmpreg = CLK->ICKR;
-2886  0058 c650c0        	ld	a,20672
-2887  005b 6b03          	ld	(OFST+0,sp),a
-2889  005d 202f          	jra	L5221
-2890  005f               L3221:
-2891                     ; 666     else if (statusreg == 0x0200) /* The flag to check is in ECKRregister */
-2893  005f 1e01          	ldw	x,(OFST-2,sp)
-2894  0061 a30200        	cpw	x,#512
-2895  0064 2607          	jrne	L7221
-2896                     ; 668         tmpreg = CLK->ECKR;
-2898  0066 c650c1        	ld	a,20673
-2899  0069 6b03          	ld	(OFST+0,sp),a
-2901  006b 2021          	jra	L5221
-2902  006d               L7221:
-2903                     ; 670     else if (statusreg == 0x0300) /* The flag to check is in SWIC register */
-2905  006d 1e01          	ldw	x,(OFST-2,sp)
-2906  006f a30300        	cpw	x,#768
-2907  0072 2607          	jrne	L3321
-2908                     ; 672         tmpreg = CLK->SWCR;
-2910  0074 c650c5        	ld	a,20677
-2911  0077 6b03          	ld	(OFST+0,sp),a
-2913  0079 2013          	jra	L5221
-2914  007b               L3321:
-2915                     ; 674     else if (statusreg == 0x0400) /* The flag to check is in CSS register */
-2917  007b 1e01          	ldw	x,(OFST-2,sp)
-2918  007d a30400        	cpw	x,#1024
-2919  0080 2607          	jrne	L7321
-2920                     ; 676         tmpreg = CLK->CSSR;
-2922  0082 c650c8        	ld	a,20680
-2923  0085 6b03          	ld	(OFST+0,sp),a
-2925  0087 2005          	jra	L5221
-2926  0089               L7321:
-2927                     ; 680         tmpreg = CLK->CCOR;
-2929  0089 c650c9        	ld	a,20681
-2930  008c 6b03          	ld	(OFST+0,sp),a
-2931  008e               L5221:
-2932                     ; 683     if ((tmpreg & (uint8_t)CLK_FLAG) != (uint8_t)RESET)
-2934  008e 7b05          	ld	a,(OFST+2,sp)
-2935  0090 1503          	bcp	a,(OFST+0,sp)
-2936  0092 2706          	jreq	L3421
-2937                     ; 685         bitstatus = SET;
-2939  0094 a601          	ld	a,#1
-2940  0096 6b03          	ld	(OFST+0,sp),a
-2942  0098 2002          	jra	L5421
-2943  009a               L3421:
-2944                     ; 689         bitstatus = RESET;
-2946  009a 0f03          	clr	(OFST+0,sp)
-2947  009c               L5421:
-2948                     ; 693     return((FlagStatus)bitstatus);
-2950  009c 7b03          	ld	a,(OFST+0,sp)
-2953  009e 5b05          	addw	sp,#5
-2954  00a0 81            	ret
-3001                     ; 703 ITStatus CLK_GetITStatus(CLK_IT_TypeDef CLK_IT)
-3001                     ; 704 {
-3002                     .text:	section	.text,new
-3003  0000               _CLK_GetITStatus:
-3005  0000 88            	push	a
-3006  0001 88            	push	a
-3007       00000001      OFST:	set	1
-3010                     ; 706     ITStatus bitstatus = RESET;
-3012                     ; 709     assert_param(IS_CLK_IT_OK(CLK_IT));
-3014  0002 a10c          	cp	a,#12
-3015  0004 2704          	jreq	L003
-3016  0006 a11c          	cp	a,#28
-3017  0008 2603          	jrne	L672
-3018  000a               L003:
-3019  000a 4f            	clr	a
-3020  000b 2010          	jra	L203
-3021  000d               L672:
-3022  000d ae02c5        	ldw	x,#709
-3023  0010 89            	pushw	x
-3024  0011 ae0000        	ldw	x,#0
-3025  0014 89            	pushw	x
-3026  0015 ae000c        	ldw	x,#L75
-3027  0018 cd0000        	call	_assert_failed
-3029  001b 5b04          	addw	sp,#4
-3030  001d               L203:
-3031                     ; 711     if (CLK_IT == CLK_IT_SWIF)
-3033  001d 7b02          	ld	a,(OFST+1,sp)
-3034  001f a11c          	cp	a,#28
-3035  0021 2613          	jrne	L1721
-3036                     ; 714         if ((CLK->SWCR & (uint8_t)CLK_IT) == (uint8_t)0x0C)
-3038  0023 c650c5        	ld	a,20677
-3039  0026 1402          	and	a,(OFST+1,sp)
-3040  0028 a10c          	cp	a,#12
-3041  002a 2606          	jrne	L3721
-3042                     ; 716             bitstatus = SET;
-3044  002c a601          	ld	a,#1
-3045  002e 6b01          	ld	(OFST+0,sp),a
-3047  0030 2015          	jra	L7721
-3048  0032               L3721:
-3049                     ; 720             bitstatus = RESET;
-3051  0032 0f01          	clr	(OFST+0,sp)
-3052  0034 2011          	jra	L7721
-3053  0036               L1721:
-3054                     ; 726         if ((CLK->CSSR & (uint8_t)CLK_IT) == (uint8_t)0x0C)
-3056  0036 c650c8        	ld	a,20680
-3057  0039 1402          	and	a,(OFST+1,sp)
-3058  003b a10c          	cp	a,#12
-3059  003d 2606          	jrne	L1031
-3060                     ; 728             bitstatus = SET;
-3062  003f a601          	ld	a,#1
-3063  0041 6b01          	ld	(OFST+0,sp),a
-3065  0043 2002          	jra	L7721
-3066  0045               L1031:
-3067                     ; 732             bitstatus = RESET;
-3069  0045 0f01          	clr	(OFST+0,sp)
-3070  0047               L7721:
-3071                     ; 737     return bitstatus;
-3073  0047 7b01          	ld	a,(OFST+0,sp)
-3076  0049 85            	popw	x
-3077  004a 81            	ret
-3114                     ; 747 void CLK_ClearITPendingBit(CLK_IT_TypeDef CLK_IT)
-3114                     ; 748 {
-3115                     .text:	section	.text,new
-3116  0000               _CLK_ClearITPendingBit:
-3118  0000 88            	push	a
-3119       00000000      OFST:	set	0
-3122                     ; 751     assert_param(IS_CLK_IT_OK(CLK_IT));
-3124  0001 a10c          	cp	a,#12
-3125  0003 2704          	jreq	L013
-3126  0005 a11c          	cp	a,#28
-3127  0007 2603          	jrne	L603
-3128  0009               L013:
-3129  0009 4f            	clr	a
-3130  000a 2010          	jra	L213
-3131  000c               L603:
-3132  000c ae02ef        	ldw	x,#751
-3133  000f 89            	pushw	x
-3134  0010 ae0000        	ldw	x,#0
-3135  0013 89            	pushw	x
-3136  0014 ae000c        	ldw	x,#L75
-3137  0017 cd0000        	call	_assert_failed
-3139  001a 5b04          	addw	sp,#4
-3140  001c               L213:
-3141                     ; 753     if (CLK_IT == (uint8_t)CLK_IT_CSSD)
-3143  001c 7b01          	ld	a,(OFST+1,sp)
-3144  001e a10c          	cp	a,#12
-3145  0020 2606          	jrne	L3231
-3146                     ; 756         CLK->CSSR &= (uint8_t)(~CLK_CSSR_CSSD);
-3148  0022 721750c8      	bres	20680,#3
-3150  0026 2004          	jra	L5231
-3151  0028               L3231:
-3152                     ; 761         CLK->SWCR &= (uint8_t)(~CLK_SWCR_SWIF);
-3154  0028 721750c5      	bres	20677,#3
-3155  002c               L5231:
-3156                     ; 764 }
-3159  002c 84            	pop	a
-3160  002d 81            	ret
-3195                     	xdef	_CLKPrescTable
-3196                     	xdef	_HSIDivFactor
-3197                     	xdef	_CLK_ClearITPendingBit
-3198                     	xdef	_CLK_GetITStatus
-3199                     	xdef	_CLK_GetFlagStatus
-3200                     	xdef	_CLK_GetSYSCLKSource
-3201                     	xdef	_CLK_GetClockFreq
-3202                     	xdef	_CLK_AdjustHSICalibrationValue
-3203                     	xdef	_CLK_SYSCLKEmergencyClear
-3204                     	xdef	_CLK_ClockSecuritySystemEnable
-3205                     	xdef	_CLK_SWIMConfig
-3206                     	xdef	_CLK_SYSCLKConfig
-3207                     	xdef	_CLK_ITConfig
-3208                     	xdef	_CLK_CCOConfig
-3209                     	xdef	_CLK_HSIPrescalerConfig
-3210                     	xdef	_CLK_ClockSwitchConfig
-3211                     	xdef	_CLK_PeripheralClockConfig
-3212                     	xdef	_CLK_SlowActiveHaltWakeUpCmd
-3213                     	xdef	_CLK_FastHaltWakeUpCmd
-3214                     	xdef	_CLK_ClockSwitchCmd
-3215                     	xdef	_CLK_CCOCmd
-3216                     	xdef	_CLK_LSICmd
-3217                     	xdef	_CLK_HSICmd
-3218                     	xdef	_CLK_HSECmd
-3219                     	xdef	_CLK_DeInit
-3220                     	xref	_assert_failed
-3221                     	switch	.const
-3222  000c               L75:
-3223  000c 2e2e5c73746d  	dc.b	"..\stm8s_stdperiph"
-3224  001e 5f6472697665  	dc.b	"_driver\src\stm8s_"
-3225  0030 636c6b2e6300  	dc.b	"clk.c",0
-3226                     	xref.b	c_lreg
-3227                     	xref.b	c_x
-3247                     	xref	c_ltor
-3248                     	xref	c_ludv
-3249                     	xref	c_rtol
-3250                     	end
+1362  02fb 1e03          	ldw	x,(OFST-1,sp)
+1363  02fd 1d0001        	subw	x,#1
+1364  0300 1f03          	ldw	(OFST-1,sp),x
+1366  0302               L164:
+1367                     ; 355         while ((((CLK->SWCR & CLK_SWCR_SWBSY) != 0 )&& (DownCounter != 0)))
+1369  0302 c650c5        	ld	a,20677
+1370  0305 a501          	bcp	a,#1
+1371  0307 2704          	jreq	L564
+1373  0309 1e03          	ldw	x,(OFST-1,sp)
+1374  030b 26ee          	jrne	L554
+1375  030d               L564:
+1376                     ; 360         if (DownCounter != 0)
+1378  030d 1e03          	ldw	x,(OFST-1,sp)
+1379  030f 2706          	jreq	L764
+1380                     ; 362             Swif = SUCCESS;
+1382  0311 a601          	ld	a,#1
+1383  0313 6b02          	ld	(OFST-2,sp),a
+1386  0315 201b          	jra	L374
+1387  0317               L764:
+1388                     ; 366             Swif = ERROR;
+1390  0317 0f02          	clr	(OFST-2,sp)
+1392  0319 2017          	jra	L374
+1393  031b               L744:
+1394                     ; 374         if (ITState != DISABLE)
+1396  031b 0d09          	tnz	(OFST+5,sp)
+1397  031d 2706          	jreq	L574
+1398                     ; 376             CLK->SWCR |= CLK_SWCR_SWIEN;
+1400  031f 721450c5      	bset	20677,#2
+1402  0323 2004          	jra	L774
+1403  0325               L574:
+1404                     ; 380             CLK->SWCR &= (uint8_t)(~CLK_SWCR_SWIEN);
+1406  0325 721550c5      	bres	20677,#2
+1407  0329               L774:
+1408                     ; 384         CLK->SWR = (uint8_t)CLK_NewClock;
+1410  0329 7b06          	ld	a,(OFST+2,sp)
+1411  032b c750c4        	ld	20676,a
+1412                     ; 388         Swif = SUCCESS;
+1414  032e a601          	ld	a,#1
+1415  0330 6b02          	ld	(OFST-2,sp),a
+1417  0332               L374:
+1418                     ; 393     if ((CLK_CurrentClockState == CLK_CURRENTCLOCKSTATE_DISABLE) && ( clock_master == CLK_SOURCE_HSI))
+1420  0332 0d0a          	tnz	(OFST+6,sp)
+1421  0334 260c          	jrne	L105
+1423  0336 7b01          	ld	a,(OFST-3,sp)
+1424  0338 a1e1          	cp	a,#225
+1425  033a 2606          	jrne	L105
+1426                     ; 395         CLK->ICKR &= (uint8_t)(~CLK_ICKR_HSIEN);
+1428  033c 721150c0      	bres	20672,#0
+1430  0340 201e          	jra	L305
+1431  0342               L105:
+1432                     ; 397     else if ((CLK_CurrentClockState == CLK_CURRENTCLOCKSTATE_DISABLE) && ( clock_master == CLK_SOURCE_LSI))
+1434  0342 0d0a          	tnz	(OFST+6,sp)
+1435  0344 260c          	jrne	L505
+1437  0346 7b01          	ld	a,(OFST-3,sp)
+1438  0348 a1d2          	cp	a,#210
+1439  034a 2606          	jrne	L505
+1440                     ; 399         CLK->ICKR &= (uint8_t)(~CLK_ICKR_LSIEN);
+1442  034c 721750c0      	bres	20672,#3
+1444  0350 200e          	jra	L305
+1445  0352               L505:
+1446                     ; 401     else if ((CLK_CurrentClockState == CLK_CURRENTCLOCKSTATE_DISABLE) && ( clock_master == CLK_SOURCE_HSE))
+1448  0352 0d0a          	tnz	(OFST+6,sp)
+1449  0354 260a          	jrne	L305
+1451  0356 7b01          	ld	a,(OFST-3,sp)
+1452  0358 a1b4          	cp	a,#180
+1453  035a 2604          	jrne	L305
+1454                     ; 403         CLK->ECKR &= (uint8_t)(~CLK_ECKR_HSEEN);
+1456  035c 721150c1      	bres	20673,#0
+1457  0360               L305:
+1458                     ; 406     return(Swif);
+1460  0360 7b02          	ld	a,(OFST-2,sp)
+1463  0362 5b06          	addw	sp,#6
+1464  0364 81            	ret
+1603                     ; 416 void CLK_HSIPrescalerConfig(CLK_Prescaler_TypeDef HSIPrescaler)
+1603                     ; 417 {
+1604                     	switch	.text
+1605  0365               _CLK_HSIPrescalerConfig:
+1607  0365 88            	push	a
+1608       00000000      OFST:	set	0
+1611                     ; 420     assert_param(IS_CLK_HSIPRESCALER_OK(HSIPrescaler));
+1613  0366 4d            	tnz	a
+1614  0367 270c          	jreq	L271
+1615  0369 a108          	cp	a,#8
+1616  036b 2708          	jreq	L271
+1617  036d a110          	cp	a,#16
+1618  036f 2704          	jreq	L271
+1619  0371 a118          	cp	a,#24
+1620  0373 2603          	jrne	L071
+1621  0375               L271:
+1622  0375 4f            	clr	a
+1623  0376 2010          	jra	L471
+1624  0378               L071:
+1625  0378 ae01a4        	ldw	x,#420
+1626  037b 89            	pushw	x
+1627  037c ae0000        	ldw	x,#0
+1628  037f 89            	pushw	x
+1629  0380 ae000c        	ldw	x,#L75
+1630  0383 cd0000        	call	_assert_failed
+1632  0386 5b04          	addw	sp,#4
+1633  0388               L471:
+1634                     ; 423     CLK->CKDIVR &= (uint8_t)(~CLK_CKDIVR_HSIDIV);
+1636  0388 c650c6        	ld	a,20678
+1637  038b a4e7          	and	a,#231
+1638  038d c750c6        	ld	20678,a
+1639                     ; 426     CLK->CKDIVR |= (uint8_t)HSIPrescaler;
+1641  0390 c650c6        	ld	a,20678
+1642  0393 1a01          	or	a,(OFST+1,sp)
+1643  0395 c750c6        	ld	20678,a
+1644                     ; 428 }
+1647  0398 84            	pop	a
+1648  0399 81            	ret
+1784                     ; 439 void CLK_CCOConfig(CLK_Output_TypeDef CLK_CCO)
+1784                     ; 440 {
+1785                     	switch	.text
+1786  039a               _CLK_CCOConfig:
+1788  039a 88            	push	a
+1789       00000000      OFST:	set	0
+1792                     ; 443     assert_param(IS_CLK_OUTPUT_OK(CLK_CCO));
+1794  039b 4d            	tnz	a
+1795  039c 2730          	jreq	L202
+1796  039e a104          	cp	a,#4
+1797  03a0 272c          	jreq	L202
+1798  03a2 a102          	cp	a,#2
+1799  03a4 2728          	jreq	L202
+1800  03a6 a108          	cp	a,#8
+1801  03a8 2724          	jreq	L202
+1802  03aa a10a          	cp	a,#10
+1803  03ac 2720          	jreq	L202
+1804  03ae a10c          	cp	a,#12
+1805  03b0 271c          	jreq	L202
+1806  03b2 a10e          	cp	a,#14
+1807  03b4 2718          	jreq	L202
+1808  03b6 a110          	cp	a,#16
+1809  03b8 2714          	jreq	L202
+1810  03ba a112          	cp	a,#18
+1811  03bc 2710          	jreq	L202
+1812  03be a114          	cp	a,#20
+1813  03c0 270c          	jreq	L202
+1814  03c2 a116          	cp	a,#22
+1815  03c4 2708          	jreq	L202
+1816  03c6 a118          	cp	a,#24
+1817  03c8 2704          	jreq	L202
+1818  03ca a11a          	cp	a,#26
+1819  03cc 2603          	jrne	L002
+1820  03ce               L202:
+1821  03ce 4f            	clr	a
+1822  03cf 2010          	jra	L402
+1823  03d1               L002:
+1824  03d1 ae01bb        	ldw	x,#443
+1825  03d4 89            	pushw	x
+1826  03d5 ae0000        	ldw	x,#0
+1827  03d8 89            	pushw	x
+1828  03d9 ae000c        	ldw	x,#L75
+1829  03dc cd0000        	call	_assert_failed
+1831  03df 5b04          	addw	sp,#4
+1832  03e1               L402:
+1833                     ; 446     CLK->CCOR &= (uint8_t)(~CLK_CCOR_CCOSEL);
+1835  03e1 c650c9        	ld	a,20681
+1836  03e4 a4e1          	and	a,#225
+1837  03e6 c750c9        	ld	20681,a
+1838                     ; 449     CLK->CCOR |= (uint8_t)CLK_CCO;
+1840  03e9 c650c9        	ld	a,20681
+1841  03ec 1a01          	or	a,(OFST+1,sp)
+1842  03ee c750c9        	ld	20681,a
+1843                     ; 452     CLK->CCOR |= CLK_CCOR_CCOEN;
+1845  03f1 721050c9      	bset	20681,#0
+1846                     ; 454 }
+1849  03f5 84            	pop	a
+1850  03f6 81            	ret
+1916                     ; 464 void CLK_ITConfig(CLK_IT_TypeDef CLK_IT, FunctionalState NewState)
+1916                     ; 465 {
+1917                     	switch	.text
+1918  03f7               _CLK_ITConfig:
+1920  03f7 89            	pushw	x
+1921       00000000      OFST:	set	0
+1924                     ; 468     assert_param(IS_FUNCTIONALSTATE_OK(NewState));
+1926  03f8 9f            	ld	a,xl
+1927  03f9 4d            	tnz	a
+1928  03fa 2705          	jreq	L212
+1929  03fc 9f            	ld	a,xl
+1930  03fd a101          	cp	a,#1
+1931  03ff 2603          	jrne	L012
+1932  0401               L212:
+1933  0401 4f            	clr	a
+1934  0402 2010          	jra	L412
+1935  0404               L012:
+1936  0404 ae01d4        	ldw	x,#468
+1937  0407 89            	pushw	x
+1938  0408 ae0000        	ldw	x,#0
+1939  040b 89            	pushw	x
+1940  040c ae000c        	ldw	x,#L75
+1941  040f cd0000        	call	_assert_failed
+1943  0412 5b04          	addw	sp,#4
+1944  0414               L412:
+1945                     ; 469     assert_param(IS_CLK_IT_OK(CLK_IT));
+1947  0414 7b01          	ld	a,(OFST+1,sp)
+1948  0416 a10c          	cp	a,#12
+1949  0418 2706          	jreq	L022
+1950  041a 7b01          	ld	a,(OFST+1,sp)
+1951  041c a11c          	cp	a,#28
+1952  041e 2603          	jrne	L612
+1953  0420               L022:
+1954  0420 4f            	clr	a
+1955  0421 2010          	jra	L222
+1956  0423               L612:
+1957  0423 ae01d5        	ldw	x,#469
+1958  0426 89            	pushw	x
+1959  0427 ae0000        	ldw	x,#0
+1960  042a 89            	pushw	x
+1961  042b ae000c        	ldw	x,#L75
+1962  042e cd0000        	call	_assert_failed
+1964  0431 5b04          	addw	sp,#4
+1965  0433               L222:
+1966                     ; 471     if (NewState != DISABLE)
+1968  0433 0d02          	tnz	(OFST+2,sp)
+1969  0435 271a          	jreq	L707
+1970                     ; 473         switch (CLK_IT)
+1972  0437 7b01          	ld	a,(OFST+1,sp)
+1974                     ; 481         default:
+1974                     ; 482             break;
+1975  0439 a00c          	sub	a,#12
+1976  043b 270a          	jreq	L346
+1977  043d a010          	sub	a,#16
+1978  043f 2624          	jrne	L517
+1979                     ; 475         case CLK_IT_SWIF: /* Enable the clock switch interrupt */
+1979                     ; 476             CLK->SWCR |= CLK_SWCR_SWIEN;
+1981  0441 721450c5      	bset	20677,#2
+1982                     ; 477             break;
+1984  0445 201e          	jra	L517
+1985  0447               L346:
+1986                     ; 478         case CLK_IT_CSSD: /* Enable the clock security system detection interrupt */
+1986                     ; 479             CLK->CSSR |= CLK_CSSR_CSSDIE;
+1988  0447 721450c8      	bset	20680,#2
+1989                     ; 480             break;
+1991  044b 2018          	jra	L517
+1992  044d               L546:
+1993                     ; 481         default:
+1993                     ; 482             break;
+1995  044d 2016          	jra	L517
+1996  044f               L317:
+1998  044f 2014          	jra	L517
+1999  0451               L707:
+2000                     ; 487         switch (CLK_IT)
+2002  0451 7b01          	ld	a,(OFST+1,sp)
+2004                     ; 495         default:
+2004                     ; 496             break;
+2005  0453 a00c          	sub	a,#12
+2006  0455 270a          	jreq	L156
+2007  0457 a010          	sub	a,#16
+2008  0459 260a          	jrne	L517
+2009                     ; 489         case CLK_IT_SWIF: /* Disable the clock switch interrupt */
+2009                     ; 490             CLK->SWCR  &= (uint8_t)(~CLK_SWCR_SWIEN);
+2011  045b 721550c5      	bres	20677,#2
+2012                     ; 491             break;
+2014  045f 2004          	jra	L517
+2015  0461               L156:
+2016                     ; 492         case CLK_IT_CSSD: /* Disable the clock security system detection interrupt */
+2016                     ; 493             CLK->CSSR &= (uint8_t)(~CLK_CSSR_CSSDIE);
+2018  0461 721550c8      	bres	20680,#2
+2019                     ; 494             break;
+2020  0465               L517:
+2021                     ; 500 }
+2024  0465 85            	popw	x
+2025  0466 81            	ret
+2026  0467               L356:
+2027                     ; 495         default:
+2027                     ; 496             break;
+2029  0467 20fc          	jra	L517
+2030  0469               L127:
+2031  0469 20fa          	jra	L517
+2067                     ; 507 void CLK_SYSCLKConfig(CLK_Prescaler_TypeDef CLK_Prescaler)
+2067                     ; 508 {
+2068                     	switch	.text
+2069  046b               _CLK_SYSCLKConfig:
+2071  046b 88            	push	a
+2072       00000000      OFST:	set	0
+2075                     ; 511     assert_param(IS_CLK_PRESCALER_OK(CLK_Prescaler));
+2077  046c 4d            	tnz	a
+2078  046d 272c          	jreq	L032
+2079  046f a108          	cp	a,#8
+2080  0471 2728          	jreq	L032
+2081  0473 a110          	cp	a,#16
+2082  0475 2724          	jreq	L032
+2083  0477 a118          	cp	a,#24
+2084  0479 2720          	jreq	L032
+2085  047b a180          	cp	a,#128
+2086  047d 271c          	jreq	L032
+2087  047f a181          	cp	a,#129
+2088  0481 2718          	jreq	L032
+2089  0483 a182          	cp	a,#130
+2090  0485 2714          	jreq	L032
+2091  0487 a183          	cp	a,#131
+2092  0489 2710          	jreq	L032
+2093  048b a184          	cp	a,#132
+2094  048d 270c          	jreq	L032
+2095  048f a185          	cp	a,#133
+2096  0491 2708          	jreq	L032
+2097  0493 a186          	cp	a,#134
+2098  0495 2704          	jreq	L032
+2099  0497 a187          	cp	a,#135
+2100  0499 2603          	jrne	L622
+2101  049b               L032:
+2102  049b 4f            	clr	a
+2103  049c 2010          	jra	L232
+2104  049e               L622:
+2105  049e ae01ff        	ldw	x,#511
+2106  04a1 89            	pushw	x
+2107  04a2 ae0000        	ldw	x,#0
+2108  04a5 89            	pushw	x
+2109  04a6 ae000c        	ldw	x,#L75
+2110  04a9 cd0000        	call	_assert_failed
+2112  04ac 5b04          	addw	sp,#4
+2113  04ae               L232:
+2114                     ; 513     if (((uint8_t)CLK_Prescaler & (uint8_t)0x80) == 0x00) /* Bit7 = 0 means HSI divider */
+2116  04ae 7b01          	ld	a,(OFST+1,sp)
+2117  04b0 a580          	bcp	a,#128
+2118  04b2 2614          	jrne	L147
+2119                     ; 515         CLK->CKDIVR &= (uint8_t)(~CLK_CKDIVR_HSIDIV);
+2121  04b4 c650c6        	ld	a,20678
+2122  04b7 a4e7          	and	a,#231
+2123  04b9 c750c6        	ld	20678,a
+2124                     ; 516         CLK->CKDIVR |= (uint8_t)((uint8_t)CLK_Prescaler & (uint8_t)CLK_CKDIVR_HSIDIV);
+2126  04bc 7b01          	ld	a,(OFST+1,sp)
+2127  04be a418          	and	a,#24
+2128  04c0 ca50c6        	or	a,20678
+2129  04c3 c750c6        	ld	20678,a
+2131  04c6 2012          	jra	L347
+2132  04c8               L147:
+2133                     ; 520         CLK->CKDIVR &= (uint8_t)(~CLK_CKDIVR_CPUDIV);
+2135  04c8 c650c6        	ld	a,20678
+2136  04cb a4f8          	and	a,#248
+2137  04cd c750c6        	ld	20678,a
+2138                     ; 521         CLK->CKDIVR |= (uint8_t)((uint8_t)CLK_Prescaler & (uint8_t)CLK_CKDIVR_CPUDIV);
+2140  04d0 7b01          	ld	a,(OFST+1,sp)
+2141  04d2 a407          	and	a,#7
+2142  04d4 ca50c6        	or	a,20678
+2143  04d7 c750c6        	ld	20678,a
+2144  04da               L347:
+2145                     ; 524 }
+2148  04da 84            	pop	a
+2149  04db 81            	ret
+2206                     ; 531 void CLK_SWIMConfig(CLK_SWIMDivider_TypeDef CLK_SWIMDivider)
+2206                     ; 532 {
+2207                     	switch	.text
+2208  04dc               _CLK_SWIMConfig:
+2210  04dc 88            	push	a
+2211       00000000      OFST:	set	0
+2214                     ; 535     assert_param(IS_CLK_SWIMDIVIDER_OK(CLK_SWIMDivider));
+2216  04dd 4d            	tnz	a
+2217  04de 2704          	jreq	L042
+2218  04e0 a101          	cp	a,#1
+2219  04e2 2603          	jrne	L632
+2220  04e4               L042:
+2221  04e4 4f            	clr	a
+2222  04e5 2010          	jra	L242
+2223  04e7               L632:
+2224  04e7 ae0217        	ldw	x,#535
+2225  04ea 89            	pushw	x
+2226  04eb ae0000        	ldw	x,#0
+2227  04ee 89            	pushw	x
+2228  04ef ae000c        	ldw	x,#L75
+2229  04f2 cd0000        	call	_assert_failed
+2231  04f5 5b04          	addw	sp,#4
+2232  04f7               L242:
+2233                     ; 537     if (CLK_SWIMDivider != CLK_SWIMDIVIDER_2)
+2235  04f7 0d01          	tnz	(OFST+1,sp)
+2236  04f9 2706          	jreq	L377
+2237                     ; 540         CLK->SWIMCCR |= CLK_SWIMCCR_SWIMDIV;
+2239  04fb 721050cd      	bset	20685,#0
+2241  04ff 2004          	jra	L577
+2242  0501               L377:
+2243                     ; 545         CLK->SWIMCCR &= (uint8_t)(~CLK_SWIMCCR_SWIMDIV);
+2245  0501 721150cd      	bres	20685,#0
+2246  0505               L577:
+2247                     ; 548 }
+2250  0505 84            	pop	a
+2251  0506 81            	ret
+2275                     ; 557 void CLK_ClockSecuritySystemEnable(void)
+2275                     ; 558 {
+2276                     	switch	.text
+2277  0507               _CLK_ClockSecuritySystemEnable:
+2281                     ; 560     CLK->CSSR |= CLK_CSSR_CSSEN;
+2283  0507 721050c8      	bset	20680,#0
+2284                     ; 561 }
+2287  050b 81            	ret
+2312                     ; 569 CLK_Source_TypeDef CLK_GetSYSCLKSource(void)
+2312                     ; 570 {
+2313                     	switch	.text
+2314  050c               _CLK_GetSYSCLKSource:
+2318                     ; 571     return((CLK_Source_TypeDef)CLK->CMSR);
+2320  050c c650c3        	ld	a,20675
+2323  050f 81            	ret
+2386                     ; 579 uint32_t CLK_GetClockFreq(void)
+2386                     ; 580 {
+2387                     	switch	.text
+2388  0510               _CLK_GetClockFreq:
+2390  0510 5209          	subw	sp,#9
+2391       00000009      OFST:	set	9
+2394                     ; 582     uint32_t clockfrequency = 0;
+2396                     ; 583     CLK_Source_TypeDef clocksource = CLK_SOURCE_HSI;
+2398                     ; 584     uint8_t tmp = 0, presc = 0;
+2402                     ; 587     clocksource = (CLK_Source_TypeDef)CLK->CMSR;
+2404  0512 c650c3        	ld	a,20675
+2405  0515 6b09          	ld	(OFST+0,sp),a
+2407                     ; 589     if (clocksource == CLK_SOURCE_HSI)
+2409  0517 7b09          	ld	a,(OFST+0,sp)
+2410  0519 a1e1          	cp	a,#225
+2411  051b 2641          	jrne	L1501
+2412                     ; 591         tmp = (uint8_t)(CLK->CKDIVR & CLK_CKDIVR_HSIDIV);
+2414  051d c650c6        	ld	a,20678
+2415  0520 a418          	and	a,#24
+2416  0522 6b09          	ld	(OFST+0,sp),a
+2418                     ; 592         tmp = (uint8_t)(tmp >> 3);
+2420  0524 0409          	srl	(OFST+0,sp)
+2421  0526 0409          	srl	(OFST+0,sp)
+2422  0528 0409          	srl	(OFST+0,sp)
+2424                     ; 593         presc = HSIDivFactor[tmp];
+2426  052a 7b09          	ld	a,(OFST+0,sp)
+2427  052c 5f            	clrw	x
+2428  052d 97            	ld	xl,a
+2429  052e d60000        	ld	a,(_HSIDivFactor,x)
+2430  0531 6b09          	ld	(OFST+0,sp),a
+2432                     ; 594         clockfrequency = HSI_VALUE / presc;
+2434  0533 7b09          	ld	a,(OFST+0,sp)
+2435  0535 b703          	ld	c_lreg+3,a
+2436  0537 3f02          	clr	c_lreg+2
+2437  0539 3f01          	clr	c_lreg+1
+2438  053b 3f00          	clr	c_lreg
+2439  053d 96            	ldw	x,sp
+2440  053e 1c0001        	addw	x,#OFST-8
+2441  0541 cd0000        	call	c_rtol
+2444  0544 ae2400        	ldw	x,#9216
+2445  0547 bf02          	ldw	c_lreg+2,x
+2446  0549 ae00f4        	ldw	x,#244
+2447  054c bf00          	ldw	c_lreg,x
+2448  054e 96            	ldw	x,sp
+2449  054f 1c0001        	addw	x,#OFST-8
+2450  0552 cd0000        	call	c_ludv
+2452  0555 96            	ldw	x,sp
+2453  0556 1c0005        	addw	x,#OFST-4
+2454  0559 cd0000        	call	c_rtol
+2458  055c 201c          	jra	L3501
+2459  055e               L1501:
+2460                     ; 596     else if ( clocksource == CLK_SOURCE_LSI)
+2462  055e 7b09          	ld	a,(OFST+0,sp)
+2463  0560 a1d2          	cp	a,#210
+2464  0562 260c          	jrne	L5501
+2465                     ; 598         clockfrequency = LSI_VALUE;
+2467  0564 aef400        	ldw	x,#62464
+2468  0567 1f07          	ldw	(OFST-2,sp),x
+2469  0569 ae0001        	ldw	x,#1
+2470  056c 1f05          	ldw	(OFST-4,sp),x
+2473  056e 200a          	jra	L3501
+2474  0570               L5501:
+2475                     ; 602         clockfrequency = HSE_VALUE;
+2477  0570 ae2400        	ldw	x,#9216
+2478  0573 1f07          	ldw	(OFST-2,sp),x
+2479  0575 ae00f4        	ldw	x,#244
+2480  0578 1f05          	ldw	(OFST-4,sp),x
+2482  057a               L3501:
+2483                     ; 605     return((uint32_t)clockfrequency);
+2485  057a 96            	ldw	x,sp
+2486  057b 1c0005        	addw	x,#OFST-4
+2487  057e cd0000        	call	c_ltor
+2491  0581 5b09          	addw	sp,#9
+2492  0583 81            	ret
+2592                     ; 616 void CLK_AdjustHSICalibrationValue(CLK_HSITrimValue_TypeDef CLK_HSICalibrationValue)
+2592                     ; 617 {
+2593                     	switch	.text
+2594  0584               _CLK_AdjustHSICalibrationValue:
+2596  0584 88            	push	a
+2597       00000000      OFST:	set	0
+2600                     ; 620     assert_param(IS_CLK_HSITRIMVALUE_OK(CLK_HSICalibrationValue));
+2602  0585 4d            	tnz	a
+2603  0586 271c          	jreq	L652
+2604  0588 a101          	cp	a,#1
+2605  058a 2718          	jreq	L652
+2606  058c a102          	cp	a,#2
+2607  058e 2714          	jreq	L652
+2608  0590 a103          	cp	a,#3
+2609  0592 2710          	jreq	L652
+2610  0594 a104          	cp	a,#4
+2611  0596 270c          	jreq	L652
+2612  0598 a105          	cp	a,#5
+2613  059a 2708          	jreq	L652
+2614  059c a106          	cp	a,#6
+2615  059e 2704          	jreq	L652
+2616  05a0 a107          	cp	a,#7
+2617  05a2 2603          	jrne	L452
+2618  05a4               L652:
+2619  05a4 4f            	clr	a
+2620  05a5 2010          	jra	L062
+2621  05a7               L452:
+2622  05a7 ae026c        	ldw	x,#620
+2623  05aa 89            	pushw	x
+2624  05ab ae0000        	ldw	x,#0
+2625  05ae 89            	pushw	x
+2626  05af ae000c        	ldw	x,#L75
+2627  05b2 cd0000        	call	_assert_failed
+2629  05b5 5b04          	addw	sp,#4
+2630  05b7               L062:
+2631                     ; 623     CLK->HSITRIMR = (uint8_t)( (uint8_t)(CLK->HSITRIMR & (uint8_t)(~CLK_HSITRIMR_HSITRIM))|((uint8_t)CLK_HSICalibrationValue));
+2633  05b7 c650cc        	ld	a,20684
+2634  05ba a4f8          	and	a,#248
+2635  05bc 1a01          	or	a,(OFST+1,sp)
+2636  05be c750cc        	ld	20684,a
+2637                     ; 625 }
+2640  05c1 84            	pop	a
+2641  05c2 81            	ret
+2665                     ; 636 void CLK_SYSCLKEmergencyClear(void)
+2665                     ; 637 {
+2666                     	switch	.text
+2667  05c3               _CLK_SYSCLKEmergencyClear:
+2671                     ; 638     CLK->SWCR &= (uint8_t)(~CLK_SWCR_SWBSY);
+2673  05c3 721150c5      	bres	20677,#0
+2674                     ; 639 }
+2677  05c7 81            	ret
+2831                     ; 648 FlagStatus CLK_GetFlagStatus(CLK_Flag_TypeDef CLK_FLAG)
+2831                     ; 649 {
+2832                     	switch	.text
+2833  05c8               _CLK_GetFlagStatus:
+2835  05c8 89            	pushw	x
+2836  05c9 5203          	subw	sp,#3
+2837       00000003      OFST:	set	3
+2840                     ; 651     uint16_t statusreg = 0;
+2842                     ; 652     uint8_t tmpreg = 0;
+2844                     ; 653     FlagStatus bitstatus = RESET;
+2846                     ; 656     assert_param(IS_CLK_FLAG_OK(CLK_FLAG));
+2848  05cb a30110        	cpw	x,#272
+2849  05ce 2728          	jreq	L072
+2850  05d0 a30102        	cpw	x,#258
+2851  05d3 2723          	jreq	L072
+2852  05d5 a30202        	cpw	x,#514
+2853  05d8 271e          	jreq	L072
+2854  05da a30308        	cpw	x,#776
+2855  05dd 2719          	jreq	L072
+2856  05df a30301        	cpw	x,#769
+2857  05e2 2714          	jreq	L072
+2858  05e4 a30408        	cpw	x,#1032
+2859  05e7 270f          	jreq	L072
+2860  05e9 a30402        	cpw	x,#1026
+2861  05ec 270a          	jreq	L072
+2862  05ee a30504        	cpw	x,#1284
+2863  05f1 2705          	jreq	L072
+2864  05f3 a30502        	cpw	x,#1282
+2865  05f6 2603          	jrne	L662
+2866  05f8               L072:
+2867  05f8 4f            	clr	a
+2868  05f9 2010          	jra	L272
+2869  05fb               L662:
+2870  05fb ae0290        	ldw	x,#656
+2871  05fe 89            	pushw	x
+2872  05ff ae0000        	ldw	x,#0
+2873  0602 89            	pushw	x
+2874  0603 ae000c        	ldw	x,#L75
+2875  0606 cd0000        	call	_assert_failed
+2877  0609 5b04          	addw	sp,#4
+2878  060b               L272:
+2879                     ; 659     statusreg = (uint16_t)((uint16_t)CLK_FLAG & (uint16_t)0xFF00);
+2881  060b 7b04          	ld	a,(OFST+1,sp)
+2882  060d 97            	ld	xl,a
+2883  060e 7b05          	ld	a,(OFST+2,sp)
+2884  0610 9f            	ld	a,xl
+2885  0611 a4ff          	and	a,#255
+2886  0613 97            	ld	xl,a
+2887  0614 4f            	clr	a
+2888  0615 02            	rlwa	x,a
+2889  0616 1f01          	ldw	(OFST-2,sp),x
+2890  0618 01            	rrwa	x,a
+2892                     ; 662     if (statusreg == 0x0100) /* The flag to check is in ICKRregister */
+2894  0619 1e01          	ldw	x,(OFST-2,sp)
+2895  061b a30100        	cpw	x,#256
+2896  061e 2607          	jrne	L3221
+2897                     ; 664         tmpreg = CLK->ICKR;
+2899  0620 c650c0        	ld	a,20672
+2900  0623 6b03          	ld	(OFST+0,sp),a
+2903  0625 202f          	jra	L5221
+2904  0627               L3221:
+2905                     ; 666     else if (statusreg == 0x0200) /* The flag to check is in ECKRregister */
+2907  0627 1e01          	ldw	x,(OFST-2,sp)
+2908  0629 a30200        	cpw	x,#512
+2909  062c 2607          	jrne	L7221
+2910                     ; 668         tmpreg = CLK->ECKR;
+2912  062e c650c1        	ld	a,20673
+2913  0631 6b03          	ld	(OFST+0,sp),a
+2916  0633 2021          	jra	L5221
+2917  0635               L7221:
+2918                     ; 670     else if (statusreg == 0x0300) /* The flag to check is in SWIC register */
+2920  0635 1e01          	ldw	x,(OFST-2,sp)
+2921  0637 a30300        	cpw	x,#768
+2922  063a 2607          	jrne	L3321
+2923                     ; 672         tmpreg = CLK->SWCR;
+2925  063c c650c5        	ld	a,20677
+2926  063f 6b03          	ld	(OFST+0,sp),a
+2929  0641 2013          	jra	L5221
+2930  0643               L3321:
+2931                     ; 674     else if (statusreg == 0x0400) /* The flag to check is in CSS register */
+2933  0643 1e01          	ldw	x,(OFST-2,sp)
+2934  0645 a30400        	cpw	x,#1024
+2935  0648 2607          	jrne	L7321
+2936                     ; 676         tmpreg = CLK->CSSR;
+2938  064a c650c8        	ld	a,20680
+2939  064d 6b03          	ld	(OFST+0,sp),a
+2942  064f 2005          	jra	L5221
+2943  0651               L7321:
+2944                     ; 680         tmpreg = CLK->CCOR;
+2946  0651 c650c9        	ld	a,20681
+2947  0654 6b03          	ld	(OFST+0,sp),a
+2949  0656               L5221:
+2950                     ; 683     if ((tmpreg & (uint8_t)CLK_FLAG) != (uint8_t)RESET)
+2952  0656 7b05          	ld	a,(OFST+2,sp)
+2953  0658 1503          	bcp	a,(OFST+0,sp)
+2954  065a 2706          	jreq	L3421
+2955                     ; 685         bitstatus = SET;
+2957  065c a601          	ld	a,#1
+2958  065e 6b03          	ld	(OFST+0,sp),a
+2961  0660 2002          	jra	L5421
+2962  0662               L3421:
+2963                     ; 689         bitstatus = RESET;
+2965  0662 0f03          	clr	(OFST+0,sp)
+2967  0664               L5421:
+2968                     ; 693     return((FlagStatus)bitstatus);
+2970  0664 7b03          	ld	a,(OFST+0,sp)
+2973  0666 5b05          	addw	sp,#5
+2974  0668 81            	ret
+3021                     ; 703 ITStatus CLK_GetITStatus(CLK_IT_TypeDef CLK_IT)
+3021                     ; 704 {
+3022                     	switch	.text
+3023  0669               _CLK_GetITStatus:
+3025  0669 88            	push	a
+3026  066a 88            	push	a
+3027       00000001      OFST:	set	1
+3030                     ; 706     ITStatus bitstatus = RESET;
+3032                     ; 709     assert_param(IS_CLK_IT_OK(CLK_IT));
+3034  066b a10c          	cp	a,#12
+3035  066d 2704          	jreq	L003
+3036  066f a11c          	cp	a,#28
+3037  0671 2603          	jrne	L672
+3038  0673               L003:
+3039  0673 4f            	clr	a
+3040  0674 2010          	jra	L203
+3041  0676               L672:
+3042  0676 ae02c5        	ldw	x,#709
+3043  0679 89            	pushw	x
+3044  067a ae0000        	ldw	x,#0
+3045  067d 89            	pushw	x
+3046  067e ae000c        	ldw	x,#L75
+3047  0681 cd0000        	call	_assert_failed
+3049  0684 5b04          	addw	sp,#4
+3050  0686               L203:
+3051                     ; 711     if (CLK_IT == CLK_IT_SWIF)
+3053  0686 7b02          	ld	a,(OFST+1,sp)
+3054  0688 a11c          	cp	a,#28
+3055  068a 2613          	jrne	L1721
+3056                     ; 714         if ((CLK->SWCR & (uint8_t)CLK_IT) == (uint8_t)0x0C)
+3058  068c c650c5        	ld	a,20677
+3059  068f 1402          	and	a,(OFST+1,sp)
+3060  0691 a10c          	cp	a,#12
+3061  0693 2606          	jrne	L3721
+3062                     ; 716             bitstatus = SET;
+3064  0695 a601          	ld	a,#1
+3065  0697 6b01          	ld	(OFST+0,sp),a
+3068  0699 2015          	jra	L7721
+3069  069b               L3721:
+3070                     ; 720             bitstatus = RESET;
+3072  069b 0f01          	clr	(OFST+0,sp)
+3074  069d 2011          	jra	L7721
+3075  069f               L1721:
+3076                     ; 726         if ((CLK->CSSR & (uint8_t)CLK_IT) == (uint8_t)0x0C)
+3078  069f c650c8        	ld	a,20680
+3079  06a2 1402          	and	a,(OFST+1,sp)
+3080  06a4 a10c          	cp	a,#12
+3081  06a6 2606          	jrne	L1031
+3082                     ; 728             bitstatus = SET;
+3084  06a8 a601          	ld	a,#1
+3085  06aa 6b01          	ld	(OFST+0,sp),a
+3088  06ac 2002          	jra	L7721
+3089  06ae               L1031:
+3090                     ; 732             bitstatus = RESET;
+3092  06ae 0f01          	clr	(OFST+0,sp)
+3094  06b0               L7721:
+3095                     ; 737     return bitstatus;
+3097  06b0 7b01          	ld	a,(OFST+0,sp)
+3100  06b2 85            	popw	x
+3101  06b3 81            	ret
+3138                     ; 747 void CLK_ClearITPendingBit(CLK_IT_TypeDef CLK_IT)
+3138                     ; 748 {
+3139                     	switch	.text
+3140  06b4               _CLK_ClearITPendingBit:
+3142  06b4 88            	push	a
+3143       00000000      OFST:	set	0
+3146                     ; 751     assert_param(IS_CLK_IT_OK(CLK_IT));
+3148  06b5 a10c          	cp	a,#12
+3149  06b7 2704          	jreq	L013
+3150  06b9 a11c          	cp	a,#28
+3151  06bb 2603          	jrne	L603
+3152  06bd               L013:
+3153  06bd 4f            	clr	a
+3154  06be 2010          	jra	L213
+3155  06c0               L603:
+3156  06c0 ae02ef        	ldw	x,#751
+3157  06c3 89            	pushw	x
+3158  06c4 ae0000        	ldw	x,#0
+3159  06c7 89            	pushw	x
+3160  06c8 ae000c        	ldw	x,#L75
+3161  06cb cd0000        	call	_assert_failed
+3163  06ce 5b04          	addw	sp,#4
+3164  06d0               L213:
+3165                     ; 753     if (CLK_IT == (uint8_t)CLK_IT_CSSD)
+3167  06d0 7b01          	ld	a,(OFST+1,sp)
+3168  06d2 a10c          	cp	a,#12
+3169  06d4 2606          	jrne	L3231
+3170                     ; 756         CLK->CSSR &= (uint8_t)(~CLK_CSSR_CSSD);
+3172  06d6 721750c8      	bres	20680,#3
+3174  06da 2004          	jra	L5231
+3175  06dc               L3231:
+3176                     ; 761         CLK->SWCR &= (uint8_t)(~CLK_SWCR_SWIF);
+3178  06dc 721750c5      	bres	20677,#3
+3179  06e0               L5231:
+3180                     ; 764 }
+3183  06e0 84            	pop	a
+3184  06e1 81            	ret
+3219                     	xdef	_CLKPrescTable
+3220                     	xdef	_HSIDivFactor
+3221                     	xdef	_CLK_ClearITPendingBit
+3222                     	xdef	_CLK_GetITStatus
+3223                     	xdef	_CLK_GetFlagStatus
+3224                     	xdef	_CLK_GetSYSCLKSource
+3225                     	xdef	_CLK_GetClockFreq
+3226                     	xdef	_CLK_AdjustHSICalibrationValue
+3227                     	xdef	_CLK_SYSCLKEmergencyClear
+3228                     	xdef	_CLK_ClockSecuritySystemEnable
+3229                     	xdef	_CLK_SWIMConfig
+3230                     	xdef	_CLK_SYSCLKConfig
+3231                     	xdef	_CLK_ITConfig
+3232                     	xdef	_CLK_CCOConfig
+3233                     	xdef	_CLK_HSIPrescalerConfig
+3234                     	xdef	_CLK_ClockSwitchConfig
+3235                     	xdef	_CLK_PeripheralClockConfig
+3236                     	xdef	_CLK_SlowActiveHaltWakeUpCmd
+3237                     	xdef	_CLK_FastHaltWakeUpCmd
+3238                     	xdef	_CLK_ClockSwitchCmd
+3239                     	xdef	_CLK_CCOCmd
+3240                     	xdef	_CLK_LSICmd
+3241                     	xdef	_CLK_HSICmd
+3242                     	xdef	_CLK_HSECmd
+3243                     	xdef	_CLK_DeInit
+3244                     	xref	_assert_failed
+3245                     	switch	.const
+3246  000c               L75:
+3247  000c 2e2e5c73746d  	dc.b	"..\stm8s_stdperiph"
+3248  001e 5f6472697665  	dc.b	"_driver\src\stm8s_"
+3249  0030 636c6b2e6300  	dc.b	"clk.c",0
+3250                     	xref.b	c_lreg
+3251                     	xref.b	c_x
+3271                     	xref	c_ltor
+3272                     	xref	c_ludv
+3273                     	xref	c_rtol
+3274                     	end
