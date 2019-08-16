@@ -517,7 +517,7 @@ void main(void)
     }
     
     
-    if(switch_pressed_time > 50)// 50ms debounce
+    if(switch_pressed_time > 20)// 20ms debounce
     {
       switch_pressed_time = 0;
       
@@ -543,6 +543,20 @@ void main(void)
             delay_ms(100);
           }
         }
+        else
+        {
+          for(uint8_t i=0; i<10; i++)
+          {
+            LED_GREEN_ON();
+            LED_RED_ON();
+            delay_ms(100);
+            LED_GREEN_OFF();
+            LED_RED_OFF();
+            delay_ms(100);
+          }
+        }
+        LED_GREEN_ON();
+        SWIM_Reset_Device();
         break;
         
       case STM8_TO_AT24:
@@ -559,6 +573,20 @@ void main(void)
             delay_ms(100);
           }
         }
+        else
+        {
+          for(uint8_t i=0; i<10; i++)
+          {
+            LED_GREEN_ON();
+            LED_RED_ON();
+            delay_ms(100);
+            LED_GREEN_OFF();
+            LED_RED_OFF();
+            delay_ms(100);
+          }
+        }
+        LED_RED_ON();
+        SWIM_Reset_Device();
         break;
         
       }
