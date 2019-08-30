@@ -10,28 +10,54 @@
 
 /* Private defines -----------------------------------------------------------*/
 
-#define NRST_PIN               GPIO_PIN_4
-#define NRST_PORT              GPIOC
+/* all swim pin must be on the same port */
+#define SWIM_PINS_PORT          GPIOD
+#define SWIM_PINS_EXTI_PORT     EXTI_PORT_GPIOD
 
-#define NRST_PIN_HIGH()        NRST_PORT->ODR |=  NRST_PIN     
-#define NRST_PIN_LOW()         NRST_PORT->ODR &=  ~NRST_PIN   
-
-#define SWIM_PIN_OUT()         SWIM_PORT->ODR |=  SWIM_PIN;\
-                               SWIM_PORT->CR1 &= ~SWIM_PIN;\
-                               SWIM_PORT->DDR |=  SWIM_PIN
-
-#define SWIM_PIN_IN_INT()      SWIM_PORT->DDR &=  ~SWIM_PIN;\
-                               SWIM_PORT->CR1 |=   SWIM_PIN;\
-                               SWIM_PORT->CR2 |=   SWIM_PIN 
+#define SWIM_PIN_1              GPIO_PIN_1
+#define SWIM_PIN_2              GPIO_PIN_2
+#define SWIM_PIN_3              GPIO_PIN_3 
+#define SWIM_PIN_4              GPIO_PIN_4 
+#define SWIM_PIN_5              GPIO_PIN_5 
+#define SWIM_PIN_6              GPIO_PIN_6 
 
 
-#define SWIM_PIN               GPIO_PIN_5   
-#define SWIM_PORT              GPIOC
+#define NRST_PIN_1              GPIO_PIN_3
+#define NRST_PIN_1_PORT         GPIOC
 
-#define SWIM_PIN_HIGH()        SWIM_PORT->ODR |=  SWIM_PIN     
-#define SWIM_PIN_LOW()         SWIM_PORT->ODR &= ~SWIM_PIN   
-#define SWIM_PIN_READ()        SWIM_PORT->IDR &   SWIM_PIN
-#define SWIM_PIN_READ11()      SWIM_PORT->IDR
+#define NRST_PIN_2              GPIO_PIN_4
+#define NRST_PIN_2_PORT         GPIOC
+
+#define NRST_PIN_3              GPIO_PIN_5
+#define NRST_PIN_3_PORT         GPIOC
+
+#define NRST_PIN_4              GPIO_PIN_6
+#define NRST_PIN_4_PORT         GPIOC
+
+#define NRST_PIN_5              GPIO_PIN_7
+#define NRST_PIN_5_PORT         GPIOC
+
+#define NRST_PIN_6              GPIO_PIN_3
+#define NRST_PIN_6_PORT         GPIOA
+
+
+#define NRST_PIN_HIGH(PORT, PIN)        PORT->ODR |=  PIN     
+#define NRST_PIN_LOW(PORT, PIN)         PORT->ODR &=  ~PIN   
+
+
+
+#define SWIM_PIN_OUT()         SWIM_PINS_PORT->ODR |=  SWIM_PIN_Mask;\
+                               SWIM_PINS_PORT->CR1 &= ~SWIM_PIN_Mask;\
+                               SWIM_PINS_PORT->DDR |=  SWIM_PIN_Mask
+
+#define SWIM_PIN_IN_INT()      SWIM_PINS_PORT->DDR &=  ~SWIM_PIN_Mask;\
+                               SWIM_PINS_PORT->CR1 |=   SWIM_PIN_Mask;\
+                               SWIM_PINS_PORT->CR2 |=   SWIM_PIN_Mask 
+
+
+#define SWIM_PIN_HIGH()        SWIM_PINS_PORT->ODR |=  SWIM_PIN_Mask     
+#define SWIM_PIN_LOW()         SWIM_PINS_PORT->ODR &= ~SWIM_PIN_Mask   
+#define SWIM_PIN_READ()        SWIM_PINS_PORT->IDR &   SWIM_PIN_Mask
 
 
 #define SWIM_DELAY_1_BIT()     nop(); nop()
@@ -40,43 +66,6 @@
                                SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();\
                                SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();\
                                SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT()
-
-
-//inline did not work
-//function call overhead causing timing issues
-#define SWIM_Write_Bit(bit)\
-{\
-  if(bit)\
-  {\
-    SWIM_PIN_LOW();\
-    SWIM_DELAY_1_BIT();\
-    SWIM_PIN_HIGH();\
-    SWIM_DELAY_0_BIT();\
-  }else\
-  {\
-    SWIM_PIN_LOW();\
-    SWIM_DELAY_0_BIT();\
-    SWIM_PIN_HIGH();\
-    SWIM_DELAY_1_BIT();\
-  }\
-}
-
-//parity or ack bit
-#define SWIM_Write_Parity_Ack_Bit(bit)\
-{\
-  if(bit)\
-  {\
-    SWIM_PIN_LOW();\
-    SWIM_DELAY_1_BIT();\
-    SWIM_PIN_IN_INT();\
-  }else\
-  {\
-    SWIM_PIN_LOW();\
-    SWIM_DELAY_0_BIT();\
-    SWIM_PIN_IN_INT();\
-  }\
-}
-
 
 #define SWIM_CMD_LEN                    3
 #define SWIM_CMD_SRST                   0x00
@@ -130,6 +119,10 @@ uint8_t SWIM_Wait_For_EOP(void);
 
 uint8_t SWIM_Reset_Device(void);
 
+
+void NRST_Low(void);
+
+void NRST_High(void);
 
 
 /***************** FLASH_CR2 ********************************/
