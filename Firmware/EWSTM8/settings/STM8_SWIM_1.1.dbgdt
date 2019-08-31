@@ -772,7 +772,7 @@
                     <item>size</item>
                     <item>device</item>
                     <item>flagstatus</item>
-                    <item></item>
+                    <item />
                 </expressions>
                 <col-names>
                     <item>Expression</item>
