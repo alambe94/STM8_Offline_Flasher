@@ -146,12 +146,12 @@ INTERRUPT_HANDLER(EXTI_PORTC_IRQHandler, 5)
   * @param  None
   * @retval None
   */
-INTERRUPT_HANDLER(EXTI_PORTD_IRQHandler, 6)
-{
+//INTERRUPT_HANDLER(EXTI_PORTD_IRQHandler, 6)
+//{
   /* In order to detect unexpected events during development,
      it is recommended to set a breakpoint on the following instruction.
   */
-}
+//}
 
 /**
   * @brief External Interrupt PORTE Interrupt routine.

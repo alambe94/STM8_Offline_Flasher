@@ -35,7 +35,7 @@
 #define EEPROM_STORE_ADDRESS         0x3000 //in 24CXX   128B EEPROM STM8S003 0x3000 to 0x3080
 #define OPTION_BYTE_STORE_ADDRESS    0x4000 //in 24CXX   10B  option byte register STM8S003
 
-#define STM8S003_BLOCK_SIZE          64  // also look for AT24Cxx Block Size
+#define STM8S003_BLOCK_SIZE          64u  // also look for AT24Cxx Block Size
 #define STM8S003_FLASH_PAGES         128 //stm8s003 has 128 pages of 64 bytes
 #define STM8S003_EEPROM_PAGES        2   //stm8s003 has 2 pages of 64 bytes (extra 2 page unofficial)
 

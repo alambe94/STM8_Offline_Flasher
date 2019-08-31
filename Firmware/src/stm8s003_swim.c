@@ -11,8 +11,8 @@
 #include "at24cxx.h"
 
 
-uint8_t RAM_Buffer[STM8S003_BLOCK_SIZE]={0};
-uint8_t Compare_Buffer[STM8S003_BLOCK_SIZE]={0};
+uint8_t RAM_Buffer[STM8S003_BLOCK_SIZE];
+uint8_t Compare_Buffer[STM8S003_BLOCK_SIZE];
 
 uint8_t STM8S003_Default_OPT[10]={0};
 
@@ -370,6 +370,7 @@ uint8_t SWIM_Enable_Block_Programming_All(void)
 
 uint8_t Copy_STM8S003_To_AT24CXX(void)
 {
+  uint8_t for_index;
   uint8_t status;
   uint16_t address_offset = 0;
   uint8_t device;
@@ -410,9 +411,9 @@ uint8_t Copy_STM8S003_To_AT24CXX(void)
   
   
   /****************************read flash data from stm8 start********************************/
-  for (uint8_t i=0; i<STM8S003_FLASH_PAGES; i++)
+  for (for_index=0; for_index<STM8S003_FLASH_PAGES; for_index++)
   {
-    address_offset = (i*STM8S003_BLOCK_SIZE);
+    address_offset = (for_index*STM8S003_BLOCK_SIZE);
     
     if(status)
     {
@@ -436,9 +437,9 @@ uint8_t Copy_STM8S003_To_AT24CXX(void)
   
   
   /*****************************read EEPROM data from stm8 start************************************/
-  for (uint8_t i=0; i<STM8S003_EEPROM_PAGES; i++)
+  for (for_index=0; for_index<STM8S003_EEPROM_PAGES; for_index++)
   {
-    address_offset = (i*STM8S003_BLOCK_SIZE);
+    address_offset = (for_index*STM8S003_BLOCK_SIZE);
     
     if(status)
     {
@@ -487,7 +488,8 @@ uint8_t Copy_STM8S003_To_AT24CXX(void)
 /****************************** AT24C256_To_STM8 start*******************************************/
 uint8_t AT24CXX_To_STM8S003(void)
 {
-  uint8_t status;
+  uint8_t for_index = 0;
+  uint8_t status = 0;
   uint16_t address_offset = 0;
   
   status = SWIM_Enter();
@@ -499,9 +501,9 @@ uint8_t AT24CXX_To_STM8S003(void)
     status = SWIM_Unlock_Flash_All();
   }
   
-  for (uint8_t i =0; i<STM8S003_FLASH_PAGES; i++)
+  for (for_index =0; for_index<STM8S003_FLASH_PAGES; for_index++)
   {
-    address_offset = (i*STM8S003_BLOCK_SIZE);
+    address_offset = (for_index*STM8S003_BLOCK_SIZE);
     
     if(status)
     {
@@ -538,9 +540,9 @@ uint8_t AT24CXX_To_STM8S003(void)
     status=SWIM_Unlock_EEPROM_All();
   }
   
-  for (uint8_t i=0; i<STM8S003_EEPROM_PAGES; i++)
+  for (for_index=0; for_index<STM8S003_EEPROM_PAGES; for_index++)
   {
-    address_offset = (i*STM8S003_BLOCK_SIZE);
+    address_offset = (for_index*STM8S003_BLOCK_SIZE);
     
     if(status)
     {
@@ -631,7 +633,8 @@ uint8_t AT24CXX_To_STM8S003(void)
 
 uint8_t OPT_Read_Write_Test(void)
 {
-  for(uint8_t i=0; i<STM8S003_BLOCK_SIZE;i++ )
+  uint8_t for_index;
+  for(for_index=0; for_index<STM8S003_BLOCK_SIZE;for_index++ )
   {
     
   }
@@ -642,15 +645,15 @@ uint8_t OPT_Read_Write_Test(void)
 
 uint8_t Flash_Read_Write_Test(void)
 {
-  
+  uint8_t for_index;
   uint8_t status;
   uint16_t address = STM8_FLASH_START_ADDRESS;
   
   status = SWIM_Enter();
   
-  for(uint8_t i=0; i<STM8S003_BLOCK_SIZE; i++ )
+  for(for_index=0; for_index<STM8S003_BLOCK_SIZE; for_index++ )
   {
-    RAM_Buffer[i] = i;
+    RAM_Buffer[for_index] = for_index;
   }
   
   if(status)
@@ -658,7 +661,7 @@ uint8_t Flash_Read_Write_Test(void)
     status = SWIM_Unlock_Flash(SWIM_PIN_6);
   }
   
-  for (uint8_t i =0; i<STM8S003_FLASH_PAGES; i++)
+  for (for_index =0; for_index<STM8S003_FLASH_PAGES; for_index++)
   {
     
     if(status)
@@ -683,7 +686,7 @@ uint8_t Flash_Read_Write_Test(void)
   
   address = STM8_FLASH_START_ADDRESS;
   
-  for (uint8_t i =0; i<STM8S003_FLASH_PAGES; i++)
+  for (for_index =0; for_index<STM8S003_FLASH_PAGES; for_index++)
   {
     
     if(status)
@@ -694,9 +697,9 @@ uint8_t Flash_Read_Write_Test(void)
     
     if(status)
     {
-      for(uint8_t i=0; i<STM8S003_BLOCK_SIZE; i++ )
+      for(for_index=0; for_index<STM8S003_BLOCK_SIZE; for_index++ )
       {
-        if(RAM_Buffer[i] != Compare_Buffer[i])
+        if(RAM_Buffer[for_index] != Compare_Buffer[for_index])
         {
          status = 0;
          break;
@@ -713,14 +716,15 @@ uint8_t Flash_Read_Write_Test(void)
 
 uint8_t EEPROM_Read_Write_Test(void)
 {
+  uint8_t for_index;
   uint8_t status;
   uint16_t address = STM8_EEPROM_START_ADDRESS;
   
   status = SWIM_Enter();
   
-  for(uint8_t i=0; i<STM8S003_BLOCK_SIZE; i++ )
+  for(for_index=0; for_index<STM8S003_BLOCK_SIZE; for_index++ )
   {
-    RAM_Buffer[i] = i;
+    RAM_Buffer[for_index] = for_index;
   }
   
   if(status)
@@ -728,7 +732,7 @@ uint8_t EEPROM_Read_Write_Test(void)
     status = SWIM_Unlock_EEPROM(SWIM_PIN_6);
   }
   
-  for (uint8_t i =0; i<STM8S003_EEPROM_PAGES; i++)
+  for (for_index =0; for_index<STM8S003_EEPROM_PAGES; for_index++)
   {
     
     if(status)
@@ -753,7 +757,7 @@ uint8_t EEPROM_Read_Write_Test(void)
   
   address = STM8_EEPROM_START_ADDRESS;
   
-  for (uint8_t i =0; i<STM8S003_FLASH_PAGES; i++)
+  for (for_index =0; for_index<STM8S003_FLASH_PAGES; for_index++)
   {
     
     if(status)
@@ -764,9 +768,9 @@ uint8_t EEPROM_Read_Write_Test(void)
     
     if(status)
     {
-      for(uint8_t i=0; i<STM8S003_BLOCK_SIZE; i++ )
+      for(for_index=0; for_index<STM8S003_BLOCK_SIZE; for_index++ )
       {
-        if(RAM_Buffer[i] != Compare_Buffer[i])
+        if(RAM_Buffer[for_index] != Compare_Buffer[for_index])
         {
          status = 0;
          break;
@@ -782,13 +786,14 @@ uint8_t EEPROM_Read_Write_Test(void)
 
 uint8_t AT24CXX_Read_Write_Test(void)
 {
+  uint8_t for_index;
   uint8_t status;
   
   status = SWIM_Enter();
   
-  for(uint8_t i=0; i<STM8S003_BLOCK_SIZE; i++ )
+  for(for_index=0; for_index<STM8S003_BLOCK_SIZE; for_index++ )
   {
-    RAM_Buffer[i] = i;
+    RAM_Buffer[for_index] = for_index;
   }
   
   if(status)

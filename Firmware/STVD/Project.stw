@@ -9,4 +9,4 @@ Dependencies=
 [Options]
 ActiveProject=project
 ActiveConfig=Debug
-AddSortedElements=0
+AddSortedElements=1

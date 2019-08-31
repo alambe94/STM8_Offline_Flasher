@@ -83,10 +83,10 @@ String.100.0=STM8S003F3P
 
 [Root.Config.0.Settings.3]
 String.2.0=Compiling $(InputFile)...
-String.3.0=cxstm8 +mods0 -customDebCompat -customOpt +split -customC +strict -pp -psa -customLst -l -dSTM8S003 -i..\inc -i..\stm8s_stdperiph_driver\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
+String.3.0=cxstm8 +warn +mods0 -customOpt -no +split -customC-pp -customLst-l -dSTM8S003 -i..\inc -i..\stm8s_stdperiph_driver\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
 String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
 String.5.0=$(IntermPath)$(InputName).ls
-String.6.0=2019,2,26,23,30,17
+String.6.0=2019,9,1,3,41,22
 
 [Root.Config.0.Settings.4]
 String.2.0=Assembling $(InputFile)...
@@ -218,7 +218,7 @@ String.6.0=2019,1,23,0,5,30
 [Root.STM8S_StdPeriph_Driver]
 ElemType=Folder
 PathName=STM8S_StdPeriph_Driver
-Child=Root.STM8S_StdPeriph_Driver...\stm8s_stdperiph_driver\src\stm8s_gpio.c
+Child=Root.STM8S_StdPeriph_Driver...\stm8s_stdperiph_driver\src\stm8s_clk.c
 Next=Root.Source Files
 Config.0=Root.STM8S_StdPeriph_Driver.Config.0
 Config.1=Root.STM8S_StdPeriph_Driver.Config.1
@@ -243,10 +243,10 @@ Int.1=0
 
 [Root.STM8S_StdPeriph_Driver.Config.0.Settings.1]
 String.2.0=Compiling $(InputFile)...
-String.3.0=cxstm8 +mods0 -customDebCompat -customOpt +split -customC +strict -pp -psa -customLst -l -dSTM8S003 -i..\inc -i..\stm8s_stdperiph_driver\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
+String.3.0=cxstm8 +warn +mods0 -customOpt -no +split -customC-pp -customLst-l -dSTM8S003 -i..\inc -i..\stm8s_stdperiph_driver\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
 String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
 String.5.0=$(IntermPath)$(InputName).ls
-String.6.0=2019,2,26,23,30,17
+String.6.0=2019,9,1,3,41,22
 
 [Root.STM8S_StdPeriph_Driver.Config.0.Settings.2]
 String.2.0=Assembling $(InputFile)...
@@ -289,14 +289,29 @@ String.4.0=
 String.5.0=
 String.6.0=2019,1,23,0,5,30
 
+[Root.STM8S_StdPeriph_Driver...\stm8s_stdperiph_driver\src\stm8s_clk.c]
+ElemType=File
+PathName=..\stm8s_stdperiph_driver\src\stm8s_clk.c
+Next=Root.STM8S_StdPeriph_Driver...\stm8s_stdperiph_driver\src\stm8s_exti.c
+
+[Root.STM8S_StdPeriph_Driver...\stm8s_stdperiph_driver\src\stm8s_exti.c]
+ElemType=File
+PathName=..\stm8s_stdperiph_driver\src\stm8s_exti.c
+Next=Root.STM8S_StdPeriph_Driver...\stm8s_stdperiph_driver\src\stm8s_gpio.c
+
 [Root.STM8S_StdPeriph_Driver...\stm8s_stdperiph_driver\src\stm8s_gpio.c]
 ElemType=File
 PathName=..\stm8s_stdperiph_driver\src\stm8s_gpio.c
+Next=Root.STM8S_StdPeriph_Driver...\stm8s_stdperiph_driver\src\stm8s_tim4.c
+
+[Root.STM8S_StdPeriph_Driver...\stm8s_stdperiph_driver\src\stm8s_tim4.c]
+ElemType=File
+PathName=..\stm8s_stdperiph_driver\src\stm8s_tim4.c
 
 [Root.Source Files]
 ElemType=Folder
 PathName=Source Files
-Child=Root.Source Files...\src\stm8_swim.c
+Child=Root.Source Files...\src\stm8s003_swim.c
 Config.0=Root.Source Files.Config.0
 Config.1=Root.Source Files.Config.1
 
@@ -320,10 +335,10 @@ Int.1=0
 
 [Root.Source Files.Config.0.Settings.1]
 String.2.0=Compiling $(InputFile)...
-String.3.0=cxstm8 +mods0 -customDebCompat -customOpt +split -customC +strict -pp -psa -customLst -l -dSTM8S003 -i..\inc -i..\stm8s_stdperiph_driver\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
+String.3.0=cxstm8 +warn +mods0 -customOpt -no +split -customC-pp -customLst-l -dSTM8S003 -i..\inc -i..\stm8s_stdperiph_driver\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
 String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
 String.5.0=$(IntermPath)$(InputName).ls
-String.6.0=2019,2,26,23,30,17
+String.6.0=2019,9,1,3,41,22
 
 [Root.Source Files.Config.0.Settings.2]
 String.2.0=Assembling $(InputFile)...
@@ -366,6 +381,11 @@ String.4.0=
 String.5.0=
 String.6.0=2019,1,23,0,5,30
 
+[Root.Source Files...\src\stm8s003_swim.c]
+ElemType=File
+PathName=..\src\stm8s003_swim.c
+Next=Root.Source Files...\src\stm8_swim.c
+
 [Root.Source Files...\src\stm8_swim.c]
 ElemType=File
 PathName=..\src\stm8_swim.c
@@ -384,16 +404,16 @@ Next=Root.Source Files...\src\at24cxx.c
 [Root.Source Files...\src\at24cxx.c]
 ElemType=File
 PathName=..\src\at24cxx.c
-Next=Root.Source Files...\src\stm8s_it.c
-
-[Root.Source Files...\src\stm8s_it.c]
-ElemType=File
-PathName=..\src\stm8s_it.c
 Next=Root.Source Files...\src\main.c
 
 [Root.Source Files...\src\main.c]
 ElemType=File
 PathName=..\src\main.c
+Next=Root.Source Files...\src\stm8s_it.c
+
+[Root.Source Files...\src\stm8s_it.c]
+ElemType=File
+PathName=..\src\stm8s_it.c
 Next=Root.Source Files.stm8_interrupt_vector.c
 
 [Root.Source Files.stm8_interrupt_vector.c]

@@ -181,8 +181,10 @@ void SWIM_Setup(void)
 
 uint8_t SWIM_Enter()
 {
+  uint8_t for_index;
   uint16_t timeout = 0;
   uint8_t swim_port = 0;
+	uint8_t csr = 0xA0;
   
   SWIM_Devices = SWIM_PIN_Mask;
   
@@ -196,14 +198,14 @@ uint8_t SWIM_Enter()
   delay_ms(1);
   
   /*2. Four pulses at 1 kHz followed by four pulses at 2 kHz*/
-  for (uint8_t i=0; i<4; i++) 
+  for (for_index=0; for_index<4; for_index++) 
   {
     SWIM_PIN_HIGH();
     delay_us(500);
     SWIM_PIN_LOW();
     delay_us(500);
   }
-  for (uint8_t i=0; i<4; i++) 
+  for (for_index=0; for_index<4; for_index++) 
   {
     SWIM_PIN_HIGH();
     delay_us(250);
@@ -241,7 +243,6 @@ uint8_t SWIM_Enter()
   
   
   /*6. Write 0xA0h in the SWIM_CSR:*/
-  uint8_t csr = 0xA0;
   if(!SWIM_WOTF_All(SWIM_CSR, &csr, 1))
   {
     NRST_High();
@@ -269,6 +270,7 @@ uint8_t SWIM_Enter()
 
 uint8_t SWIM_Write_Cammand(uint8_t cammand)
 {
+  uint8_t for_index;
   uint8_t timeout = 255;
   uint8_t data_frame[3] = "0";
   uint8_t parity = 0;
@@ -277,9 +279,9 @@ uint8_t SWIM_Write_Cammand(uint8_t cammand)
   data_frame[1] = cammand>>1 & 0x01;
   data_frame[0] = cammand>>0 & 0x01;
   
-  for (uint8_t i = 0; i <=2; i++) 
+  for (for_index = 0; for_index<3; for_index++) 
   {
-    parity += data_frame[i];
+    parity += data_frame[for_index];
   }
   parity &= 0x01;
   
