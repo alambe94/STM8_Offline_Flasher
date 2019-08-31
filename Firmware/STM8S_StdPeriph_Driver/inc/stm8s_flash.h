@@ -2,20 +2,26 @@
   ******************************************************************************
   * @file    stm8s_flash.h
   * @author  MCD Application Team
-  * @version V2.1.0
-  * @date    18-November-2011
+  * @version V2.3.0
+  * @date    16-June-2017
   * @brief   This file contains all functions prototype and macros for the FLASH peripheral.
-  ******************************************************************************
+   ******************************************************************************
   * @attention
   *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY
-  * DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
+  * <h2><center>&copy; COPYRIGHT 2014 STMicroelectronics</center></h2>
   *
-  * <h2><center>&copy; COPYRIGHT 2011 STMicroelectronics</center></h2>
+  * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
+  * You may not use this file except in compliance with the License.
+  * You may obtain a copy of the License at:
+  *
+  *        http://www.st.com/software_license_agreement_liberty_v2
+  *
+  * Unless required by applicable law or agreed to in writing, software 
+  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  *
   ******************************************************************************
   */
 
@@ -52,14 +58,14 @@
  #define FLASH_BLOCK_SIZE                  ((uint8_t)128)       /*!< Number of bytes in a block (common for Program and Data memories) */
 #endif /* STM8S105 or STM8AF626x */
 
-#if defined(STM8S103) || defined(STM8S003) ||  defined(STM8S903)
+#if defined(STM8S103) || defined(STM8S003) || defined(STM8S001) || defined(STM8S903) || defined(STM8AF622x)
  #define FLASH_PROG_END_PHYSICAL_ADDRESS   ((uint32_t)0x9FFF)   /*!< Program memory: end address */
  #define FLASH_PROG_BLOCKS_NUMBER          ((uint16_t)128)      /*!< Program memory: total number of blocks */
  #define FLASH_DATA_START_PHYSICAL_ADDRESS ((uint32_t)0x004000) /*!< Data EEPROM memory: start address */
  #define FLASH_DATA_END_PHYSICAL_ADDRESS   ((uint32_t)0x00427F) /*!< Data EEPROM memory: end address */
  #define FLASH_DATA_BLOCKS_NUMBER          ((uint16_t)10)       /*!< Data EEPROM memory: total number of blocks */
  #define FLASH_BLOCK_SIZE                  ((uint8_t)64)        /*!< Number of bytes in a block (common for Program and Data memories) */
-#endif /* STM8S103, STM8S903 */
+#endif /* STM8S103 or STM8S003 or STM8S001 or STM8S903 or STM8AF622x*/
 
 #define FLASH_RASS_KEY1 ((uint8_t)0x56) /*!< First RASS key */
 #define FLASH_RASS_KEY2 ((uint8_t)0xAE) /*!< Second RASS key */
@@ -232,7 +238,7 @@ typedef enum {
                                  ((FLAG) == FLASH_FLAG_EOP) || \
                                  ((FLAG) == FLASH_FLAG_PUL) || \
                                  ((FLAG) == FLASH_FLAG_WR_PG_DIS))
-#else /* STM8S103, STM8S903 */
+#else /* STM8S103, STM8S001, STM8S903, STM8AF622x */
  #define IS_FLASH_FLAGS_OK(FLAG) (((FLAG) == FLASH_FLAG_DUL) || \
                                  ((FLAG) == FLASH_FLAG_EOP) || \
                                  ((FLAG) == FLASH_FLAG_PUL) || \
@@ -290,4 +296,5 @@ IN_RAM(FLASH_Status_TypeDef FLASH_WaitForLastOperation(FLASH_MemType_TypeDef FLA
 
 #endif /*__STM8S_FLASH_H */
 
-/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
+
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

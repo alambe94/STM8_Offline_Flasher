@@ -2,20 +2,26 @@
   ******************************************************************************
   * @file    stm8s_i2c.c
   * @author  MCD Application Team
-  * @version V2.1.0
-  * @date    18-November-2011
+  * @version V2.3.0
+  * @date    16-June-2017
   * @brief   This file contains all the functions for the I2C peripheral.
-  ******************************************************************************
+   ******************************************************************************
   * @attention
   *
-  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
-  * TIME. AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY
-  * DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
-  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
-  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
+  * <h2><center>&copy; COPYRIGHT 2014 STMicroelectronics</center></h2>
   *
-  * <h2><center>&copy; COPYRIGHT 2011 STMicroelectronics</center></h2>
+  * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
+  * You may not use this file except in compliance with the License.
+  * You may obtain a copy of the License at:
+  *
+  *        http://www.st.com/software_license_agreement_liberty_v2
+  *
+  * Unless required by applicable law or agreed to in writing, software 
+  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  * See the License for the specific language governing permissions and
+  * limitations under the License.
+  *
   ******************************************************************************
   */
 
@@ -27,7 +33,7 @@
   */
 /* Private typedef -----------------------------------------------------------*/
 
-/** @defgroup I2C_Private_Defines
+/** @addtogroup I2C_Private_Defines
   * @{
   */
 /* I2C register mask */
@@ -195,7 +201,6 @@ void I2C_Init(uint32_t OutputClockFrequencyHz, uint16_t OwnAddress,
   */
 void I2C_Cmd(FunctionalState NewState)
 {
-
   /* Check function parameters */
   assert_param(IS_FUNCTIONALSTATE_OK(NewState));
 
@@ -219,7 +224,6 @@ void I2C_Cmd(FunctionalState NewState)
   */
 void I2C_GeneralCallCmd(FunctionalState NewState)
 {
-
   /* Check function parameters */
   assert_param(IS_FUNCTIONALSTATE_OK(NewState));
 
@@ -245,7 +249,6 @@ void I2C_GeneralCallCmd(FunctionalState NewState)
   */
 void I2C_GenerateSTART(FunctionalState NewState)
 {
-
   /* Check function parameters */
   assert_param(IS_FUNCTIONALSTATE_OK(NewState));
 
@@ -269,7 +272,6 @@ void I2C_GenerateSTART(FunctionalState NewState)
   */
 void I2C_GenerateSTOP(FunctionalState NewState)
 {
-
   /* Check function parameters */
   assert_param(IS_FUNCTIONALSTATE_OK(NewState));
 
@@ -342,7 +344,6 @@ void I2C_StretchClockCmd(FunctionalState NewState)
   */
 void I2C_AcknowledgeConfig(I2C_Ack_TypeDef Ack)
 {
-
   /* Check function parameters */
   assert_param(IS_I2C_ACK_OK(Ack));
 
@@ -371,7 +372,7 @@ void I2C_AcknowledgeConfig(I2C_Ack_TypeDef Ack)
 
 /**
   * @brief  Enables or disables the specified I2C interrupt.
-  * @param  ITName : Name of the interrupt to enable or disable.
+  * @param  I2C_IT : Name of the interrupt to enable or disable.
   *         This parameter can be any of the  @ref I2C_IT_TypeDef enumeration.
   * @param  NewState : State of the interrupt to apply.
   *         This parameter can be any of the @ref FunctionalState enumeration.
@@ -379,7 +380,6 @@ void I2C_AcknowledgeConfig(I2C_Ack_TypeDef Ack)
   */
 void I2C_ITConfig(I2C_IT_TypeDef I2C_IT, FunctionalState NewState)
 {
-
   /* Check functions parameters */
   assert_param(IS_I2C_INTERRUPT_OK(I2C_IT));
   assert_param(IS_FUNCTIONALSTATE_OK(NewState));
@@ -404,7 +404,6 @@ void I2C_ITConfig(I2C_IT_TypeDef I2C_IT, FunctionalState NewState)
   */
 void I2C_FastModeDutyCycleConfig(I2C_DutyCycle_TypeDef I2C_DutyCycle)
 {
-
   /* Check function parameters */
   assert_param(IS_I2C_DUTYCYCLE_OK(I2C_DutyCycle));
 
@@ -494,9 +493,9 @@ void I2C_SendData(uint8_t Data)
  *        @note
  *        For error management, it is advised to use the following functions:
  *          - I2C_ITConfig() to configure and enable the error interrupts (I2C_IT_ERR).
- *          - I2C_IRQHandler() which is called when the I2C interurpts occur.
+ *          - I2C_IRQHandler() which is called when the I2C interrupts occur.
  *          - I2C_GetFlagStatus() or I2C_GetITStatus() to be called into the
- *           I2C_IRQHandler() function in order to determine which error occured.
+ *           I2C_IRQHandler() function in order to determine which error occurred.
  *          - I2C_ClearFlag() or I2C_ClearITPendingBit() and/or I2C_SoftwareResetCmd()
  *            and/or I2C_GenerateStop() in order to clear the error flag and
  *            source and return to correct communication status.
@@ -550,7 +549,7 @@ void I2C_SendData(uint8_t Data)
 /**
   * @brief  Checks whether the last I2C Event is equal to the one passed
   *   as parameter.
-  * @param  I2C_EVENT: specifies the event to be checked.
+  * @param  I2C_Event: specifies the event to be checked.
   *   This parameter can be one of the following values:
   *     @arg I2C_EVENT_SLAVE_TRANSMITTER_ADDRESS_MATCHED           : EV1
   *     @arg I2C_EVENT_SLAVE_RECEIVER_ADDRESS_MATCHED              : EV1
@@ -656,7 +655,7 @@ I2C_Event_TypeDef I2C_GetLastEvent(void)
  */
 /**
   * @brief  Checks whether the specified I2C flag is set or not.
-  * @param  I2C_FLAG: specifies the flag to check.
+  * @param  I2C_Flag: specifies the flag to check.
   *   This parameter can be one of the following values:
   *     @arg I2C_FLAG_GENERALCALL: General call header flag (Slave mode)
   *     @arg I2C_FLAG_TRANSMITTERRECEIVER: Transmitter/Receiver flag
@@ -727,7 +726,7 @@ FlagStatus I2C_GetFlagStatus(I2C_Flag_TypeDef I2C_Flag)
 
 /**
   * @brief  Clear flags
-  * @param  I2C_Flag : Specifies the flag to clear
+  * @param  I2C_FLAG : Specifies the flag to clear
   *   This parameter can be any combination of the following values:
   *                       - I2C_FLAG_WAKEUPFROMHALT: Wakeup from Halt
   *                       - I2C_FLAG_OVERRUNUNDERRUN: Overrun/Underrun flag (Slave mode)
@@ -833,12 +832,11 @@ ITStatus I2C_GetITStatus(I2C_ITPendingBit_TypeDef I2C_ITPendingBit)
   }
   /* Return the I2C_IT status */
   return  bitstatus;
-
 }
 
 /**
   * @brief  Clear IT pending bit
-  * @param  I2C_IT: specifies the interrupt pending bit to clear.
+  * @param  I2C_ITPendingBit : specifies the interrupt pending bit to clear.
   *            This parameter can be any combination of the following values:
   *                 - I2C_ITPENDINGBIT_WAKEUPFROMHALT: Wakeup from Halt
   *                 - I2C_ITPENDINGBIT_OVERRUNUNDERRUN: Overrun/Underrun interrupt (Slave mode)
@@ -891,4 +889,5 @@ void I2C_ClearITPendingBit(I2C_ITPendingBit_TypeDef I2C_ITPendingBit)
 /**
   * @}
   */
-/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
+
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
