@@ -28,11 +28,13 @@ build stm8_swim.pbi : index stm8_swim.xcl
 build stm8s003_swim.pbi : index stm8s003_swim.xcl
 build stm8s_clk.pbi : index stm8s_clk.xcl
 build stm8s_exti.pbi : index stm8s_exti.xcl
+build stm8s_flash.pbi : index stm8s_flash.xcl
 build stm8s_gpio.pbi : index stm8s_gpio.xcl
 build STM8_SWIM_1.1_part0.pbi : link at24cxx.pbi main.pbi millis.pbi
 build STM8_SWIM_1.1_part1.pbi : link soft_i2c.pbi stm8_swim.pbi stm8s003_swim.pbi
-build STM8_SWIM_1.1_part2.pbi : link stm8s_clk.pbi stm8s_exti.pbi stm8s_gpio.pbi
-build STM8_SWIM_1.1.pbd : link STM8_SWIM_1.1_part0.pbi STM8_SWIM_1.1_part1.pbi STM8_SWIM_1.1_part2.pbi
+build STM8_SWIM_1.1_part2.pbi : link stm8s_clk.pbi stm8s_exti.pbi stm8s_flash.pbi
+build STM8_SWIM_1.1_part3.pbi : link stm8s_gpio.pbi
+build STM8_SWIM_1.1.pbd : link STM8_SWIM_1.1_part0.pbi STM8_SWIM_1.1_part1.pbi STM8_SWIM_1.1_part2.pbi STM8_SWIM_1.1_part3.pbi
 build STM8_SWIM_1.1.pbw : browsedata STM8_SWIM_1.1.pbd
 
 

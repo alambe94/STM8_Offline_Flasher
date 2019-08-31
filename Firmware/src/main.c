@@ -45,7 +45,7 @@ void main(void)
   
   /* Infinite loop */
   
-  Copy_STM8S003_To_EEPROM();
+  status = Flash_Read_Write_Test();
   
   while (1)
   {

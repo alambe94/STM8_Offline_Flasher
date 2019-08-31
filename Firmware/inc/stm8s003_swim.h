@@ -35,7 +35,7 @@
 #define EEPROM_STORE_ADDRESS         0x3000 //in 24CXX   128B EEPROM STM8S003 0x3000 to 0x3080
 #define OPTION_BYTE_STORE_ADDRESS    0x4000 //in 24CXX   10B  option byte register STM8S003
 
-#define STM8S003_BLOCK_SIZE          64  //
+#define STM8S003_BLOCK_SIZE          64  // also look for AT24Cxx Block Size
 #define STM8S003_FLASH_PAGES         128 //stm8s003 has 128 pages of 64 bytes
 #define STM8S003_EEPROM_PAGES        2   //stm8s003 has 2 pages of 64 bytes (extra 2 page unofficial)
 
@@ -82,8 +82,14 @@ uint8_t SWIM_Lock_Flash_All(void);
 uint8_t SWIM_Enable_Block_Programming_All(void);
 
 
-uint8_t Copy_STM8S003_To_EEPROM(void);
-uint8_t EEPROM_To_STM8S003(void);
+uint8_t Copy_STM8S003_To_AT24CXX(void);
+uint8_t AT24CXX_To_STM8S003(void);
+
+
+uint8_t OPT_Read_Write_Test(void);
+uint8_t Flash_Read_Write_Test(void);
+uint8_t EEPROM_Read_Write_Test(void);
+uint8_t AT24CXX_Read_Write_Test(void);
 
 
 #endif 
