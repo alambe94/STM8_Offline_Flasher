@@ -1642,10 +1642,10 @@
             <name>$PROJ_DIR$\..\inc\at24cxx.h</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\inc\i2c.h</name>
+            <name>$PROJ_DIR$\..\inc\millis.h</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\..\inc\millis.h</name>
+            <name>$PROJ_DIR$\..\inc\stm8s003_swim.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\inc\stm8s_conf.h</name>
@@ -1670,6 +1670,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\src\stm8_swim.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\src\stm8s003_swim.c</name>
         </file>
     </group>
     <group>

@@ -1,6 +1,40 @@
 #include "stm8_swim.h"
 #include "stm8s_it.h"
+#include "millis.h"
 
+
+
+/**********************Device Independent File************************/
+/**********************Device Independent File************************/
+/**********************Device Independent File************************/
+/**********************Device Independent File************************/
+/**********************Device Independent File************************/
+
+
+#define NRST_PIN_HIGH(PORT, PIN)        PORT->ODR |=  PIN     
+#define NRST_PIN_LOW(PORT, PIN)         PORT->ODR &=  ~PIN   
+
+
+#define SWIM_PIN_OUT()         SWIM_PINS_PORT->ODR |=  SWIM_PIN_Mask;\
+                               SWIM_PINS_PORT->CR1 &= ~SWIM_PIN_Mask;\
+                               SWIM_PINS_PORT->DDR |=  SWIM_PIN_Mask
+
+#define SWIM_PIN_IN_INT()      SWIM_PINS_PORT->DDR &=  ~SWIM_PIN_Mask;\
+                               SWIM_PINS_PORT->CR1 |=   SWIM_PIN_Mask;\
+                               SWIM_PINS_PORT->CR2 |=   SWIM_PIN_Mask 
+
+
+#define SWIM_PIN_HIGH()        SWIM_PINS_PORT->ODR |=  SWIM_PIN_Mask     
+#define SWIM_PIN_LOW()         SWIM_PINS_PORT->ODR &= ~SWIM_PIN_Mask   
+#define SWIM_PIN_READ()        SWIM_PINS_PORT->IDR &   SWIM_PIN_Mask
+
+
+#define SWIM_DELAY_1_BIT()     nop(); nop()
+#define SWIM_DELAY_0_BIT()     SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();\
+                               SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();\
+                               SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();\
+                               SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT();\
+                               SWIM_DELAY_1_BIT();SWIM_DELAY_1_BIT()
 
 
 //inline did not work
@@ -44,6 +78,7 @@ uint8_t RX_Frame[15] = {0};
 
 /* Initially all swim ports are enabled. If device did not responds to swim sequence, then that port will be disabled*/
 uint8_t SWIM_PIN_Mask = (SWIM_PIN_1|SWIM_PIN_2|SWIM_PIN_3|SWIM_PIN_4|SWIM_PIN_5|SWIM_PIN_6);
+uint8_t SWIM_Devices = 0; // discovred devices on swim pin, ie response to swim sequence;
 
 
 
@@ -124,7 +159,7 @@ void SWIM_Setup(void)
   CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
   
   /* Initialise all SWIM pins to open drain out, for now dont enable interrupts*/
-  GPIO_Init(SWIM_PINS_PORT, SWIM_PIN_Mask, GPIO_MODE_OUT_OD_HIZ_SLOW);
+  GPIO_Init(SWIM_PINS_PORT, (GPIO_Pin_TypeDef)SWIM_PIN_Mask, GPIO_MODE_OUT_OD_HIZ_SLOW);
   
   /* Interrupts on falling edge*/
   EXTI_SetExtIntSensitivity(SWIM_PINS_EXTI_PORT, EXTI_SENSITIVITY_FALL_ONLY);
@@ -145,7 +180,9 @@ uint8_t SWIM_Enter()
   uint16_t timeout = 0;
   uint8_t swim_port = 0;
   
-  SWIM_Reset_Device();
+  SWIM_Devices = SWIM_PIN_Mask;
+  
+  SWIM_Reset_Devices();
  
   NRST_Low();
   delay_ms(1);
@@ -185,7 +222,9 @@ uint8_t SWIM_Enter()
   SWIM_PIN_OUT();
   INT_Count = 0;
   
-  SWIM_PIN_Mask = (SWIM_PIN_Mask ^ swim_port);
+  //disable swim pin if device did not responds.
+  SWIM_Devices = (SWIM_PIN_Mask ^ swim_port);
+  SWIM_PIN_Mask = SWIM_Devices;
   
   if(!timeout)
   {
@@ -199,7 +238,7 @@ uint8_t SWIM_Enter()
   
   /*6. Write 0xA0h in the SWIM_CSR:*/
   uint8_t csr = 0xA0;
-  if(!SWIM_WOTF(SWIM_CSR, &csr, 1))
+  if(!SWIM_WOTF_All(SWIM_CSR, &csr, 1))
   {
     NRST_High();
     return 0;
@@ -308,12 +347,14 @@ uint8_t SWIM_Write_Data(uint8_t data)
 }
 
 
-uint8_t SWIM_WOTF(uint32_t addr, uint8_t *buf, uint8_t size) 
+uint8_t SWIM_WOTF(uint8_t swim_pin, uint32_t addr, uint8_t *buf, uint8_t size) 
 {
   
   if (!buf || !size) {
     return 0;
   }
+  
+  SWIM_PIN_Mask = swim_pin;
   
   if(SWIM_Write_Cammand(SWIM_CMD_WOTF))
   {
@@ -343,13 +384,52 @@ uint8_t SWIM_WOTF(uint32_t addr, uint8_t *buf, uint8_t size)
 }
 
 
-uint8_t SWIM_ROTF(uint32_t addr, uint8_t *buf, uint8_t size) 
+uint8_t SWIM_WOTF_All(uint32_t addr, uint8_t *buf, uint8_t size) 
+{
+  
+  if (!buf || !size) {
+    return 0;
+  }
+  
+  SWIM_PIN_Mask = SWIM_Devices;
+  
+  if(SWIM_Write_Cammand(SWIM_CMD_WOTF))
+  {
+    if(SWIM_Write_Data(size))
+    {
+      if(SWIM_Write_Data((addr >> 16) & 0xFF))
+      {
+        if(SWIM_Write_Data((addr >> 8) & 0xFF))
+        {
+          if(SWIM_Write_Data((addr >> 0) & 0xFF))
+          {
+            while(size--)
+            {
+              if(!SWIM_Write_Data(*buf++))
+              {
+                return 0;
+              }
+            }
+            return 1;
+          }
+        }
+      }
+    }
+  }
+  
+  return 0;
+}
+
+
+uint8_t SWIM_ROTF(uint8_t swim_pin, uint32_t addr, uint8_t *buf, uint8_t size) 
 {
   uint8_t timeout = 255;
   uint8_t start_bit = 0;
   uint8_t parity = 0;
   uint8_t parity_bit = 0;
   uint8_t rx_data = 0;  
+  
+  SWIM_PIN_Mask = swim_pin;
   
   if (!buf || !size) {
     return 0;
@@ -430,7 +510,6 @@ uint8_t SWIM_ROTF(uint32_t addr, uint8_t *buf, uint8_t size)
               }
               
             }
-            
           }
         }
       } 
@@ -447,146 +526,24 @@ uint8_t SWIM_ROTF(uint32_t addr, uint8_t *buf, uint8_t size)
 }
 
 
-uint8_t SWIM_Soft_Reset()
+uint8_t SWIM_Soft_Reset(uint8_t swim_pin)
 {
+  SWIM_PIN_Mask = swim_pin;
   return SWIM_Write_Cammand(SWIM_CMD_SRST);
 }
 
-
-uint8_t SWIM_Stall_CPU()
+uint8_t SWIM_Soft_Reset_All(void)
 {
-  uint8_t temp[1];
-  if(SWIM_ROTF(SWIM_DM_CSR2,temp,1))
-  {
-    temp[0]|=0x08;
-    return SWIM_WOTF(SWIM_DM_CSR2,temp,1);//stall the cpu
-  }
-  return 0;
+  SWIM_PIN_Mask = SWIM_Devices;
+  return SWIM_Write_Cammand(SWIM_CMD_SRST);
 }
 
-
-uint8_t SWIM_Unlock_OptionByte()
-{
-  uint8_t temp[2];
-  if(SWIM_ROTF(SWIM_FLASH_CR2,temp,2))
-  {
-    temp[0]|=(uint8_t)(0x80);  // OPT = 1 and NOPT = 0
-    temp[1]&=(uint8_t)(0x7F);
-    
-    if(SWIM_WOTF(SWIM_FLASH_CR2,temp,2))
-    {
-      return  SWIM_Unlock_EEPROM();//opt unlock sequence 
-    }  
-  }
-  return 0;
-}
-
-
-uint8_t SWIM_Lock_OptionByte()
-{
-  uint8_t temp[2];
-  if(SWIM_ROTF(SWIM_FLASH_CR2,temp,2))
-  {
-    temp[0]&=(uint8_t)(0x7F); // OPT = 0 and NOPT = 1
-    temp[1]|=(uint8_t)(0x80); // enable opt
-    
-    if(SWIM_WOTF(SWIM_FLASH_CR2,temp,2))
-    {
-      return SWIM_Lock_EEPROM();
-    }
-  }
-  return 0;
-}
-
-
-uint8_t SWIM_Unlock_EEPROM()
-{
-  uint8_t temp[1];
-  temp[0]=SWIM_FLASH_DUKR_KEY1;
-  if(SWIM_WOTF(SWIM_FLASH_DUKR,temp,1))
-  {
-    temp[0]=SWIM_FLASH_DUKR_KEY2;
-    return SWIM_WOTF(SWIM_FLASH_DUKR,temp,1);
-  }
-  return 0;
-}
-
-
-uint8_t SWIM_Lock_EEPROM()
-{
-  uint8_t temp[1];
-  if(SWIM_ROTF(SWIM_FLASH_IAPSR,temp,1))
-  {
-    temp[0]&= (uint8_t)0xF7; //
-    return SWIM_WOTF(SWIM_FLASH_IAPSR,temp,1);
-  }
-  return 0;
-}
-
-
-uint8_t SWIM_Unlock_Flash()
-{
-  uint8_t temp[1];
-  temp[0]=SWIM_FLASH_PUKR_KEY1;
-  if(SWIM_WOTF(SWIM_FLASH_PUKR,temp,1))
-  {
-    temp[0]=SWIM_FLASH_PUKR_KEY2;
-    return SWIM_WOTF(SWIM_FLASH_PUKR,temp,1);
-  }
-  return 0;
-}
-
-uint8_t SWIM_Lock_Flash()
-{
-  uint8_t temp[1];
-  if(SWIM_ROTF(SWIM_FLASH_IAPSR,temp,1))
-  {
-    temp[0] &= 0xFD; //
-    return SWIM_WOTF(SWIM_FLASH_IAPSR,temp,1);
-  }
-  return 0;
-}
-
-
-uint8_t SWIM_Enable_Block_Programming()
-{
-  uint8_t temp[2];
-  if(SWIM_ROTF(SWIM_FLASH_CR2,temp,2))
-  {
-    temp[0] |= 0x01;  //Flash_CR2  standard block programming
-    temp[1] &= 0xFE;  //Flash_NCR2
-    return SWIM_WOTF(SWIM_FLASH_CR2,temp,2); 
-  }
-  return 0;
-}
-
-
-uint8_t SWIM_Wait_For_EOP()
-{
-  uint8_t flagstatus[1]={0};
-  uint16_t timeout = 0xFFFF;
-  
-  while ((flagstatus[0] == 0x00) && --timeout)
-  {
-    SWIM_ROTF(SWIM_FLASH_IAPSR,flagstatus,1);
-    flagstatus[0] = (uint8_t)(flagstatus[0]&FLASH_IAPSR_EOP);
-  }
-  
-  if (timeout)
-  {
-    return 1;
-  }
-  
-  return 0;
-}
-
-
-uint8_t SWIM_Reset_Device()
+uint8_t SWIM_Reset_Devices(void)
 {
   uint8_t temp[1]={0xA4};
-  if(SWIM_WOTF(SWIM_CSR, temp, 1))
+  if(SWIM_WOTF_All(SWIM_CSR, temp, 1))
   {
-    SWIM_Soft_Reset();
+    SWIM_Soft_Reset_All();
     NRST_Low();
     delay_ms(2);
     NRST_High();
@@ -595,4 +552,8 @@ uint8_t SWIM_Reset_Device()
   return 0;
 }
 
+uint8_t Get_SWIM_Devices(void)
+{
+  return SWIM_Devices;
+}
 
