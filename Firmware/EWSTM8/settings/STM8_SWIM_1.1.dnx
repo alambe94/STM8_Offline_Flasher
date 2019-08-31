@@ -50,8 +50,7 @@
         <Bp2>_ "STD_CODE" "{$PROJ_DIR$\..\src\main.c}.71.3" 1 0 0 0 "" 0 ""</Bp2>
         <Bp3>_ "STD_CODE" "{$PROJ_DIR$\..\src\main.c}.71.3" 1 0 0 0 "" 0 ""</Bp3>
         <Bp4>_ "STD_CODE" "{$PROJ_DIR$\..\src\main.c}.50.3" 1 0 0 0 "" 0 ""</Bp4>
-        <Bp5>_ "STD_CODE" "{$PROJ_DIR$\..\src\stm8s003_swim.c}.136.5" 1 0 0 0 "" 0 ""</Bp5>
-        <Count>6</Count>
+        <Count>5</Count>
     </Breakpoints>
     <Aliases>
         <Count>0</Count>

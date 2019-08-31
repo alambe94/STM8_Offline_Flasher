@@ -84,6 +84,7 @@ uint8_t SWIM_Devices = 0; // discovred devices on swim pin, ie response to swim 
 
 INTERRUPT_HANDLER(EXTI_PORTD_IRQHandler, 6)
 {
+  /*
   if(SWIM_PIN_READ())
   {
     RX_Frame[INT_Count++] = 0x01;
@@ -92,6 +93,9 @@ INTERRUPT_HANDLER(EXTI_PORTD_IRQHandler, 6)
   {
     RX_Frame[INT_Count++] = 0x00;
   }
+*/
+  uint8_t temp = SWIM_PIN_READ();
+  RX_Frame[INT_Count++] = temp;
 }
 
 
@@ -254,7 +258,9 @@ uint8_t SWIM_Enter()
   delay_us(50);
   SWIM_PIN_HIGH();
   
+  SWIM_Stall_CPU_All();
   delay_ms(20);
+  SWIM_Soft_Reset_All();
   
   return 1;
   
@@ -290,7 +296,13 @@ uint8_t SWIM_Write_Cammand(uint8_t cammand)
   INT_Count = 0;
   if(timeout)
   {
-    return RX_Frame[0]; 
+    //disable swim pin if device did not ACK.
+    SWIM_Devices = (SWIM_PIN_Mask & RX_Frame[0]);
+    SWIM_PIN_Mask = SWIM_Devices;
+    if(SWIM_Devices) // at least one of the mcu acked
+    {
+      return 1;
+    }
   }  
   return 0;
 }
@@ -321,6 +333,7 @@ uint8_t SWIM_Write_Data(uint8_t data)
   parity += data_frame[2];
   parity += data_frame[1];
   parity += data_frame[0];
+  
   parity &= 0x01;// XOR of all frame bits
   
   
@@ -341,7 +354,13 @@ uint8_t SWIM_Write_Data(uint8_t data)
   INT_Count = 0;
   if(timeout)
   {
-    return RX_Frame[0]; 
+    //disable swim pin if device did not ACK.
+    SWIM_Devices = (SWIM_PIN_Mask & RX_Frame[0]);
+    SWIM_PIN_Mask = SWIM_Devices;
+    if(SWIM_Devices) // at least one of the mcu acked
+    {
+      return 1;
+    }
   }  
   return 0;
 }
@@ -472,24 +491,47 @@ uint8_t SWIM_ROTF(uint8_t swim_pin, uint32_t addr, uint8_t *buf, uint8_t size)
                 */
                 
                 //unroll for loop for faster execution
-                rx_data  = RX_Frame[1]<<7;
-                rx_data |= RX_Frame[2]<<6;
-                rx_data |= RX_Frame[3]<<5;
-                rx_data |= RX_Frame[4]<<4;
-                rx_data |= RX_Frame[5]<<3;
-                rx_data |= RX_Frame[6]<<2;
-                rx_data |= RX_Frame[7]<<1;
-                rx_data |= RX_Frame[8]<<0;
+                if(RX_Frame[1] & SWIM_PIN_Mask)
+                {
+                  rx_data |= 1 << (7);
+                  parity++;
+                }
+                if(RX_Frame[2] & SWIM_PIN_Mask)
+                {
+                  rx_data |= 1 << (6);
+                  parity++;
+                }
+                if(RX_Frame[3] & SWIM_PIN_Mask)
+                {
+                  rx_data |= 1 << (5);
+                  parity++;
+                }
+                if(RX_Frame[4] & SWIM_PIN_Mask)
+                {
+                  rx_data |= 1 << (4);
+                  parity++;
+                }
+                if(RX_Frame[5] & SWIM_PIN_Mask)
+                {
+                  rx_data |= 1 << (3);
+                  parity++;
+                }
+                if(RX_Frame[6] & SWIM_PIN_Mask)
+                {
+                  rx_data |= 1 << (2);
+                  parity++;
+                }
+                if(RX_Frame[7] & SWIM_PIN_Mask)
+                {
+                  rx_data |= 1 << (1);
+                  parity++;
+                }
+                if(RX_Frame[8] & SWIM_PIN_Mask)
+                {
+                  rx_data |= 1 << (0);
+                  parity++;
+                }
                 
-                //unroll for loop for faster execution
-                parity  = RX_Frame[1];
-                parity += RX_Frame[2];
-                parity += RX_Frame[3];
-                parity += RX_Frame[4];
-                parity += RX_Frame[5];
-                parity += RX_Frame[6];
-                parity += RX_Frame[7];
-                parity += RX_Frame[8];
                 parity &= 0x01;// XOR of all frame bits
                 
                 if(parity == parity_bit && start_bit)
@@ -556,4 +598,57 @@ uint8_t Get_SWIM_Devices(void)
 {
   return SWIM_Devices;
 }
+
+
+uint8_t SWIM_Stall_CPU(uint8_t swim_pin)
+{
+  uint8_t temp[1];
+  if(SWIM_ROTF(swim_pin, SWIM_DM_CSR2,temp,1))
+  {
+    temp[0]|=0x08;
+    return SWIM_WOTF(swim_pin, SWIM_DM_CSR2, temp, 1);//stall the cpu
+  }
+  return 0;
+}
+
+
+uint8_t SWIM_Stall_CPU_All(void)
+{
+  uint8_t devices;
+  
+  devices = Get_SWIM_Devices();  
+  
+  if(devices & SWIM_PIN_1)
+  {
+    SWIM_Stall_CPU(SWIM_PIN_1);
+  }
+  if(devices & SWIM_PIN_2)
+  {
+    SWIM_Stall_CPU(SWIM_PIN_2);
+  }
+  if(devices & SWIM_PIN_3)
+  {
+    SWIM_Stall_CPU(SWIM_PIN_3);
+  }
+  if(devices & SWIM_PIN_4)
+  {
+    SWIM_Stall_CPU(SWIM_PIN_4);
+  }
+  if(devices & SWIM_PIN_5)
+  {
+    SWIM_Stall_CPU(SWIM_PIN_5);
+  }
+  if(devices & SWIM_PIN_6)
+  {
+    SWIM_Stall_CPU(SWIM_PIN_6);
+  }
+  else
+  {
+    //zero mcu to copy
+    return 0;
+  }
+  
+  return 1;
+}
+
 

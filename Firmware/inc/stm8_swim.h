@@ -54,7 +54,7 @@
 
 
 #define SWIM_CSR               0x7F80
-#define SWIM_DM_CSR2	       0x7F99
+#define SWIM_DM_CSR2	      0x7F99
 
 
 #define SWIM_FLASH_PUKR_KEY1    0x56
@@ -83,6 +83,10 @@ uint8_t SWIM_Soft_Reset_All(void);
 uint8_t SWIM_Reset_Devices(void);
 
 uint8_t Get_SWIM_Devices(void);
+
+uint8_t SWIM_Stall_CPU(uint8_t swim_pin);
+uint8_t SWIM_Stall_CPU_All(void);
+
 
 /***************** FLASH_CR2 ********************************/
 /*

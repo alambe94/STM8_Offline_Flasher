@@ -11,20 +11,10 @@
 #include "at24cxx.h"
 
 
-
 uint8_t RAM_Buffer[STM8S003_BLOCK_SIZE]={0};
 uint8_t Compare_Buffer[STM8S003_BLOCK_SIZE]={0};
 
-uint8_t SWIM_Stall_CPU(uint8_t swim_pin)
-{
-  uint8_t temp[1];
-  if(SWIM_ROTF(swim_pin, SWIM_DM_CSR2,temp,1))
-  {
-    temp[0]|=0x08;
-    return SWIM_WOTF(swim_pin, SWIM_DM_CSR2, temp, 1);//stall the cpu
-  }
-  return 0;
-}
+uint8_t STM8S003_Default_OPT[10]={0};
 
 
 uint8_t SWIM_Unlock_OptionByte(uint8_t swim_pin)
@@ -86,8 +76,6 @@ uint8_t SWIM_Lock_EEPROM(uint8_t swim_pin)
 }
 
 
-
-
 uint8_t SWIM_Unlock_Flash(uint8_t swim_pin)
 {
   uint8_t temp[1];
@@ -99,6 +87,7 @@ uint8_t SWIM_Unlock_Flash(uint8_t swim_pin)
   }
   return 0;
 }
+
 
 uint8_t SWIM_Lock_Flash(uint8_t swim_pin)
 {
@@ -127,13 +116,16 @@ uint8_t SWIM_Enable_Block_Programming(uint8_t swim_pin)
 
 uint8_t SWIM_Wait_For_EOP(uint8_t swim_pin)
 {
-  uint8_t flagstatus[1]={0};
-  uint16_t timeout = 0xFFFF;
+  uint8_t flagstatus[1]= {0};
+  uint32_t timeout = 100000; 
   
   while ((flagstatus[0] == 0x00) && --timeout)
   {
+    if(timeout % 10000 == 0)
+    {
     SWIM_ROTF(swim_pin, SWIM_FLASH_IAPSR, flagstatus, 1);
-    flagstatus[0] = (uint8_t)(flagstatus[0] & (FLASH_IAPSR_EOP | FLASH_IAPSR_WR_PG_DIS));
+    flagstatus[0] = (uint8_t)(flagstatus[0] & FLASH_IAPSR_EOP);
+    }
   }
   
   if (timeout)
@@ -143,47 +135,6 @@ uint8_t SWIM_Wait_For_EOP(uint8_t swim_pin)
   
   return 0;
 }
-
-
-uint8_t SWIM_Stall_CPU_All(void)
-{
-  uint8_t devices;
-  
-  devices = Get_SWIM_Devices();  
-  
-  if(devices & SWIM_PIN_1)
-  {
-    SWIM_Stall_CPU(SWIM_PIN_1);
-  }
-  if(devices & SWIM_PIN_2)
-  {
-    SWIM_Stall_CPU(SWIM_PIN_2);
-  }
-  if(devices & SWIM_PIN_3)
-  {
-    SWIM_Stall_CPU(SWIM_PIN_3);
-  }
-  if(devices & SWIM_PIN_4)
-  {
-    SWIM_Stall_CPU(SWIM_PIN_4);
-  }
-  if(devices & SWIM_PIN_5)
-  {
-    SWIM_Stall_CPU(SWIM_PIN_5);
-  }
-  if(devices & SWIM_PIN_6)
-  {
-    SWIM_Stall_CPU(SWIM_PIN_6);
-  }
-  else
-  {
-    //zero mcu to copy
-    return 0;
-  }
-  
-  return 1;
-}
-
 
 
 uint8_t SWIM_Unlock_OptionByte_All(void)
@@ -693,7 +644,7 @@ uint8_t Flash_Read_Write_Test(void)
 {
   
   uint8_t status;
-  uint16_t address_offset = 0;
+  uint16_t address = STM8_FLASH_START_ADDRESS;
   
   status = SWIM_Enter();
   
@@ -709,7 +660,6 @@ uint8_t Flash_Read_Write_Test(void)
   
   for (uint8_t i =0; i<STM8S003_FLASH_PAGES; i++)
   {
-    address_offset = (i*STM8S003_BLOCK_SIZE);
     
     if(status)
     {
@@ -718,13 +668,44 @@ uint8_t Flash_Read_Write_Test(void)
     
     if(status)
     {
-      status = SWIM_WOTF(SWIM_PIN_6, STM8_FLASH_START_ADDRESS+address_offset, RAM_Buffer,STM8S003_BLOCK_SIZE);
+      status = SWIM_WOTF(SWIM_PIN_6, address, RAM_Buffer, STM8S003_BLOCK_SIZE);
+      address += STM8S003_BLOCK_SIZE;
       delay_ms(5); //5ms delay after block write  //read from 24cxx takes 1.5 // wait for EOP
       SWIM_Wait_For_EOP(SWIM_PIN_6);
     }
-    
+    else
+    {
+      break;
+    }
+      
   }
   
+  
+  address = STM8_FLASH_START_ADDRESS;
+  
+  for (uint8_t i =0; i<STM8S003_FLASH_PAGES; i++)
+  {
+    
+    if(status)
+    {
+      status = SWIM_ROTF(SWIM_PIN_6, address, Compare_Buffer, STM8S003_BLOCK_SIZE);
+      address += STM8S003_BLOCK_SIZE;
+    }
+    
+    if(status)
+    {
+      for(uint8_t i=0; i<STM8S003_BLOCK_SIZE; i++ )
+      {
+        if(RAM_Buffer[i] != Compare_Buffer[i])
+        {
+         status = 0;
+         break;
+        }
+      }
+    }
+  }
+  
+  SWIM_Lock_Flash(SWIM_PIN_6);
   return status;
 }
 
@@ -732,20 +713,89 @@ uint8_t Flash_Read_Write_Test(void)
 
 uint8_t EEPROM_Read_Write_Test(void)
 {
+  uint8_t status;
+  uint16_t address = STM8_EEPROM_START_ADDRESS;
+  
+  status = SWIM_Enter();
+  
   for(uint8_t i=0; i<STM8S003_BLOCK_SIZE; i++ )
   {
-    
+    RAM_Buffer[i] = i;
   }
   
-  return 0;
+  if(status)
+  {
+    status = SWIM_Unlock_EEPROM(SWIM_PIN_6);
+  }
+  
+  for (uint8_t i =0; i<STM8S003_EEPROM_PAGES; i++)
+  {
+    
+    if(status)
+    {
+      status = SWIM_Enable_Block_Programming(SWIM_PIN_6); //standard block programming
+    }
+    
+    if(status)
+    {
+      status = SWIM_WOTF(SWIM_PIN_6, address, RAM_Buffer, STM8S003_BLOCK_SIZE);
+      address += STM8S003_BLOCK_SIZE;
+      delay_ms(5); //5ms delay after block write  //read from 24cxx takes 1.5 // wait for EOP
+      SWIM_Wait_For_EOP(SWIM_PIN_6);
+    }
+    else
+    {
+      break;
+    }
+      
+  }
+  
+  
+  address = STM8_EEPROM_START_ADDRESS;
+  
+  for (uint8_t i =0; i<STM8S003_FLASH_PAGES; i++)
+  {
+    
+    if(status)
+    {
+      status = SWIM_ROTF(SWIM_PIN_6, address, Compare_Buffer, STM8S003_BLOCK_SIZE);
+      address += STM8S003_BLOCK_SIZE;
+    }
+    
+    if(status)
+    {
+      for(uint8_t i=0; i<STM8S003_BLOCK_SIZE; i++ )
+      {
+        if(RAM_Buffer[i] != Compare_Buffer[i])
+        {
+         status = 0;
+         break;
+        }
+      }
+    }
+  }
+  
+  SWIM_Lock_EEPROM(SWIM_PIN_6);
+  return status;
 }
+
 
 uint8_t AT24CXX_Read_Write_Test(void)
 {
-  for(uint8_t i=0; i<AT24CXX_PAGE_LENGTH; i++ )
+  uint8_t status;
+  
+  status = SWIM_Enter();
+  
+  for(uint8_t i=0; i<STM8S003_BLOCK_SIZE; i++ )
   {
-    
+    RAM_Buffer[i] = i;
   }
+  
+  if(status)
+  {
+    status = SWIM_Unlock_OptionByte(SWIM_PIN_6);
+  }
+  
   return 0;
 }
 

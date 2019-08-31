@@ -68,7 +68,6 @@ uint8_t SWIM_Wait_For_EOP(uint8_t swim_pin);
 
 
 
-uint8_t SWIM_Stall_CPU_All(void);
 
 uint8_t SWIM_Unlock_OptionByte_All(void);
 uint8_t SWIM_Lock_OptionByte_All(void);
