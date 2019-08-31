@@ -40746,13 +40746,27 @@
     "scope": null
   },
   {
+    "ID": "c:@SWIM_PIN_Mask",
+    "What": "Variable",
+    "defdec": "Dec",
+    "display": "SWIM_PIN_Mask",
+    "location": {
+      "column": "16",
+      "line": "456",
+      "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\main.c"
+    },
+    "name": "SWIM_PIN_Mask",
+    "origin": "project_file",
+    "scope": null
+  },
+  {
     "ID": "c:@F@main",
     "What": "Function",
     "defdec": "Def",
     "display": "void main(void)",
     "location": {
       "column": "6",
-      "line": "460",
+      "line": "458",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\main.c"
     },
     "name": "main",
@@ -40760,86 +40774,16 @@
     "scope": null
   },
   {
-    "ID": "c:main.c@12532@F@main@status",
+    "ID": "c:main.c@12557@F@main@status",
     "What": "Variable",
     "defdec": "Def",
     "display": "status",
     "location": {
-      "column": "12",
-      "line": "462",
+      "column": "11",
+      "line": "460",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\main.c"
     },
     "name": "status",
-    "origin": "project_file",
-    "scope": null
-  },
-  {
-    "ID": "c:main.c@12560@F@main@switch_pressed_time",
-    "What": "Variable",
-    "defdec": "Def",
-    "display": "switch_pressed_time",
-    "location": {
-      "column": "12",
-      "line": "464",
-      "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\main.c"
-    },
-    "name": "switch_pressed_time",
-    "origin": "project_file",
-    "scope": null
-  },
-  {
-    "ID": "c:main.c@14521@F@main@i",
-    "What": "Variable",
-    "defdec": "Def",
-    "display": "i",
-    "location": {
-      "column": "23",
-      "line": "540",
-      "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\main.c"
-    },
-    "name": "i",
-    "origin": "project_file",
-    "scope": null
-  },
-  {
-    "ID": "c:main.c@14681@F@main@i",
-    "What": "Variable",
-    "defdec": "Def",
-    "display": "i",
-    "location": {
-      "column": "23",
-      "line": "548",
-      "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\main.c"
-    },
-    "name": "i",
-    "origin": "project_file",
-    "scope": null
-  },
-  {
-    "ID": "c:main.c@15203@F@main@i",
-    "What": "Variable",
-    "defdec": "Def",
-    "display": "i",
-    "location": {
-      "column": "23",
-      "line": "570",
-      "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\main.c"
-    },
-    "name": "i",
-    "origin": "project_file",
-    "scope": null
-  },
-  {
-    "ID": "c:main.c@15365@F@main@i",
-    "What": "Variable",
-    "defdec": "Def",
-    "display": "i",
-    "location": {
-      "column": "23",
-      "line": "578",
-      "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\main.c"
-    },
-    "name": "i",
     "origin": "project_file",
     "scope": null
   },
@@ -40850,7 +40794,7 @@
     "display": "void assert_failed(u8 *, u32)",
     "location": {
       "column": "6",
-      "line": "610",
+      "line": "486",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\main.c"
     },
     "name": "assert_failed",
@@ -46834,16 +46778,16 @@
     "scope": null
   },
   {
-    "ID": "c:@F@EXTI_PORTC_IRQHandler",
+    "ID": "c:@F@EXTI_PORTD_IRQHandler",
     "What": "Function",
     "defdec": "Def",
-    "display": "void EXTI_PORTC_IRQHandler(void)",
+    "display": "void EXTI_PORTD_IRQHandler(void)",
     "location": {
       "column": "1",
       "line": "50",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
-    "name": "EXTI_PORTC_IRQHandler",
+    "name": "EXTI_PORTD_IRQHandler",
     "origin": "project_file",
     "scope": null
   },
@@ -46909,7 +46853,7 @@
     "defdec": "Def",
     "display": "timeout",
     "location": {
-      "column": "11",
+      "column": "12",
       "line": "145",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
@@ -46918,13 +46862,27 @@
     "scope": null
   },
   {
-    "ID": "c:stm8_swim.c@3392@F@SWIM_Enter@i",
+    "ID": "c:stm8_swim.c@3151@F@SWIM_Enter@swim_port",
+    "What": "Variable",
+    "defdec": "Def",
+    "display": "swim_port",
+    "location": {
+      "column": "11",
+      "line": "146",
+      "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
+    },
+    "name": "swim_port",
+    "origin": "project_file",
+    "scope": null
+  },
+  {
+    "ID": "c:stm8_swim.c@3444@F@SWIM_Enter@i",
     "What": "Variable",
     "defdec": "Def",
     "display": "i",
     "location": {
       "column": "16",
-      "line": "155",
+      "line": "158",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "i",
@@ -46932,13 +46890,13 @@
     "scope": null
   },
   {
-    "ID": "c:stm8_swim.c@3517@F@SWIM_Enter@i",
+    "ID": "c:stm8_swim.c@3569@F@SWIM_Enter@i",
     "What": "Variable",
     "defdec": "Def",
     "display": "i",
     "location": {
       "column": "16",
-      "line": "162",
+      "line": "165",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "i",
@@ -46946,13 +46904,13 @@
     "scope": null
   },
   {
-    "ID": "c:stm8_swim.c@4255@F@SWIM_Enter@csr",
+    "ID": "c:stm8_swim.c@4449@F@SWIM_Enter@csr",
     "What": "Variable",
     "defdec": "Def",
     "display": "csr",
     "location": {
       "column": "11",
-      "line": "194",
+      "line": "201",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "csr",
@@ -46966,7 +46924,7 @@
     "display": "uint8_t SWIM_Write_Cammand(uint8_t)",
     "location": {
       "column": "9",
-      "line": "215",
+      "line": "225",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "SWIM_Write_Cammand",
@@ -46974,13 +46932,13 @@
     "scope": null
   },
   {
-    "ID": "c:stm8_swim.c@4638@F@SWIM_Write_Cammand@timeout",
+    "ID": "c:stm8_swim.c@4857@F@SWIM_Write_Cammand@timeout",
     "What": "Variable",
     "defdec": "Def",
     "display": "timeout",
     "location": {
       "column": "11",
-      "line": "217",
+      "line": "227",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "timeout",
@@ -46988,13 +46946,13 @@
     "scope": null
   },
   {
-    "ID": "c:stm8_swim.c@4664@F@SWIM_Write_Cammand@data_frame",
+    "ID": "c:stm8_swim.c@4883@F@SWIM_Write_Cammand@data_frame",
     "What": "Variable",
     "defdec": "Def",
     "display": "data_frame",
     "location": {
       "column": "11",
-      "line": "218",
+      "line": "228",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "data_frame",
@@ -47002,13 +46960,13 @@
     "scope": null
   },
   {
-    "ID": "c:stm8_swim.c@4696@F@SWIM_Write_Cammand@parity",
+    "ID": "c:stm8_swim.c@4915@F@SWIM_Write_Cammand@parity",
     "What": "Variable",
     "defdec": "Def",
     "display": "parity",
     "location": {
       "column": "11",
-      "line": "219",
+      "line": "229",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "parity",
@@ -47016,13 +46974,13 @@
     "scope": null
   },
   {
-    "ID": "c:stm8_swim.c@4846@F@SWIM_Write_Cammand@i",
+    "ID": "c:stm8_swim.c@5065@F@SWIM_Write_Cammand@i",
     "What": "Variable",
     "defdec": "Def",
     "display": "i",
     "location": {
       "column": "16",
-      "line": "225",
+      "line": "235",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "i",
@@ -47036,7 +46994,7 @@
     "display": "uint8_t SWIM_Write_Data(uint8_t)",
     "location": {
       "column": "9",
-      "line": "250",
+      "line": "260",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "SWIM_Write_Data",
@@ -47044,13 +47002,13 @@
     "scope": null
   },
   {
-    "ID": "c:stm8_swim.c@5328@F@SWIM_Write_Data@timeout",
+    "ID": "c:stm8_swim.c@5547@F@SWIM_Write_Data@timeout",
     "What": "Variable",
     "defdec": "Def",
     "display": "timeout",
     "location": {
       "column": "11",
-      "line": "252",
+      "line": "262",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "timeout",
@@ -47058,13 +47016,13 @@
     "scope": null
   },
   {
-    "ID": "c:stm8_swim.c@5354@F@SWIM_Write_Data@data_frame",
+    "ID": "c:stm8_swim.c@5573@F@SWIM_Write_Data@data_frame",
     "What": "Variable",
     "defdec": "Def",
     "display": "data_frame",
     "location": {
       "column": "11",
-      "line": "253",
+      "line": "263",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "data_frame",
@@ -47072,13 +47030,13 @@
     "scope": null
   },
   {
-    "ID": "c:stm8_swim.c@5380@F@SWIM_Write_Data@parity",
+    "ID": "c:stm8_swim.c@5599@F@SWIM_Write_Data@parity",
     "What": "Variable",
     "defdec": "Def",
     "display": "parity",
     "location": {
       "column": "11",
-      "line": "254",
+      "line": "264",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "parity",
@@ -47092,7 +47050,7 @@
     "display": "uint8_t SWIM_WOTF(uint32_t, uint8_t *, uint8_t)",
     "location": {
       "column": "9",
-      "line": "301",
+      "line": "311",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "SWIM_WOTF",
@@ -47106,7 +47064,7 @@
     "display": "uint8_t SWIM_ROTF(uint32_t, uint8_t *, uint8_t)",
     "location": {
       "column": "9",
-      "line": "336",
+      "line": "346",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "SWIM_ROTF",
@@ -47114,13 +47072,13 @@
     "scope": null
   },
   {
-    "ID": "c:stm8_swim.c@7265@F@SWIM_ROTF@timeout",
+    "ID": "c:stm8_swim.c@7484@F@SWIM_ROTF@timeout",
     "What": "Variable",
     "defdec": "Def",
     "display": "timeout",
     "location": {
       "column": "11",
-      "line": "338",
+      "line": "348",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "timeout",
@@ -47128,13 +47086,13 @@
     "scope": null
   },
   {
-    "ID": "c:stm8_swim.c@7291@F@SWIM_ROTF@start_bit",
+    "ID": "c:stm8_swim.c@7510@F@SWIM_ROTF@start_bit",
     "What": "Variable",
     "defdec": "Def",
     "display": "start_bit",
     "location": {
       "column": "11",
-      "line": "339",
+      "line": "349",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "start_bit",
@@ -47142,13 +47100,13 @@
     "scope": null
   },
   {
-    "ID": "c:stm8_swim.c@7317@F@SWIM_ROTF@parity",
+    "ID": "c:stm8_swim.c@7536@F@SWIM_ROTF@parity",
     "What": "Variable",
     "defdec": "Def",
     "display": "parity",
     "location": {
       "column": "11",
-      "line": "340",
+      "line": "350",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "parity",
@@ -47156,13 +47114,13 @@
     "scope": null
   },
   {
-    "ID": "c:stm8_swim.c@7340@F@SWIM_ROTF@parity_bit",
+    "ID": "c:stm8_swim.c@7559@F@SWIM_ROTF@parity_bit",
     "What": "Variable",
     "defdec": "Def",
     "display": "parity_bit",
     "location": {
       "column": "11",
-      "line": "341",
+      "line": "351",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "parity_bit",
@@ -47170,13 +47128,13 @@
     "scope": null
   },
   {
-    "ID": "c:stm8_swim.c@7367@F@SWIM_ROTF@rx_data",
+    "ID": "c:stm8_swim.c@7586@F@SWIM_ROTF@rx_data",
     "What": "Variable",
     "defdec": "Def",
     "display": "rx_data",
     "location": {
       "column": "11",
-      "line": "342",
+      "line": "352",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "rx_data",
@@ -47190,7 +47148,7 @@
     "display": "uint8_t SWIM_Soft_Reset(void)",
     "location": {
       "column": "9",
-      "line": "440",
+      "line": "450",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "SWIM_Soft_Reset",
@@ -47204,7 +47162,7 @@
     "display": "uint8_t SWIM_Stall_CPU(void)",
     "location": {
       "column": "9",
-      "line": "446",
+      "line": "456",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "SWIM_Stall_CPU",
@@ -47212,13 +47170,13 @@
     "scope": null
   },
   {
-    "ID": "c:stm8_swim.c@10031@F@SWIM_Stall_CPU@temp",
+    "ID": "c:stm8_swim.c@10250@F@SWIM_Stall_CPU@temp",
     "What": "Variable",
     "defdec": "Def",
     "display": "temp",
     "location": {
       "column": "11",
-      "line": "448",
+      "line": "458",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "temp",
@@ -47232,7 +47190,7 @@
     "display": "uint8_t SWIM_Unlock_OptionByte(void)",
     "location": {
       "column": "9",
-      "line": "458",
+      "line": "468",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "SWIM_Unlock_OptionByte",
@@ -47240,13 +47198,13 @@
     "scope": null
   },
   {
-    "ID": "c:stm8_swim.c@10235@F@SWIM_Unlock_OptionByte@temp",
+    "ID": "c:stm8_swim.c@10454@F@SWIM_Unlock_OptionByte@temp",
     "What": "Variable",
     "defdec": "Def",
     "display": "temp",
     "location": {
       "column": "11",
-      "line": "460",
+      "line": "470",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "temp",
@@ -47260,7 +47218,7 @@
     "display": "uint8_t SWIM_Lock_OptionByte(void)",
     "location": {
       "column": "9",
-      "line": "475",
+      "line": "485",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "SWIM_Lock_OptionByte",
@@ -47268,13 +47226,13 @@
     "scope": null
   },
   {
-    "ID": "c:stm8_swim.c@10570@F@SWIM_Lock_OptionByte@temp",
+    "ID": "c:stm8_swim.c@10789@F@SWIM_Lock_OptionByte@temp",
     "What": "Variable",
     "defdec": "Def",
     "display": "temp",
     "location": {
       "column": "11",
-      "line": "477",
+      "line": "487",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "temp",
@@ -47288,7 +47246,7 @@
     "display": "uint8_t SWIM_Unlock_EEPROM(void)",
     "location": {
       "column": "9",
-      "line": "492",
+      "line": "502",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "SWIM_Unlock_EEPROM",
@@ -47296,13 +47254,13 @@
     "scope": null
   },
   {
-    "ID": "c:stm8_swim.c@10889@F@SWIM_Unlock_EEPROM@temp",
+    "ID": "c:stm8_swim.c@11108@F@SWIM_Unlock_EEPROM@temp",
     "What": "Variable",
     "defdec": "Def",
     "display": "temp",
     "location": {
       "column": "11",
-      "line": "494",
+      "line": "504",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "temp",
@@ -47316,7 +47274,7 @@
     "display": "uint8_t SWIM_Lock_EEPROM(void)",
     "location": {
       "column": "9",
-      "line": "505",
+      "line": "515",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "SWIM_Lock_EEPROM",
@@ -47324,13 +47282,13 @@
     "scope": null
   },
   {
-    "ID": "c:stm8_swim.c@11126@F@SWIM_Lock_EEPROM@temp",
+    "ID": "c:stm8_swim.c@11345@F@SWIM_Lock_EEPROM@temp",
     "What": "Variable",
     "defdec": "Def",
     "display": "temp",
     "location": {
       "column": "11",
-      "line": "507",
+      "line": "517",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "temp",
@@ -47344,7 +47302,7 @@
     "display": "uint8_t SWIM_Unlock_Flash(void)",
     "location": {
       "column": "9",
-      "line": "517",
+      "line": "527",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "SWIM_Unlock_Flash",
@@ -47352,13 +47310,13 @@
     "scope": null
   },
   {
-    "ID": "c:stm8_swim.c@11331@F@SWIM_Unlock_Flash@temp",
+    "ID": "c:stm8_swim.c@11550@F@SWIM_Unlock_Flash@temp",
     "What": "Variable",
     "defdec": "Def",
     "display": "temp",
     "location": {
       "column": "11",
-      "line": "519",
+      "line": "529",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "temp",
@@ -47372,7 +47330,7 @@
     "display": "uint8_t SWIM_Lock_Flash(void)",
     "location": {
       "column": "9",
-      "line": "529",
+      "line": "539",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "SWIM_Lock_Flash",
@@ -47380,13 +47338,13 @@
     "scope": null
   },
   {
-    "ID": "c:stm8_swim.c@11565@F@SWIM_Lock_Flash@temp",
+    "ID": "c:stm8_swim.c@11784@F@SWIM_Lock_Flash@temp",
     "What": "Variable",
     "defdec": "Def",
     "display": "temp",
     "location": {
       "column": "11",
-      "line": "531",
+      "line": "541",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "temp",
@@ -47400,7 +47358,7 @@
     "display": "uint8_t SWIM_Enable_Block_Programming(void)",
     "location": {
       "column": "9",
-      "line": "541",
+      "line": "551",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "SWIM_Enable_Block_Programming",
@@ -47408,13 +47366,13 @@
     "scope": null
   },
   {
-    "ID": "c:stm8_swim.c@11774@F@SWIM_Enable_Block_Programming@temp",
+    "ID": "c:stm8_swim.c@11993@F@SWIM_Enable_Block_Programming@temp",
     "What": "Variable",
     "defdec": "Def",
     "display": "temp",
     "location": {
       "column": "11",
-      "line": "543",
+      "line": "553",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "temp",
@@ -47428,7 +47386,7 @@
     "display": "uint8_t SWIM_Wait_For_EOP(void)",
     "location": {
       "column": "9",
-      "line": "554",
+      "line": "564",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "SWIM_Wait_For_EOP",
@@ -47436,13 +47394,13 @@
     "scope": null
   },
   {
-    "ID": "c:stm8_swim.c@12042@F@SWIM_Wait_For_EOP@flagstatus",
+    "ID": "c:stm8_swim.c@12261@F@SWIM_Wait_For_EOP@flagstatus",
     "What": "Variable",
     "defdec": "Def",
     "display": "flagstatus",
     "location": {
       "column": "11",
-      "line": "556",
+      "line": "566",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "flagstatus",
@@ -47450,13 +47408,13 @@
     "scope": null
   },
   {
-    "ID": "c:stm8_swim.c@12072@F@SWIM_Wait_For_EOP@timeout",
+    "ID": "c:stm8_swim.c@12291@F@SWIM_Wait_For_EOP@timeout",
     "What": "Variable",
     "defdec": "Def",
     "display": "timeout",
     "location": {
       "column": "12",
-      "line": "557",
+      "line": "567",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "timeout",
@@ -47470,7 +47428,7 @@
     "display": "uint8_t SWIM_Reset_Device(void)",
     "location": {
       "column": "9",
-      "line": "574",
+      "line": "584",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "SWIM_Reset_Device",
@@ -47478,13 +47436,13 @@
     "scope": null
   },
   {
-    "ID": "c:stm8_swim.c@12375@F@SWIM_Reset_Device@temp",
+    "ID": "c:stm8_swim.c@12594@F@SWIM_Reset_Device@temp",
     "What": "Variable",
     "defdec": "Def",
     "display": "temp",
     "location": {
       "column": "11",
-      "line": "576",
+      "line": "586",
       "path": "C:\\Users\\sam\\Desktop\\STM8_Offline_Flasher\\Firmware\\src\\stm8_swim.c"
     },
     "name": "temp",

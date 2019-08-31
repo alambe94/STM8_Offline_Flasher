@@ -42,12 +42,12 @@
 volatile uint8_t INT_Count = 0;
 uint8_t RX_Frame[15] = {0};
 
-/* Initially all swim ports are enabled. If device did not responds to swim sequence, then that port is disable*/
+/* Initially all swim ports are enabled. If device did not responds to swim sequence, then that port will be disabled*/
 uint8_t SWIM_PIN_Mask = (SWIM_PIN_1|SWIM_PIN_2|SWIM_PIN_3|SWIM_PIN_4|SWIM_PIN_5|SWIM_PIN_6);
 
 
 
-INTERRUPT_HANDLER(EXTI_PORTC_IRQHandler, 5)
+INTERRUPT_HANDLER(EXTI_PORTD_IRQHandler, 6)
 {
   if(SWIM_PIN_READ())
   {
@@ -129,12 +129,12 @@ void SWIM_Setup(void)
   /* Interrupts on falling edge*/
   EXTI_SetExtIntSensitivity(SWIM_PINS_EXTI_PORT, EXTI_SENSITIVITY_FALL_ONLY);
   
-  GPIO_Init(NRST_PIN_1_PORT, NRST_PIN_1, GPIO_MODE_OUT_PP_HIGH_SLOW);
-  GPIO_Init(NRST_PIN_2_PORT, NRST_PIN_2, GPIO_MODE_OUT_PP_HIGH_SLOW);
-  GPIO_Init(NRST_PIN_3_PORT, NRST_PIN_3, GPIO_MODE_OUT_PP_HIGH_SLOW);
-  GPIO_Init(NRST_PIN_4_PORT, NRST_PIN_4, GPIO_MODE_OUT_PP_HIGH_SLOW);
-  GPIO_Init(NRST_PIN_5_PORT, NRST_PIN_5, GPIO_MODE_OUT_PP_HIGH_SLOW);
-  GPIO_Init(NRST_PIN_6_PORT, NRST_PIN_6, GPIO_MODE_OUT_PP_HIGH_SLOW);
+  GPIO_Init(NRST_PIN_1_PORT, NRST_PIN_1, GPIO_MODE_OUT_OD_HIZ_SLOW);
+  GPIO_Init(NRST_PIN_2_PORT, NRST_PIN_2, GPIO_MODE_OUT_OD_HIZ_SLOW);
+  GPIO_Init(NRST_PIN_3_PORT, NRST_PIN_3, GPIO_MODE_OUT_OD_HIZ_SLOW);
+  GPIO_Init(NRST_PIN_4_PORT, NRST_PIN_4, GPIO_MODE_OUT_OD_HIZ_SLOW);
+  GPIO_Init(NRST_PIN_5_PORT, NRST_PIN_5, GPIO_MODE_OUT_OD_HIZ_SLOW);
+  GPIO_Init(NRST_PIN_6_PORT, NRST_PIN_6, GPIO_MODE_OUT_OD_HIZ_SLOW);
   
   enableInterrupts();
 }
@@ -142,8 +142,11 @@ void SWIM_Setup(void)
 
 uint8_t SWIM_Enter()
 {
-  uint8_t timeout =0xFF;
+  uint16_t timeout = 0;
+  uint8_t swim_port = 0;
   
+  SWIM_Reset_Device();
+ 
   NRST_Low();
   delay_ms(1);
   
@@ -171,21 +174,25 @@ uint8_t SWIM_Enter()
   is automatically turned ON. */
   
   
-  /*4. SWIM sends a synchronization frame to the host 128 x SWIM clocks = 16us */
   
+  /*4. SWIM sends a synchronization frame to the host 128 x SWIM clocks = 16us */
   SWIM_PIN_IN_INT();
   // approx 30us to give sync pulse of 16us
   
+  timeout = 1000; // approx (1000/16) us for 16mhz clk
   while(!INT_Count && --timeout);
+  swim_port = SWIM_PIN_READ();
   SWIM_PIN_OUT();
   INT_Count = 0;
+  
+  SWIM_PIN_Mask = (SWIM_PIN_Mask ^ swim_port);
   
   if(!timeout)
   {
     NRST_High();
     return 0;
   }
-  
+    
   /*5. SWIM line must be released at 1 to guarantee that the SWIM is ready for communication (at least 300 ns).*/
   delay_us(500);
   
@@ -198,6 +205,7 @@ uint8_t SWIM_Enter()
     return 0;
   }
   
+  
   /*6. Release the reset which starts the option byte loading sequence. Wait 1 ms for
   stabilization*/  
   NRST_High();
@@ -206,6 +214,8 @@ uint8_t SWIM_Enter()
   SWIM_PIN_LOW();
   delay_us(50);
   SWIM_PIN_HIGH();
+  
+  delay_ms(20);
   
   return 1;
   
@@ -356,7 +366,7 @@ uint8_t SWIM_ROTF(uint32_t addr, uint8_t *buf, uint8_t size)
           if(SWIM_Write_Data((addr >> 0) & 0xFF))
           {
             
-            delay_us(40); //dicard first frame
+            delay_us(50); //dicard first frame
             SWIM_Write_Parity_Ack_Bit(0);//send nack
             
             while(size) 

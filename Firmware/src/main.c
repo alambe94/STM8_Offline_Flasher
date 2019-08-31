@@ -453,147 +453,23 @@ uint8_t Compare_STM8_And_AT24C256(void)
 
 
 
-
-
-
+extern uint8_t SWIM_PIN_Mask;
 
 void main(void)
 {
-  uint16_t status = 0;
-  
-  uint16_t switch_pressed_time = 0;
-  
+  uint8_t status = 0;
   SWIM_Setup();
   
   Soft_I2C_Init();
   
-  /*Initialise LEDs and switch */
-  GPIO_Init(LED_RED_PORT, LED_RED_PIN, GPIO_MODE_OUT_PP_HIGH_SLOW);
-  GPIO_Init(LED_GREEN_PORT, LED_GREEN_PIN, GPIO_MODE_OUT_PP_HIGH_SLOW);
-  GPIO_Init(PROG_SWITCH_PORT, PROG_SWITCH_PIN, GPIO_MODE_IN_PU_NO_IT);
-  
-  
-  LED_GREEN_ON(); // LED GREEN and RED ON to indicate ideal state
-  LED_RED_ON();
-  Current_State = IDLE; //flash mcu mode
-  
   /* Infinite loop */
+  if(SWIM_Enter())
+  {    
+    status = SWIM_ROTF(STM8_FLASH_START_ADDRESS, RAM_BUFFER, STM8S003_BLOCK_SIZE);
+  }
+  
   while (1)
   {
-    while(PROG_SWITCH_READ() == PROG_SWITCH_PRESSED)
-    {
-      delay_ms(1);
-      switch_pressed_time++;
-      
-      if(switch_pressed_time > 2000)
-      {
-        switch_pressed_time = 0;
-        
-        switch(Current_State)
-        {
-        case IDLE:
-          Current_State = AT24_TO_STM8; //read mcu mode
-          LED_GREEN_ON(); // GREEN on RED off to indicate flashing mode
-          LED_RED_OFF();
-          break;
-          
-          
-        case AT24_TO_STM8:
-          Current_State = STM8_TO_AT24; //read mcu mode
-          LED_RED_ON();
-          LED_GREEN_OFF(); // GREEN off RED on to indicate reading mode
-          
-          
-          break;
-        case STM8_TO_AT24:
-          Current_State = IDLE; //flash the mcu
-          LED_GREEN_ON(); // LED GREEN and RED ON to indicate ideal state
-          LED_RED_ON();
-          
-          break;
-          
-        }
-      }
-    }
-    
-    
-    if(switch_pressed_time > 20)// 20ms debounce
-    {
-      switch_pressed_time = 0;
-      
-      switch(Current_State)
-      {
-      case IDLE:
-        LED_GREEN_ON(); // LED GREEN and RED ON to indicate ideal state
-        LED_RED_ON();
-        break;
-        
-        
-      case AT24_TO_STM8:
-        status = AT24C256_To_STM8();
-        if(status)
-        {
-          status = Compare_STM8_And_AT24C256();
-        }
-        if(status)// success 
-        {
-          for(uint8_t i=0; i<10; i++)
-          {
-            LED_RED_TOGGLE();
-            delay_ms(100);
-          }
-        }
-        else
-        {
-          for(uint8_t i=0; i<10; i++)
-          {
-            LED_GREEN_ON();
-            LED_RED_ON();
-            delay_ms(100);
-            LED_GREEN_OFF();
-            LED_RED_OFF();
-            delay_ms(100);
-          }
-        }
-        LED_GREEN_ON();
-        SWIM_Reset_Device();
-        break;
-        
-      case STM8_TO_AT24:
-        status = STM8_To_AT24C256();
-        if(status)
-        {
-        status = Compare_STM8_And_AT24C256();
-        }
-        if(status)// success 
-        {
-          for(uint8_t i=0; i<10; i++)
-          {
-            LED_GREEN_TOGGLE();
-            delay_ms(100);
-          }
-        }
-        else
-        {
-          for(uint8_t i=0; i<10; i++)
-          {
-            LED_GREEN_ON();
-            LED_RED_ON();
-            delay_ms(100);
-            LED_GREEN_OFF();
-            LED_RED_OFF();
-            delay_ms(100);
-          }
-        }
-        LED_RED_ON();
-        SWIM_Reset_Device();
-        break;
-        
-      }
-      
-   
-    }
-    
   }
   
 }

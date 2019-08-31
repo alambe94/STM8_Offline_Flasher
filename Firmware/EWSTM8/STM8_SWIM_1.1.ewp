@@ -16,7 +16,7 @@
                 <debug>1</debug>
                 <option>
                     <name>GenDeviceSelectMenu</name>
-                    <state>STM8S003F3	STM8S003F3</state>
+                    <state>STM8S003K3	STM8S003K3</state>
                 </option>
                 <option>
                     <name>GenCodeModel</name>
@@ -151,7 +151,7 @@
                 <option>
                     <name>IccOptStrategy</name>
                     <version>0</version>
-                    <state>1</state>
+                    <state>2</state>
                 </option>
                 <option>
                     <name>IccOptLevelSlave</name>
@@ -607,7 +607,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile</name>
-                    <state>$TOOLKIT_DIR$\config\lnkstm8s003f3.icf</state>
+                    <state>$TOOLKIT_DIR$\config\lnkstm8s003k3.icf</state>
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
