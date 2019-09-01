@@ -21,13 +21,13 @@ uint8_t AT24CXX_Write_Byte (uint16_t register_address, uint8_t data)
   
   if (AT24CXX_ADDRESS_WIDTH > 8)/* Only if address is 16 bit */
   {
-    if (Soft_I2C_Send_Byte ((register_address >> 8)) == SOFT_I2C_ERR)
+    if (Soft_I2C_Send_Byte ((uint8_t)(register_address >> 8)) == SOFT_I2C_ERR)
     {
       return AT24CXX_ERR;
     }
   }
   
-  if (Soft_I2C_Send_Byte (register_address) == SOFT_I2C_ERR)/*send register address to write*/
+  if (Soft_I2C_Send_Byte ((uint8_t)register_address) == SOFT_I2C_ERR)/*send register address to write*/
   {
     return AT24CXX_ERR;
   }
@@ -53,19 +53,19 @@ uint8_t AT24CXX_Read_Byte (uint16_t register_address, uint8_t* data)
     return AT24CXX_ERR;
   }
   
-  if (Soft_I2C_Send_Byte (AT24CXX_EEPROM_ADDR + 0) == SOFT_I2C_ERR)/*Send device address + write bit */
+  if (Soft_I2C_Send_Byte ((uint8_t)(AT24CXX_EEPROM_ADDR + 0)) == SOFT_I2C_ERR)/*Send device address + write bit */
   {
     return AT24CXX_ERR;
   }
   
   if (AT24CXX_ADDRESS_WIDTH > 8)/* Only if address is 16 bit */
   {
-    if (Soft_I2C_Send_Byte ((register_address >> 8)) == SOFT_I2C_ERR)
+    if (Soft_I2C_Send_Byte ((uint8_t)(register_address >> 8)) == SOFT_I2C_ERR)
     {
       return AT24CXX_ERR;
     }
   }
-  if (Soft_I2C_Send_Byte (register_address) == SOFT_I2C_ERR)/*send register address to write*/
+  if (Soft_I2C_Send_Byte ((uint8_t)register_address) == SOFT_I2C_ERR)/*send register address to write*/
   {
     return AT24CXX_ERR;
   }
@@ -109,12 +109,12 @@ uint8_t AT24CXX_Write_Page (uint16_t start_address, uint8_t *buf, uint16_t len)
   
   if (AT24CXX_ADDRESS_WIDTH > 8)/* Only if address is 16 bit */
   {
-    if (Soft_I2C_Send_Byte ((start_address >> 8)) == SOFT_I2C_ERR)
+    if (Soft_I2C_Send_Byte ((uint8_t)(start_address >> 8)) == SOFT_I2C_ERR)
     {
       return AT24CXX_ERR;
     }
   }
-  if (Soft_I2C_Send_Byte (start_address) == SOFT_I2C_ERR)/*send register address to write*/
+  if (Soft_I2C_Send_Byte ((uint8_t)start_address) == SOFT_I2C_ERR)/*send register address to write*/
   {
     return AT24CXX_ERR;
   }
@@ -150,13 +150,13 @@ uint8_t AT24CXX_Read_Buffer (uint16_t start_address, uint8_t *buf, uint16_t len)
   
   if (AT24CXX_ADDRESS_WIDTH > 8)/* Only if address is 16 bit */
   {
-    if (Soft_I2C_Send_Byte ((start_address >> 8)) == SOFT_I2C_ERR)
+    if (Soft_I2C_Send_Byte ((uint8_t)(start_address >> 8)) == SOFT_I2C_ERR)
     {
       return AT24CXX_ERR;
     }
   }
   
-  if (Soft_I2C_Send_Byte (start_address) == SOFT_I2C_ERR)/*send register address to write*/
+  if (Soft_I2C_Send_Byte ((uint8_t)start_address) == SOFT_I2C_ERR)/*send register address to write*/
   {
     return AT24CXX_ERR;
   }

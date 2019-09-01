@@ -5,8 +5,8 @@
 #include "millis.h"
 
 
-#define SOFT_I2C_OK		0
-#define SOFT_I2C_ERR		1
+#define SOFT_I2C_OK		  0u
+#define SOFT_I2C_ERR		1u
 
 
 #define SOFT_I2C_SDA_PIN		GPIO_PIN_5
@@ -17,14 +17,14 @@
 #define SOFT_I2C_SCL_PORT		GPIOB
 
 
-#define SOFT_I2C_SDA_HIGH()	    SOFT_I2C_SDA_PORT->ODR |=  SOFT_I2C_SDA_PIN
-#define SOFT_I2C_SDA_LOW()	    SOFT_I2C_SDA_PORT->ODR &=  ~SOFT_I2C_SDA_PIN
-#define SOFT_I2C_SDA_READ()	    SOFT_I2C_SDA_PORT->IDR  &   SOFT_I2C_SDA_PIN
+#define SOFT_I2C_SDA_HIGH()	    (SOFT_I2C_SDA_PORT->ODR |=  (uint8_t)SOFT_I2C_SDA_PIN)
+#define SOFT_I2C_SDA_LOW()	    (SOFT_I2C_SDA_PORT->ODR &=  (uint8_t)~SOFT_I2C_SDA_PIN)
+#define SOFT_I2C_SDA_READ()	    (SOFT_I2C_SDA_PORT->IDR  &  (uint8_t) SOFT_I2C_SDA_PIN)
 
 
-#define SOFT_I2C_SCL_HIGH()	    SOFT_I2C_SCL_PORT->ODR |= SOFT_I2C_SCL_PIN
-#define SOFT_I2C_SCL_LOW()	    SOFT_I2C_SCL_PORT->ODR &= ~SOFT_I2C_SCL_PIN
-#define SOFT_I2C_SCL_READ()	    SOFT_I2C_SCL_PORT->IDR &  SOFT_I2C_SCL_PIN
+#define SOFT_I2C_SCL_HIGH()	    (SOFT_I2C_SCL_PORT->ODR |= (uint8_t)SOFT_I2C_SCL_PIN)
+#define SOFT_I2C_SCL_LOW()	    (SOFT_I2C_SCL_PORT->ODR &= (uint8_t)~SOFT_I2C_SCL_PIN)
+#define SOFT_I2C_SCL_READ()	    (SOFT_I2C_SCL_PORT->IDR &  (uint8_t)SOFT_I2C_SCL_PIN)
 
 
 void Soft_I2C_Init(void);

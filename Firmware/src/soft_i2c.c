@@ -212,7 +212,7 @@ uint8_t Soft_I2C_Read_Byte(uint8_t slave_address, uint8_t register_address, uint
 		return SOFT_I2C_ERR;
 	}
 
-	if (Soft_I2C_Send_Byte(slave_address + 1) == SOFT_I2C_ERR) //read bit
+	if (Soft_I2C_Send_Byte((uint8_t)(slave_address + 1)) == SOFT_I2C_ERR) //read bit
 	{
 		return SOFT_I2C_ERR;
 	}
@@ -287,7 +287,7 @@ uint8_t Soft_I2C_Read_Bytes(uint8_t slave_address, uint8_t register_address, uin
 		return SOFT_I2C_ERR;
 	}
 
-	if (Soft_I2C_Send_Byte(slave_address + 1) == SOFT_I2C_ERR) //read bit
+	if (Soft_I2C_Send_Byte((uint8_t)(slave_address + 1)) == SOFT_I2C_ERR) //read bit
 	{
 		return SOFT_I2C_ERR;
 	}

@@ -11,22 +11,22 @@
 /**********************Device Independent File************************/
 
 
-#define NRST_PIN_HIGH(PORT, PIN)        PORT->ODR |=  PIN     
-#define NRST_PIN_LOW(PORT, PIN)         PORT->ODR &=  ~PIN   
+#define NRST_PIN_HIGH(PORT, PIN)        (PORT->ODR |= (uint8_t)PIN)     
+#define NRST_PIN_LOW(PORT, PIN)         (PORT->ODR &= (uint8_t)~PIN)   
 
 
-#define SWIM_PIN_OUT()         SWIM_PINS_PORT->ODR |=  SWIM_PIN_Mask;\
-                               SWIM_PINS_PORT->CR1 &= ~SWIM_PIN_Mask;\
-                               SWIM_PINS_PORT->DDR |=  SWIM_PIN_Mask
+#define SWIM_PIN_OUT()         SWIM_PINS_PORT->ODR |= (uint8_t) SWIM_PIN_Mask;\
+                               SWIM_PINS_PORT->CR1 &= (uint8_t)~SWIM_PIN_Mask;\
+                               SWIM_PINS_PORT->DDR |= (uint8_t) SWIM_PIN_Mask
 
-#define SWIM_PIN_IN_INT()      SWIM_PINS_PORT->DDR &=  ~SWIM_PIN_Mask;\
-                               SWIM_PINS_PORT->CR1 |=   SWIM_PIN_Mask;\
-                               SWIM_PINS_PORT->CR2 |=   SWIM_PIN_Mask 
+#define SWIM_PIN_IN_INT()      SWIM_PINS_PORT->DDR &= (uint8_t)~SWIM_PIN_Mask;\
+                               SWIM_PINS_PORT->CR1 |= (uint8_t)SWIM_PIN_Mask;\
+                               SWIM_PINS_PORT->CR2 |= (uint8_t)SWIM_PIN_Mask 
 
 
-#define SWIM_PIN_HIGH()        SWIM_PINS_PORT->ODR |=  SWIM_PIN_Mask     
-#define SWIM_PIN_LOW()         SWIM_PINS_PORT->ODR &= ~SWIM_PIN_Mask   
-#define SWIM_PIN_READ()        SWIM_PINS_PORT->IDR &   SWIM_PIN_Mask
+#define SWIM_PIN_HIGH()        (SWIM_PINS_PORT->ODR |= (uint8_t)SWIM_PIN_Mask)     
+#define SWIM_PIN_LOW()         (SWIM_PINS_PORT->ODR &= (uint8_t)~SWIM_PIN_Mask)   
+#define SWIM_PIN_READ()        (uint8_t)(SWIM_PINS_PORT->IDR &   SWIM_PIN_Mask)
 
 
 #define SWIM_DELAY_1_BIT()     nop(); nop()
@@ -229,7 +229,7 @@ uint8_t SWIM_Enter()
   INT_Count = 0;
   
   //disable swim pin if device did not responds.
-  SWIM_Devices = (SWIM_PIN_Mask ^ swim_port);
+  SWIM_Devices = (uint8_t)(SWIM_PIN_Mask ^ swim_port);
   SWIM_PIN_Mask = SWIM_Devices;
   
   if(!timeout)
@@ -275,9 +275,9 @@ uint8_t SWIM_Write_Cammand(uint8_t cammand)
   uint8_t data_frame[3] = "0";
   uint8_t parity = 0;
   
-  data_frame[2] = cammand>>2 & 0x01;
-  data_frame[1] = cammand>>1 & 0x01;
-  data_frame[0] = cammand>>0 & 0x01;
+  data_frame[2] = (uint8_t)(cammand>>2 & 0x01);
+  data_frame[1] = (uint8_t)(cammand>>1 & 0x01);
+  data_frame[0] = (uint8_t)(cammand>>0 & 0x01);
   
   for (for_index = 0; for_index<3; for_index++) 
   {
@@ -299,7 +299,7 @@ uint8_t SWIM_Write_Cammand(uint8_t cammand)
   if(timeout)
   {
     //disable swim pin if device did not ACK.
-    SWIM_Devices = (SWIM_PIN_Mask & RX_Frame[0]);
+    SWIM_Devices = (uint8_t)(SWIM_PIN_Mask & RX_Frame[0]);
     SWIM_PIN_Mask = SWIM_Devices;
     if(SWIM_Devices) // at least one of the mcu acked
     {
@@ -317,14 +317,14 @@ uint8_t SWIM_Write_Data(uint8_t data)
   uint8_t parity = 0;
   
   //unroll for loop for faster execution
-  data_frame[7] = data>>7 & 0x01;
-  data_frame[6] = data>>6 & 0x01;
-  data_frame[5] = data>>5 & 0x01;
-  data_frame[4] = data>>4 & 0x01;
-  data_frame[3] = data>>3 & 0x01;
-  data_frame[2] = data>>2 & 0x01;
-  data_frame[1] = data>>1 & 0x01;
-  data_frame[0] = data>>0 & 0x01;
+  data_frame[7] = (uint8_t)(data>>7 & 0x01);
+  data_frame[6] = (uint8_t)(data>>6 & 0x01);
+  data_frame[5] = (uint8_t)(data>>5 & 0x01);
+  data_frame[4] = (uint8_t)(data>>4 & 0x01);
+  data_frame[3] = (uint8_t)(data>>3 & 0x01);
+  data_frame[2] = (uint8_t)(data>>2 & 0x01);
+  data_frame[1] = (uint8_t)(data>>1 & 0x01);
+  data_frame[0] = (uint8_t)(data>>0 & 0x01);
   
   //unroll for loop for faster execution
   parity  = data_frame[7];
@@ -357,7 +357,7 @@ uint8_t SWIM_Write_Data(uint8_t data)
   if(timeout)
   {
     //disable swim pin if device did not ACK.
-    SWIM_Devices = (SWIM_PIN_Mask & RX_Frame[0]);
+    SWIM_Devices = (uint8_t)(SWIM_PIN_Mask & RX_Frame[0]);
     SWIM_PIN_Mask = SWIM_Devices;
     if(SWIM_Devices) // at least one of the mcu acked
     {
@@ -381,11 +381,11 @@ uint8_t SWIM_WOTF(uint8_t swim_pin, uint32_t addr, uint8_t *buf, uint8_t size)
   {
     if(SWIM_Write_Data(size))
     {
-      if(SWIM_Write_Data((addr >> 16) & 0xFF))
+      if(SWIM_Write_Data((uint8_t)((addr >> 16) & 0xFF)))
       {
-        if(SWIM_Write_Data((addr >> 8) & 0xFF))
+        if(SWIM_Write_Data((uint8_t)((addr >> 8) & 0xFF)))
         {
-          if(SWIM_Write_Data((addr >> 0) & 0xFF))
+          if(SWIM_Write_Data((uint8_t)((addr >> 0) & 0xFF)))
           {
             while(size--)
             {
@@ -418,11 +418,11 @@ uint8_t SWIM_WOTF_All(uint32_t addr, uint8_t *buf, uint8_t size)
   {
     if(SWIM_Write_Data(size))
     {
-      if(SWIM_Write_Data((addr >> 16) & 0xFF))
+      if(SWIM_Write_Data((uint8_t)((addr >> 16) & 0xFF)))
       {
-        if(SWIM_Write_Data((addr >> 8) & 0xFF))
+        if(SWIM_Write_Data((uint8_t)((addr >> 8) & 0xFF)))
         {
-          if(SWIM_Write_Data((addr >> 0) & 0xFF))
+          if(SWIM_Write_Data((uint8_t)((addr >> 0) & 0xFF)))
           {
             while(size--)
             {
@@ -460,11 +460,11 @@ uint8_t SWIM_ROTF(uint8_t swim_pin, uint32_t addr, uint8_t *buf, uint8_t size)
   {
     if(SWIM_Write_Data(size))
     {
-      if(SWIM_Write_Data((addr >> 16) & 0xFF))
+      if(SWIM_Write_Data((uint8_t)((addr >> 16) & 0xFF)))
       {
-        if(SWIM_Write_Data((addr >> 8) & 0xFF))
+        if(SWIM_Write_Data((uint8_t)((addr >> 8) & 0xFF)))
         {
-          if(SWIM_Write_Data((addr >> 0) & 0xFF))
+          if(SWIM_Write_Data((uint8_t)((addr >> 0) & 0xFF)))
           {
             
             delay_us(50); //dicard first frame
@@ -479,7 +479,7 @@ uint8_t SWIM_ROTF(uint8_t swim_pin, uint32_t addr, uint8_t *buf, uint8_t size)
               {
                 timeout = 255;
                 start_bit = RX_Frame[0];
-                parity_bit = RX_Frame[9]?1:0;
+                parity_bit = (uint8_t)(RX_Frame[9]?1:0);
                 
                 /*
                 for(uint8_t i=1; i<=8; i++)

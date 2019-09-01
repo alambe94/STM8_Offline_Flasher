@@ -163,24 +163,25 @@ ARRL	..\stm8s_stdperiph_driver\inc\stm8s.h	844;"	member	struct:TIM2_struct
 ARRL	..\stm8s_stdperiph_driver\inc\stm8s.h	966;"	member	struct:TIM3_struct
 AT24CXX_ADDRESS_WIDTH	..\inc\at24cxx.h	10;"	macro
 AT24CXX_EEPROM_ADDR	..\inc\at24cxx.h	8;"	macro
-AT24CXX_ERR	..\inc\at24cxx.h	16;"	macro
-AT24CXX_Init	..\inc\at24cxx.h	19;"	prototype	signature:(void)
+AT24CXX_ERR	..\inc\at24cxx.h	18;"	macro
+AT24CXX_Init	..\inc\at24cxx.h	21;"	prototype	signature:(void)
 AT24CXX_Init	..\src\at24cxx.c	4;"	function	signature:(void)
-AT24CXX_OK	..\inc\at24cxx.h	15;"	macro
+AT24CXX_OK	..\inc\at24cxx.h	17;"	macro
+AT24CXX_PAGES	..\inc\at24cxx.h	12;"	macro
 AT24CXX_PAGE_LENGTH	..\inc\at24cxx.h	11;"	macro
-AT24CXX_Read_Buffer	..\inc\at24cxx.h	23;"	prototype	signature:(uint16_t Address, uint8_t *buf, uint16_t len)
+AT24CXX_Read_Buffer	..\inc\at24cxx.h	25;"	prototype	signature:(uint16_t Address, uint8_t *buf, uint16_t len)
 AT24CXX_Read_Buffer	..\src\at24cxx.c	137;"	function	signature:(uint16_t start_address, uint8_t *buf, uint16_t len)
-AT24CXX_Read_Byte	..\inc\at24cxx.h	21;"	prototype	signature:(uint16_t Address, uint8_t* data)
+AT24CXX_Read_Byte	..\inc\at24cxx.h	23;"	prototype	signature:(uint16_t Address, uint8_t* data)
 AT24CXX_Read_Byte	..\src\at24cxx.c	47;"	function	signature:(uint16_t register_address, uint8_t* data)
 AT24CXX_Read_Write_Test	..\inc\stm8s003_swim.h	91;"	prototype	signature:(void)
-AT24CXX_Read_Write_Test	..\src\stm8s003_swim.c	787;"	function	signature:(void)
+AT24CXX_Read_Write_Test	..\src\stm8s003_swim.c	846;"	function	signature:(void)
 AT24CXX_To_STM8S003	..\inc\stm8s003_swim.h	85;"	prototype	signature:(void)
 AT24CXX_To_STM8S003	..\src\stm8s003_swim.c	489;"	function	signature:(void)
-AT24CXX_Write_Buffer	..\inc\at24cxx.h	24;"	prototype	signature:(uint16_t Address, uint8_t *buf, uint16_t len)
+AT24CXX_Write_Buffer	..\inc\at24cxx.h	26;"	prototype	signature:(uint16_t Address, uint8_t *buf, uint16_t len)
 AT24CXX_Write_Buffer	..\src\at24cxx.c	196;"	function	signature:(uint16_t start_address, uint8_t *buf, uint16_t len)
-AT24CXX_Write_Byte	..\inc\at24cxx.h	20;"	prototype	signature:(uint16_t Address, uint8_t data)
+AT24CXX_Write_Byte	..\inc\at24cxx.h	22;"	prototype	signature:(uint16_t Address, uint8_t data)
 AT24CXX_Write_Byte	..\src\at24cxx.c	9;"	function	signature:(uint16_t register_address, uint8_t data)
-AT24CXX_Write_Page	..\inc\at24cxx.h	22;"	prototype	signature:(uint16_t Address, uint8_t *buf, uint16_t len)
+AT24CXX_Write_Page	..\inc\at24cxx.h	24;"	prototype	signature:(uint16_t Address, uint8_t *buf, uint16_t len)
 AT24CXX_Write_Page	..\src\at24cxx.c	91;"	function	signature:(uint16_t start_address, uint8_t *buf, uint16_t len)
 AWCRH	..\stm8s_stdperiph_driver\inc\stm8s.h	335;"	member	struct:ADC1_struct
 AWCRL	..\stm8s_stdperiph_driver\inc\stm8s.h	336;"	member	struct:ADC1_struct
@@ -758,7 +759,7 @@ EEPROM	..\stm8s_stdperiph_driver\inc\stm8s.h	131;"	macro
 EEPROM	..\stm8s_stdperiph_driver\inc\stm8s.h	145;"	macro
 EEPROM_EEC_IRQHandler	..\inc\stm8s_it.h	105;"	prototype	signature:(void)
 EEPROM_Read_Write_Test	..\inc\stm8s003_swim.h	90;"	prototype	signature:(void)
-EEPROM_Read_Write_Test	..\src\stm8s003_swim.c	717;"	function	signature:(void)
+EEPROM_Read_Write_Test	..\src\stm8s003_swim.c	776;"	function	signature:(void)
 EEPROM_STORE_ADDRESS	..\inc\stm8s003_swim.h	35;"	macro
 EGR	..\stm8s_stdperiph_driver\inc\stm8s.h	1067;"	member	struct:TIM4_struct
 EGR	..\stm8s_stdperiph_driver\inc\stm8s.h	1129;"	member	struct:TIM5_struct
@@ -992,7 +993,7 @@ Filter23	..\stm8s_stdperiph_driver\inc\stm8s.h	2268;"	member	union:__anon5::__an
 Filter45	..\stm8s_stdperiph_driver\inc\stm8s.h	2289;"	member	union:__anon5::__anon6	typeref:struct:__anon5::__anon6::__anon11
 FlagStatus	..\stm8s_stdperiph_driver\inc\stm8s.h	233;"	typedef	typeref:enum:__anon2
 Flash_Read_Write_Test	..\inc\stm8s003_swim.h	89;"	prototype	signature:(void)
-Flash_Read_Write_Test	..\src\stm8s003_swim.c	646;"	function	signature:(void)
+Flash_Read_Write_Test	..\src\stm8s003_swim.c	703;"	function	signature:(void)
 FunctionalState	..\stm8s_stdperiph_driver\inc\stm8s.h	235;"	typedef	typeref:enum:__anon3
 GCR	..\stm8s_stdperiph_driver\inc\stm8s.h	2524;"	member	struct:CFG_struct
 GPIOA	..\stm8s_stdperiph_driver\inc\stm8s.h	2627;"	macro
@@ -1587,7 +1588,7 @@ OPTION_BYTE_START_PHYSICAL_ADDRESS	..\stm8s_stdperiph_driver\inc\stm8s_flash.h	7
 OPTION_BYTE_STORE_ADDRESS	..\inc\stm8s003_swim.h	36;"	macro
 OPT_BaseAddress	..\stm8s_stdperiph_driver\inc\stm8s.h	2556;"	macro
 OPT_Read_Write_Test	..\inc\stm8s003_swim.h	88;"	prototype	signature:(void)
-OPT_Read_Write_Test	..\src\stm8s003_swim.c	634;"	function	signature:(void)
+OPT_Read_Write_Test	..\src\stm8s003_swim.c	637;"	function	signature:(void)
 OPT_TypeDef	..\stm8s_stdperiph_driver\inc\stm8s.h	1602;"	typedef	typeref:struct:OPT_struct
 OPT_struct	..\stm8s_stdperiph_driver\inc\stm8s.h	1584;"	struct
 PCKENR1	..\stm8s_stdperiph_driver\inc\stm8s.h	517;"	member	struct:CLK_struct
