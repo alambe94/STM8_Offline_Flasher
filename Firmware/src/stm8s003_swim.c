@@ -465,7 +465,7 @@ uint8_t Copy_STM8S003_To_AT24CXX(void)
   /***************************read Option bytes data from stm8 start*************************/
   if(status)
   {
-    status=SWIM_ROTF(device, SWIM_OPT1,RAM_Buffer,10); // stm8s0033 has 10 option bytes
+    status=SWIM_ROTF(device, SWIM_OPT1,RAM_Buffer,10); // stm8s003 has 10 option bytes
   }
   
   if(status)
@@ -631,14 +631,71 @@ uint8_t AT24CXX_To_STM8S003(void)
 
 
 
+
+
+
 uint8_t OPT_Read_Write_Test(void)
 {
   uint8_t for_index;
-  for(for_index=0; for_index<STM8S003_BLOCK_SIZE;for_index++ )
+  uint8_t status;
+  
+  status = SWIM_Enter();
+  
+  if(status)
   {
-    
+    status=SWIM_Unlock_OptionByte(SWIM_PIN_6);
   }
-  return 0;
+    
+  if(status)
+  {
+    status=SWIM_WOTF(SWIM_PIN_6, SWIM_OPT1, STM8S003_Default_OPT, 2);
+    delay_ms(10);// wait for EOP
+  }
+  
+  if(status)
+  {
+    status=SWIM_WOTF(SWIM_PIN_6, SWIM_OPT2, STM8S003_Default_OPT+2, 2);
+    delay_ms(10);// wait for EOP
+  }
+  
+  if(status)
+  {
+    status=SWIM_WOTF(SWIM_PIN_6, SWIM_OPT3, STM8S003_Default_OPT+4, 2);
+    delay_ms(10);// wait for EOP
+  }
+  
+  if(status)
+  {
+    status=SWIM_WOTF(SWIM_PIN_6, SWIM_OPT4, STM8S003_Default_OPT+6, 2);
+    delay_ms(10);// wait for EOP
+  }
+  
+  if(status)
+  {
+    status=SWIM_WOTF(SWIM_PIN_6, SWIM_OPT5, STM8S003_Default_OPT+8, 2);
+    delay_ms(10);// wait for EOP
+  }
+  
+  if(status)
+  {
+    status = SWIM_Lock_OptionByte(SWIM_PIN_6);
+  }
+  
+  if(status)
+  {
+    status = SWIM_ROTF(SWIM_PIN_6, SWIM_OPT1, Compare_Buffer, 10); // stm8s003 has 10 option bytes
+  }
+  
+  for(for_index=0; for_index<10; for_index++)
+  {
+    if(STM8S003_Default_OPT[for_index] != Compare_Buffer[for_index])
+    {
+      status = 0;
+      break;
+    }
+  }
+  
+  return status;
 }
 
 
@@ -707,8 +764,10 @@ uint8_t Flash_Read_Write_Test(void)
       }
     }
   }
-  
-  SWIM_Lock_Flash(SWIM_PIN_6);
+  if(status)
+  {
+    status = SWIM_Lock_Flash(SWIM_PIN_6);
+  }
   return status;
 }
 
@@ -786,22 +845,46 @@ uint8_t EEPROM_Read_Write_Test(void)
 
 uint8_t AT24CXX_Read_Write_Test(void)
 {
-  uint8_t for_index;
+  uint8_t for_index_i;
+  uint8_t for_index_j;
   uint8_t status;
+  uint16_t address = 0;
   
-  status = SWIM_Enter();
-  
-  for(for_index=0; for_index<STM8S003_BLOCK_SIZE; for_index++ )
+  for(for_index_i=0; for_index_i<STM8S003_BLOCK_SIZE; for_index_i++ )
   {
-    RAM_Buffer[for_index] = for_index;
+    RAM_Buffer[for_index_i] = for_index_i;
   }
   
-  if(status)
+  for(for_index_i=0; for_index_i<AT24CXX_PAGES; for_index_i++ )
   {
-    status = SWIM_Unlock_OptionByte(SWIM_PIN_6);
+    status = AT24CXX_Write_Page(address, RAM_Buffer, STM8S003_BLOCK_SIZE);
+    address += STM8S003_BLOCK_SIZE;
   }
   
-  return 0;
+  for(address = for_index_i=0; for_index_i<AT24CXX_PAGES; for_index_i++ )
+  {
+    if(status)
+    {
+      status = AT24CXX_Read_Buffer(address, Compare_Buffer, STM8S003_BLOCK_SIZE);
+      address += STM8S003_BLOCK_SIZE;
+    }
+    
+    for(for_index_j=0; for_index_j<STM8S003_BLOCK_SIZE; for_index_j++ )
+    {
+      if(RAM_Buffer[for_index_j] != Compare_Buffer[for_index_j])
+      {
+        status = 0;
+        break;
+      }
+    }
+    
+    if(!status)
+    {
+      break;
+    }
+  }
+  
+  return status;
 }
 
 

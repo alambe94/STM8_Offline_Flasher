@@ -7,8 +7,10 @@
 /******************at24cxx config******************************/
 #define AT24CXX_EEPROM_ADDR      0XA0
 
-#define AT24CXX_ADDRESS_WIDTH    16 // 8 or 16
-#define AT24CXX_PAGE_LENGTH      64 // 8 , 16 , 32 or 64
+#define AT24CXX_ADDRESS_WIDTH    16       // 8 or 16
+#define AT24CXX_PAGE_LENGTH      64       // 8 , 16 , 32 or 64
+#define AT24CXX_PAGES           (uint8_t)(32000/64) // (size/AT24CXX_PAGE_LENGTH)
+
 
 /******************at24cxx config******************************/
 

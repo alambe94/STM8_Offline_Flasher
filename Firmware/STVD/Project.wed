@@ -368,10 +368,10 @@ BarID=59392
 YPos=28
 Docking=True
 MRUDockID=0
-MRUDockLeftPos=-1
-MRUDockTopPos=28
-MRUDockRightPos=147
-MRUDockBottomPos=58
+MRUDockLeftPos=8
+MRUDockTopPos=31
+MRUDockRightPos=156
+MRUDockBottomPos=61
 MRUFloatStyle=8196
 MRUFloatXPos=-1
 MRUFloatYPos=0
@@ -409,9 +409,9 @@ MRUWidth=566
 Docking=True
 MRUDockID=59419
 MRUDockLeftPos=147
-MRUDockTopPos=28
+MRUDockTopPos=31
 MRUDockRightPos=730
-MRUDockBottomPos=58
+MRUDockBottomPos=61
 MRUFloatStyle=8196
 MRUFloatXPos=-1
 MRUFloatYPos=0
@@ -526,9 +526,9 @@ YPos=58
 MRUWidth=385
 Docking=True
 MRUDockID=59419
-MRUDockLeftPos=-1
+MRUDockLeftPos=8
 MRUDockTopPos=58
-MRUDockRightPos=401
+MRUDockRightPos=410
 MRUDockBottomPos=88
 MRUFloatStyle=8196
 MRUFloatXPos=-1
@@ -567,9 +567,9 @@ MRUWidth=23
 Docking=True
 MRUDockID=59419
 MRUDockLeftPos=730
-MRUDockTopPos=28
+MRUDockTopPos=31
 MRUDockRightPos=770
-MRUDockBottomPos=58
+MRUDockBottomPos=61
 MRUFloatStyle=8196
 MRUFloatXPos=-1
 MRUFloatYPos=0
@@ -1239,6 +1239,18 @@ ptn_Child2=ChildFrames
 
 [WorkState_v1_2.Frames.MainFrame]
 WindowPlacement=MCAAAAAACAAAAAAADAAAAAAAPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPHLAAAAAAEHAAAAAAEGEAAAAADBDAAAAA
-Title=ST Visual Develop - Project.stw
+Title=ST Visual Develop - Project.stw - [stm8s003_swim.c]
 
 [WorkState_v1_2.Frames.ChildFrames]
+ptn_Child1=Document-0
+
+[WorkState_v1_2.Frames.ChildFrames.Document-0]
+ptn_Child1=ViewFrame-0
+
+[WorkState_v1_2.Frames.ChildFrames.Document-0.ViewFrame-0]
+DocPathName=..\src\stm8s003_swim.c
+DocumentString=
+DocTemplateIndex=0
+WindowPlacement=MCAAAAAACAAAAAAADAAAAAAAPPPPPPPPPPPPPPPPIPPPPPPPBOPPPPPPAAAAAAAAAAAAAAAAGCEAAAAALDBAAAAA
+IsActiveChildFrame=True
+IsFrameVisible=True
