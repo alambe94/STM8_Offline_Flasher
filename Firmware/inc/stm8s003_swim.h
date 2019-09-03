@@ -65,6 +65,8 @@ uint8_t SWIM_Lock_Flash(uint8_t swim_pin);
 
 uint8_t SWIM_Enable_Block_Programming(uint8_t swim_pin);
 uint8_t SWIM_Wait_For_EOP(uint8_t swim_pin);
+uint8_t SWIM_Wait_For_EOP_All(void);
+
 
 
 
@@ -80,17 +82,18 @@ uint8_t SWIM_Lock_Flash_All(void);
 
 uint8_t SWIM_Enable_Block_Programming_All(void);
 uint8_t SWIM_Enable_Read_Out_Protection(uint8_t swim_pin);
+uint8_t SWIM_Enable_Read_Out_Protection_All(void);
 uint8_t SWIM_Disable_Read_Out_Protection(uint8_t swim_pin);
+uint8_t SWIM_Disable_Read_Out_Protection_All(void);
+
 
 
 uint8_t Copy_STM8S003_To_AT24CXX(void);
 uint8_t AT24CXX_To_STM8S003(void);
+uint8_t Compare_STM8S003_To_AT24CXX(void);
 
 
-uint8_t OPT_Read_Write_Test(void);
-uint8_t Flash_Read_Write_Test(void);
-uint8_t EEPROM_Read_Write_Test(void);
-uint8_t AT24CXX_Read_Write_Test(void);
+
 
 
 #endif 

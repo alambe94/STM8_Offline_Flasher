@@ -517,12 +517,12 @@ uint8_t SWIM_ROTF(uint8_t swim_pin, uint32_t addr, uint8_t *buf, uint8_t size)
             
             if(timeout)
             {
-              
-              for(uint8_t i=2; i<=9; i++)
+              uint8_t i;
+              for(i=2; i<=9; i++)
               {
                 if(RX_Frame[i])
                 {
-                  rx_data |= 1 << (9-i);
+                  rx_data |= (uint8_t)(1 << (9-i));
                   parity++;
                 }
               }

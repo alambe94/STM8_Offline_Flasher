@@ -27,7 +27,7 @@ Debug=$(TargetFName)
 [Root]
 ElemType=Project
 PathName=project
-Child=Root.STM8S_StdPeriph_Driver
+Child=Root.Source Files
 Config.0=Root.Config.0
 Config.1=Root.Config.1
 
@@ -54,59 +54,59 @@ Settings.1.7=Root.Config.1.Settings.7
 Settings.1.8=Root.Config.1.Settings.8
 
 [Root.Config.0.Settings.0]
-String.6.0=2019,1,23,0,14,43
+String.6.0=2019,9,3,15,32,29
 String.100.0=ST Assembler Linker
 String.100.1=ST7 Cosmic
 String.100.2=STM8 Cosmic
 String.100.3=ST7 Metrowerks V1.1
 String.100.4=Raisonance
 String.101.0=STM8 Cosmic
-String.102.0=C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8
+String.102.0=C:\Program Files (x86)\COSMIC\CXSTM8_EVAL
 String.103.0=
 String.104.0=Hstm8
 String.105.0=Lib
 String.106.0=Debug
 String.107.0=$(ProjectSFile).elf
-Int.108=1
+Int.108=0
 
 [Root.Config.0.Settings.1]
-String.6.0=2019,1,23,0,5,30
+String.6.0=2019,9,3,15,24,35
 String.100.0=$(TargetFName)
 String.101.0=
 String.102.0=
-String.103.0=.\;..\src;..\stm8s_stdperiph_driver\src;
+String.103.0=.\;..\stm8s_stdperiph_driver\src;..\src;
 
 [Root.Config.0.Settings.2]
 String.2.0=
-String.6.0=2019,1,23,0,5,30
-String.100.0=STM8S003F3P
+String.6.0=2019,9,3,15,24,35
+String.100.0=STM8S003K3
 
 [Root.Config.0.Settings.3]
 String.2.0=Compiling $(InputFile)...
-String.3.0=cxstm8 +warn +mods0 -customDebCompat -customOpt -no +split -customC-pp -customLst-l -dSTM8S003 -i..\inc -i..\stm8s_stdperiph_driver\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
+String.3.0=cxstm8 +mods0 -customDebCompat -customOpt +compact +split -customC-pp -customLst-l -dSTM8S003 -i..\stm8s_stdperiph_driver\inc -i..\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
 String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
 String.5.0=$(IntermPath)$(InputName).ls
-String.6.0=2019,9,1,13,25,23
+String.6.0=2019,9,3,15,36,18
 
 [Root.Config.0.Settings.4]
 String.2.0=Assembling $(InputFile)...
 String.3.0=castm8 -xx -l $(ToolsetIncOpts) -o$(IntermPath)$(InputName).$(ObjectExt) $(InputFile)
 String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
 String.5.0=$(IntermPath)$(InputName).ls
-String.6.0=2019,1,23,0,5,30
+String.6.0=2019,9,3,15,24,35
 
 [Root.Config.0.Settings.5]
 String.2.0=Running Pre-Link step
-String.6.0=2019,1,23,0,5,30
+String.6.0=2019,9,3,15,24,35
 String.8.0=
 
 [Root.Config.0.Settings.6]
 String.2.0=Running Linker
-String.3.0=clnk $(ToolsetLibOpts) -o $(OutputPath)$(TargetSName).sm8 -fakeInteger -fakeOutFile$(ProjectSFile).elf -fakeRunConv -fakeStartupcrtsi0.sm8 -fakeSemiAutoGen -fakeVectFilestm8_interrupt_vector.c -fakeVectAddr0x8000 -customMapFile -customMapFile-m$(OutputPath)$(TargetSName).map -customMapAddress -customCfgFile$(OutputPath)$(TargetSName).lkf 
+String.3.0=clnk $(ToolsetLibOpts) -o $(OutputPath)$(TargetSName).sm8 -fakeInteger -fakeOutFile$(ProjectSFile).elf -fakeRunConv -fakeStartupcrtsi0.sm8 -fakeSemiAutoGen -fakeVectAddr0x8000 -customMapFile -customMapFile-m$(OutputPath)$(TargetSName).map -customMapAddress -customCfgFile$(OutputPath)$(TargetSName).lkf 
 String.3.1=cvdwarf $(OutputPath)$(TargetSName).sm8
 String.4.0=$(OutputPath)$(TargetFName)
 String.5.0=$(OutputPath)$(ProjectSFile).elf $(OutputPath)$(TargetSName).map
-String.6.0=2019,1,23,0,22,28
+String.6.0=2019,9,3,15,32,29
 String.100.0=
 String.101.0=crtsi.st7
 String.102.0=+seg .const -b 0x8080 -m 0x1f80 -n .const -it
@@ -130,64 +130,64 @@ Int.1=0
 [Root.Config.0.Settings.7]
 String.2.0=Running Post-Build step
 String.3.0=chex -o $(OutputPath)$(TargetSName).s19 $(OutputPath)$(TargetSName).sm8
-String.6.0=2019,1,23,0,5,30
+String.6.0=2019,9,3,15,24,35
 
 [Root.Config.0.Settings.8]
 String.2.0=Performing Custom Build on $(InputFile)
-String.6.0=2019,1,23,0,5,30
+String.6.0=2019,9,3,15,24,35
 
 [Root.Config.1.Settings.0]
-String.6.0=2019,1,23,0,5,30
+String.6.0=2019,9,3,15,24,35
 String.100.0=ST Assembler Linker
 String.100.1=ST7 Cosmic
 String.100.2=STM8 Cosmic
 String.100.3=ST7 Metrowerks V1.1
 String.100.4=Raisonance
 String.101.0=STM8 Cosmic
-String.102.0=C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8
+String.102.0=C:\Program Files (x86)\COSMIC\CXSTM8_EVAL
 String.103.0=
 String.104.0=Hstm8
 String.105.0=Lib
 String.106.0=Release
 String.107.0=project.elf
-Int.108=1
+Int.108=0
 
 [Root.Config.1.Settings.1]
-String.6.0=2019,1,23,0,5,30
+String.6.0=2019,9,3,15,24,35
 String.100.0=$(TargetFName)
 String.101.0=
-String.103.0=.\;..\src;..\stm8s_stdperiph_driver\src;
+String.103.0=.\;..\stm8s_stdperiph_driver\src;..\src;
 
 [Root.Config.1.Settings.2]
 String.2.0=
-String.6.0=2019,1,23,0,5,30
-String.100.0=STM8S003F3P
+String.6.0=2019,9,3,15,24,35
+String.100.0=STM8S003K3
 
 [Root.Config.1.Settings.3]
 String.2.0=Compiling $(InputFile)...
 String.3.0=cxstm8 +mods0 -customC-pp $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile) 
 String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
 String.5.0=$(IntermPath)$(InputName).ls
-String.6.0=2019,1,23,0,5,30
+String.6.0=2019,9,3,15,24,35
 
 [Root.Config.1.Settings.4]
 String.2.0=Assembling $(InputFile)...
 String.3.0=castm8 $(ToolsetIncOpts) -o$(IntermPath)$(InputName).$(ObjectExt) $(InputFile)
 String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
 String.5.0=$(IntermPath)$(InputName).ls
-String.6.0=2019,1,23,0,5,30
+String.6.0=2019,9,3,15,24,35
 
 [Root.Config.1.Settings.5]
 String.2.0=Running Pre-Link step
-String.6.0=2019,1,23,0,5,30
+String.6.0=2019,9,3,15,24,35
 
 [Root.Config.1.Settings.6]
 String.2.0=Running Linker
-String.3.0=clnk -fakeRunConv -fakeInteger -fakeSemiAutoGen $(ToolsetLibOpts) -o $(OutputPath)$(TargetSName).sm8 -fakeOutFile$(ProjectSFile).elf -customCfgFile $(OutputPath)$(TargetSName).lkf -fakeVectFilestm8_interrupt_vector.c -fakeStartupcrtsi0.sm8 
+String.3.0=clnk -fakeRunConv -fakeInteger -fakeSemiAutoGen $(ToolsetLibOpts) -o $(OutputPath)$(TargetSName).sm8 -fakeOutFile$(ProjectSFile).elf -customCfgFile $(OutputPath)$(TargetSName).lkf -fakeStartupcrtsi0.sm8 
 String.3.1=cvdwarf $(OutputPath)$(TargetSName).sm8 -fakeVectAddr0x8000
 String.4.0=$(OutputPath)$(TargetFName)
 String.5.0=$(OutputPath)$(TargetSName).map $(OutputPath)$(TargetSName).st7 $(OutputPath)$(TargetSName).s19
-String.6.0=2019,1,23,0,5,30
+String.6.0=2019,9,3,15,32,29
 String.101.0=crtsi.st7
 String.102.0=+seg .const -b 0x8080 -m 0x1f80  -n .const -it 
 String.102.1=+seg .text -a .const  -n .text 
@@ -209,109 +209,16 @@ Int.1=0
 [Root.Config.1.Settings.7]
 String.2.0=Running Post-Build step
 String.3.0=chex -o $(OutputPath)$(TargetSName).s19 $(OutputPath)$(TargetSName).sm8
-String.6.0=2019,1,23,0,5,30
+String.6.0=2019,9,3,15,24,35
 
 [Root.Config.1.Settings.8]
 String.2.0=Performing Custom Build on $(InputFile)
-String.6.0=2019,1,23,0,5,30
-
-[Root.STM8S_StdPeriph_Driver]
-ElemType=Folder
-PathName=STM8S_StdPeriph_Driver
-Child=Root.STM8S_StdPeriph_Driver...\stm8s_stdperiph_driver\src\stm8s_clk.c
-Next=Root.Source Files
-Config.0=Root.STM8S_StdPeriph_Driver.Config.0
-Config.1=Root.STM8S_StdPeriph_Driver.Config.1
-
-[Root.STM8S_StdPeriph_Driver.Config.0]
-Settings.0.0=Root.STM8S_StdPeriph_Driver.Config.0.Settings.0
-Settings.0.1=Root.STM8S_StdPeriph_Driver.Config.0.Settings.1
-Settings.0.2=Root.STM8S_StdPeriph_Driver.Config.0.Settings.2
-Settings.0.3=Root.STM8S_StdPeriph_Driver.Config.0.Settings.3
-
-[Root.STM8S_StdPeriph_Driver.Config.1]
-Settings.1.0=Root.STM8S_StdPeriph_Driver.Config.1.Settings.0
-Settings.1.1=Root.STM8S_StdPeriph_Driver.Config.1.Settings.1
-Settings.1.2=Root.STM8S_StdPeriph_Driver.Config.1.Settings.2
-Settings.1.3=Root.STM8S_StdPeriph_Driver.Config.1.Settings.3
-
-[Root.STM8S_StdPeriph_Driver.Config.0.Settings.0]
-String.6.0=2019,1,23,0,16,36
-String.8.0=Debug
-Int.0=0
-Int.1=0
-
-[Root.STM8S_StdPeriph_Driver.Config.0.Settings.1]
-String.2.0=Compiling $(InputFile)...
-String.3.0=cxstm8 +warn +mods0 -customDebCompat -customOpt -no +split -customC-pp -customLst-l -dSTM8S003 -i..\inc -i..\stm8s_stdperiph_driver\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
-String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
-String.5.0=$(IntermPath)$(InputName).ls
-String.6.0=2019,9,1,13,25,23
-
-[Root.STM8S_StdPeriph_Driver.Config.0.Settings.2]
-String.2.0=Assembling $(InputFile)...
-String.3.0=castm8 -xx -l $(ToolsetIncOpts) -o$(IntermPath)$(InputName).$(ObjectExt) $(InputFile)
-String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
-String.5.0=$(IntermPath)$(InputName).ls
-String.6.0=2019,1,23,0,5,30
-
-[Root.STM8S_StdPeriph_Driver.Config.0.Settings.3]
-String.2.0=Performing Custom Build on $(InputFile)
-String.3.0=
-String.4.0=
-String.5.0=
-String.6.0=2019,1,23,0,5,30
-
-[Root.STM8S_StdPeriph_Driver.Config.1.Settings.0]
-String.6.0=2019,1,23,0,16,36
-String.8.0=Release
-Int.0=0
-Int.1=0
-
-[Root.STM8S_StdPeriph_Driver.Config.1.Settings.1]
-String.2.0=Compiling $(InputFile)...
-String.3.0=cxstm8 +mods0 -customC-pp $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile) 
-String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
-String.5.0=$(IntermPath)$(InputName).ls
-String.6.0=2019,1,23,0,5,30
-
-[Root.STM8S_StdPeriph_Driver.Config.1.Settings.2]
-String.2.0=Assembling $(InputFile)...
-String.3.0=castm8 $(ToolsetIncOpts) -o$(IntermPath)$(InputName).$(ObjectExt) $(InputFile)
-String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
-String.5.0=$(IntermPath)$(InputName).ls
-String.6.0=2019,1,23,0,5,30
-
-[Root.STM8S_StdPeriph_Driver.Config.1.Settings.3]
-String.2.0=Performing Custom Build on $(InputFile)
-String.3.0=
-String.4.0=
-String.5.0=
-String.6.0=2019,1,23,0,5,30
-
-[Root.STM8S_StdPeriph_Driver...\stm8s_stdperiph_driver\src\stm8s_clk.c]
-ElemType=File
-PathName=..\stm8s_stdperiph_driver\src\stm8s_clk.c
-Next=Root.STM8S_StdPeriph_Driver...\stm8s_stdperiph_driver\src\stm8s_exti.c
-
-[Root.STM8S_StdPeriph_Driver...\stm8s_stdperiph_driver\src\stm8s_exti.c]
-ElemType=File
-PathName=..\stm8s_stdperiph_driver\src\stm8s_exti.c
-Next=Root.STM8S_StdPeriph_Driver...\stm8s_stdperiph_driver\src\stm8s_gpio.c
-
-[Root.STM8S_StdPeriph_Driver...\stm8s_stdperiph_driver\src\stm8s_gpio.c]
-ElemType=File
-PathName=..\stm8s_stdperiph_driver\src\stm8s_gpio.c
-Next=Root.STM8S_StdPeriph_Driver...\stm8s_stdperiph_driver\src\stm8s_tim4.c
-
-[Root.STM8S_StdPeriph_Driver...\stm8s_stdperiph_driver\src\stm8s_tim4.c]
-ElemType=File
-PathName=..\stm8s_stdperiph_driver\src\stm8s_tim4.c
+String.6.0=2019,9,3,15,24,35
 
 [Root.Source Files]
 ElemType=Folder
 PathName=Source Files
-Child=Root.Source Files...\src\stm8s003_swim.c
+Next=Root.STM8S_StdPeriph_Driver
 Config.0=Root.Source Files.Config.0
 Config.1=Root.Source Files.Config.1
 
@@ -328,34 +235,34 @@ Settings.1.2=Root.Source Files.Config.1.Settings.2
 Settings.1.3=Root.Source Files.Config.1.Settings.3
 
 [Root.Source Files.Config.0.Settings.0]
-String.6.0=2019,1,23,0,5,30
+String.6.0=2019,9,3,15,34,2
 String.8.0=Debug
 Int.0=0
 Int.1=0
 
 [Root.Source Files.Config.0.Settings.1]
 String.2.0=Compiling $(InputFile)...
-String.3.0=cxstm8 +warn +mods0 -customDebCompat -customOpt -no +split -customC-pp -customLst-l -dSTM8S003 -i..\inc -i..\stm8s_stdperiph_driver\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
+String.3.0=cxstm8 +mods0 -customDebCompat -customOpt +compact +split -customC-pp -customLst-l -dSTM8S003 -i..\stm8s_stdperiph_driver\inc -i..\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
 String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
 String.5.0=$(IntermPath)$(InputName).ls
-String.6.0=2019,9,1,13,25,23
+String.6.0=2019,9,3,15,36,18
 
 [Root.Source Files.Config.0.Settings.2]
 String.2.0=Assembling $(InputFile)...
 String.3.0=castm8 -xx -l $(ToolsetIncOpts) -o$(IntermPath)$(InputName).$(ObjectExt) $(InputFile)
 String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
 String.5.0=$(IntermPath)$(InputName).ls
-String.6.0=2019,1,23,0,5,30
+String.6.0=2019,9,3,15,24,35
 
 [Root.Source Files.Config.0.Settings.3]
 String.2.0=Performing Custom Build on $(InputFile)
 String.3.0=
 String.4.0=
 String.5.0=
-String.6.0=2019,1,23,0,5,30
+String.6.0=2019,9,3,15,24,35
 
 [Root.Source Files.Config.1.Settings.0]
-String.6.0=2019,1,23,0,5,30
+String.6.0=2019,9,3,15,34,2
 String.8.0=Release
 Int.0=0
 Int.1=0
@@ -365,57 +272,213 @@ String.2.0=Compiling $(InputFile)...
 String.3.0=cxstm8 +mods0 -customC-pp $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile) 
 String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
 String.5.0=$(IntermPath)$(InputName).ls
-String.6.0=2019,1,23,0,5,30
+String.6.0=2019,9,3,15,24,35
 
 [Root.Source Files.Config.1.Settings.2]
 String.2.0=Assembling $(InputFile)...
 String.3.0=castm8 $(ToolsetIncOpts) -o$(IntermPath)$(InputName).$(ObjectExt) $(InputFile)
 String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
 String.5.0=$(IntermPath)$(InputName).ls
-String.6.0=2019,1,23,0,5,30
+String.6.0=2019,9,3,15,24,35
 
 [Root.Source Files.Config.1.Settings.3]
 String.2.0=Performing Custom Build on $(InputFile)
 String.3.0=
 String.4.0=
 String.5.0=
-String.6.0=2019,1,23,0,5,30
+String.6.0=2019,9,3,15,24,35
 
-[Root.Source Files...\src\stm8s003_swim.c]
+[Root.STM8S_StdPeriph_Driver]
+ElemType=Folder
+PathName=STM8S_StdPeriph_Driver
+Child=Root.STM8S_StdPeriph_Driver...\stm8s_stdperiph_driver\src\stm8s_clk.c
+Next=Root.src
+Config.0=Root.STM8S_StdPeriph_Driver.Config.0
+Config.1=Root.STM8S_StdPeriph_Driver.Config.1
+
+[Root.STM8S_StdPeriph_Driver.Config.0]
+Settings.0.0=Root.STM8S_StdPeriph_Driver.Config.0.Settings.0
+Settings.0.1=Root.STM8S_StdPeriph_Driver.Config.0.Settings.1
+Settings.0.2=Root.STM8S_StdPeriph_Driver.Config.0.Settings.2
+Settings.0.3=Root.STM8S_StdPeriph_Driver.Config.0.Settings.3
+
+[Root.STM8S_StdPeriph_Driver.Config.1]
+Settings.1.0=Root.STM8S_StdPeriph_Driver.Config.1.Settings.0
+Settings.1.1=Root.STM8S_StdPeriph_Driver.Config.1.Settings.1
+Settings.1.2=Root.STM8S_StdPeriph_Driver.Config.1.Settings.2
+Settings.1.3=Root.STM8S_StdPeriph_Driver.Config.1.Settings.3
+
+[Root.STM8S_StdPeriph_Driver.Config.0.Settings.0]
+String.6.0=2019,9,3,15,25,15
+String.8.0=Debug
+Int.0=0
+Int.1=0
+
+[Root.STM8S_StdPeriph_Driver.Config.0.Settings.1]
+String.2.0=Compiling $(InputFile)...
+String.3.0=cxstm8 +mods0 -customDebCompat -customOpt +compact +split -customC-pp -customLst-l -dSTM8S003 -i..\stm8s_stdperiph_driver\inc -i..\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
+String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
+String.5.0=$(IntermPath)$(InputName).ls
+String.6.0=2019,9,3,15,36,18
+
+[Root.STM8S_StdPeriph_Driver.Config.0.Settings.2]
+String.2.0=Assembling $(InputFile)...
+String.3.0=castm8 -xx -l $(ToolsetIncOpts) -o$(IntermPath)$(InputName).$(ObjectExt) $(InputFile)
+String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
+String.5.0=$(IntermPath)$(InputName).ls
+String.6.0=2019,9,3,15,24,35
+
+[Root.STM8S_StdPeriph_Driver.Config.0.Settings.3]
+String.2.0=Performing Custom Build on $(InputFile)
+String.3.0=
+String.4.0=
+String.5.0=
+String.6.0=2019,9,3,15,24,35
+
+[Root.STM8S_StdPeriph_Driver.Config.1.Settings.0]
+String.6.0=2019,9,3,15,25,15
+String.8.0=Release
+Int.0=0
+Int.1=0
+
+[Root.STM8S_StdPeriph_Driver.Config.1.Settings.1]
+String.2.0=Compiling $(InputFile)...
+String.3.0=cxstm8 +mods0 -customC-pp $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile) 
+String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
+String.5.0=$(IntermPath)$(InputName).ls
+String.6.0=2019,9,3,15,24,35
+
+[Root.STM8S_StdPeriph_Driver.Config.1.Settings.2]
+String.2.0=Assembling $(InputFile)...
+String.3.0=castm8 $(ToolsetIncOpts) -o$(IntermPath)$(InputName).$(ObjectExt) $(InputFile)
+String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
+String.5.0=$(IntermPath)$(InputName).ls
+String.6.0=2019,9,3,15,24,35
+
+[Root.STM8S_StdPeriph_Driver.Config.1.Settings.3]
+String.2.0=Performing Custom Build on $(InputFile)
+String.3.0=
+String.4.0=
+String.5.0=
+String.6.0=2019,9,3,15,24,35
+
+[Root.STM8S_StdPeriph_Driver...\stm8s_stdperiph_driver\src\stm8s_clk.c]
 ElemType=File
-PathName=..\src\stm8s003_swim.c
-Next=Root.Source Files...\src\stm8_swim.c
+PathName=..\stm8s_stdperiph_driver\src\stm8s_clk.c
+Next=Root.STM8S_StdPeriph_Driver...\stm8s_stdperiph_driver\src\stm8s_exti.c
 
-[Root.Source Files...\src\stm8_swim.c]
+[Root.STM8S_StdPeriph_Driver...\stm8s_stdperiph_driver\src\stm8s_exti.c]
 ElemType=File
-PathName=..\src\stm8_swim.c
-Next=Root.Source Files...\src\soft_i2c.c
+PathName=..\stm8s_stdperiph_driver\src\stm8s_exti.c
+Next=Root.STM8S_StdPeriph_Driver...\stm8s_stdperiph_driver\src\stm8s_gpio.c
 
-[Root.Source Files...\src\soft_i2c.c]
+[Root.STM8S_StdPeriph_Driver...\stm8s_stdperiph_driver\src\stm8s_gpio.c]
 ElemType=File
-PathName=..\src\soft_i2c.c
-Next=Root.Source Files...\src\millis.c
+PathName=..\stm8s_stdperiph_driver\src\stm8s_gpio.c
 
-[Root.Source Files...\src\millis.c]
-ElemType=File
-PathName=..\src\millis.c
-Next=Root.Source Files...\src\at24cxx.c
+[Root.src]
+ElemType=Folder
+PathName=src
+Child=Root.src...\src\at24cxx.c
+Config.0=Root.src.Config.0
+Config.1=Root.src.Config.1
 
-[Root.Source Files...\src\at24cxx.c]
+[Root.src.Config.0]
+Settings.0.0=Root.src.Config.0.Settings.0
+Settings.0.1=Root.src.Config.0.Settings.1
+Settings.0.2=Root.src.Config.0.Settings.2
+Settings.0.3=Root.src.Config.0.Settings.3
+
+[Root.src.Config.1]
+Settings.1.0=Root.src.Config.1.Settings.0
+Settings.1.1=Root.src.Config.1.Settings.1
+Settings.1.2=Root.src.Config.1.Settings.2
+Settings.1.3=Root.src.Config.1.Settings.3
+
+[Root.src.Config.0.Settings.0]
+String.6.0=2019,9,3,15,30,31
+String.8.0=Debug
+Int.0=0
+Int.1=0
+
+[Root.src.Config.0.Settings.1]
+String.2.0=Compiling $(InputFile)...
+String.3.0=cxstm8 +mods0 -customDebCompat -customOpt +compact +split -customC-pp -customLst-l -dSTM8S003 -i..\stm8s_stdperiph_driver\inc -i..\inc $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile)
+String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
+String.5.0=$(IntermPath)$(InputName).ls
+String.6.0=2019,9,3,15,36,18
+
+[Root.src.Config.0.Settings.2]
+String.2.0=Assembling $(InputFile)...
+String.3.0=castm8 -xx -l $(ToolsetIncOpts) -o$(IntermPath)$(InputName).$(ObjectExt) $(InputFile)
+String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
+String.5.0=$(IntermPath)$(InputName).ls
+String.6.0=2019,9,3,15,24,35
+
+[Root.src.Config.0.Settings.3]
+String.2.0=Performing Custom Build on $(InputFile)
+String.3.0=
+String.4.0=
+String.5.0=
+String.6.0=2019,9,3,15,24,35
+
+[Root.src.Config.1.Settings.0]
+String.6.0=2019,9,3,15,30,31
+String.8.0=Release
+Int.0=0
+Int.1=0
+
+[Root.src.Config.1.Settings.1]
+String.2.0=Compiling $(InputFile)...
+String.3.0=cxstm8 +mods0 -customC-pp $(ToolsetIncOpts) -cl$(IntermPath) -co$(IntermPath) $(InputFile) 
+String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
+String.5.0=$(IntermPath)$(InputName).ls
+String.6.0=2019,9,3,15,24,35
+
+[Root.src.Config.1.Settings.2]
+String.2.0=Assembling $(InputFile)...
+String.3.0=castm8 $(ToolsetIncOpts) -o$(IntermPath)$(InputName).$(ObjectExt) $(InputFile)
+String.4.0=$(IntermPath)$(InputName).$(ObjectExt)
+String.5.0=$(IntermPath)$(InputName).ls
+String.6.0=2019,9,3,15,24,35
+
+[Root.src.Config.1.Settings.3]
+String.2.0=Performing Custom Build on $(InputFile)
+String.3.0=
+String.4.0=
+String.5.0=
+String.6.0=2019,9,3,15,24,35
+
+[Root.src...\src\at24cxx.c]
 ElemType=File
 PathName=..\src\at24cxx.c
-Next=Root.Source Files...\src\main.c
+Next=Root.src...\src\main.c
 
-[Root.Source Files...\src\main.c]
+[Root.src...\src\main.c]
 ElemType=File
 PathName=..\src\main.c
-Next=Root.Source Files...\src\stm8s_it.c
+Next=Root.src...\src\millis.c
 
-[Root.Source Files...\src\stm8s_it.c]
+[Root.src...\src\millis.c]
+ElemType=File
+PathName=..\src\millis.c
+Next=Root.src...\src\soft_i2c.c
+
+[Root.src...\src\soft_i2c.c]
+ElemType=File
+PathName=..\src\soft_i2c.c
+Next=Root.src...\src\stm8_swim.c
+
+[Root.src...\src\stm8_swim.c]
+ElemType=File
+PathName=..\src\stm8_swim.c
+Next=Root.src...\src\stm8s003_swim.c
+
+[Root.src...\src\stm8s003_swim.c]
+ElemType=File
+PathName=..\src\stm8s003_swim.c
+Next=Root.src...\src\stm8s_it.c
+
+[Root.src...\src\stm8s_it.c]
 ElemType=File
 PathName=..\src\stm8s_it.c
-Next=Root.Source Files.stm8_interrupt_vector.c
-
-[Root.Source Files.stm8_interrupt_vector.c]
-ElemType=File
-PathName=stm8_interrupt_vector.c

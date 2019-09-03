@@ -53,13 +53,12 @@ crtsi0.sm8
 Release\stm8s_clk.o
 Release\stm8s_exti.o
 Release\stm8s_gpio.o
-Release\stm8s_tim4.o
-Release\stm8s003_swim.o
-Release\stm8_swim.o
-Release\soft_i2c.o
-Release\millis.o
 Release\at24cxx.o
 Release\main.o
+Release\millis.o
+Release\soft_i2c.o
+Release\stm8_swim.o
+Release\stm8s003_swim.o
 Release\stm8s_it.o
 #<END OBJECT_FILES>
 
@@ -73,8 +72,6 @@ libm0.sm8
 
 # Interrupt vectors file - section reserved for STVD
 #<BEGIN VECTOR_FILE>
-+seg .const -b 0x8000 -k
-Release\stm8_interrupt_vector.o
 #<END VECTOR_FILE>
 
 # Defines - section reserved for STVD

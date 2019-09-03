@@ -173,10 +173,10 @@ AT24CXX_Read_Buffer	..\inc\at24cxx.h	25;"	prototype	signature:(uint16_t Address,
 AT24CXX_Read_Buffer	..\src\at24cxx.c	137;"	function	signature:(uint16_t start_address, uint8_t *buf, uint16_t len)
 AT24CXX_Read_Byte	..\inc\at24cxx.h	23;"	prototype	signature:(uint16_t Address, uint8_t* data)
 AT24CXX_Read_Byte	..\src\at24cxx.c	47;"	function	signature:(uint16_t register_address, uint8_t* data)
-AT24CXX_Read_Write_Test	..\inc\stm8s003_swim.h	91;"	prototype	signature:(void)
-AT24CXX_Read_Write_Test	..\src\stm8s003_swim.c	846;"	function	signature:(void)
-AT24CXX_To_STM8S003	..\inc\stm8s003_swim.h	85;"	prototype	signature:(void)
-AT24CXX_To_STM8S003	..\src\stm8s003_swim.c	489;"	function	signature:(void)
+AT24CXX_Read_Write_Test	..\inc\stm8s003_swim.h	93;"	prototype	signature:(void)
+AT24CXX_Read_Write_Test	..\src\stm8s003_swim.c	782;"	function	signature:(void)
+AT24CXX_To_STM8S003	..\inc\stm8s003_swim.h	87;"	prototype	signature:(void)
+AT24CXX_To_STM8S003	..\src\stm8s003_swim.c	422;"	function	signature:(void)
 AT24CXX_Write_Buffer	..\inc\at24cxx.h	26;"	prototype	signature:(uint16_t Address, uint8_t *buf, uint16_t len)
 AT24CXX_Write_Buffer	..\src\at24cxx.c	196;"	function	signature:(uint16_t start_address, uint8_t *buf, uint16_t len)
 AT24CXX_Write_Byte	..\inc\at24cxx.h	22;"	prototype	signature:(uint16_t Address, uint8_t data)
@@ -714,8 +714,8 @@ ChgBit	..\stm8s_stdperiph_driver\inc\stm8s.h	2792;"	macro
 ClrBit	..\stm8s_stdperiph_driver\inc\stm8s.h	2790;"	macro
 Compare_Buffer	..\src\stm8s003_swim.c	15;"	variable
 Config	..\stm8s_stdperiph_driver\inc\stm8s.h	2306;"	member	union:__anon5::__anon6	typeref:struct:__anon5::__anon6::__anon12
-Copy_STM8S003_To_AT24CXX	..\inc\stm8s003_swim.h	84;"	prototype	signature:(void)
-Copy_STM8S003_To_AT24CXX	..\src\stm8s003_swim.c	371;"	function	signature:(void)
+Copy_STM8S003_To_AT24CXX	..\inc\stm8s003_swim.h	86;"	prototype	signature:(void)
+Copy_STM8S003_To_AT24CXX	..\src\stm8s003_swim.c	304;"	function	signature:(void)
 DB0RH	..\stm8s_stdperiph_driver\inc\stm8s.h	300;"	member	struct:ADC1_struct
 DB0RL	..\stm8s_stdperiph_driver\inc\stm8s.h	301;"	member	struct:ADC1_struct
 DB1RH	..\stm8s_stdperiph_driver\inc\stm8s.h	302;"	member	struct:ADC1_struct
@@ -758,8 +758,8 @@ EEPROM	..\stm8s_stdperiph_driver\inc\stm8s.h	125;"	macro
 EEPROM	..\stm8s_stdperiph_driver\inc\stm8s.h	131;"	macro
 EEPROM	..\stm8s_stdperiph_driver\inc\stm8s.h	145;"	macro
 EEPROM_EEC_IRQHandler	..\inc\stm8s_it.h	105;"	prototype	signature:(void)
-EEPROM_Read_Write_Test	..\inc\stm8s003_swim.h	90;"	prototype	signature:(void)
-EEPROM_Read_Write_Test	..\src\stm8s003_swim.c	776;"	function	signature:(void)
+EEPROM_Read_Write_Test	..\inc\stm8s003_swim.h	92;"	prototype	signature:(void)
+EEPROM_Read_Write_Test	..\src\stm8s003_swim.c	709;"	function	signature:(void)
 EEPROM_STORE_ADDRESS	..\inc\stm8s003_swim.h	35;"	macro
 EGR	..\stm8s_stdperiph_driver\inc\stm8s.h	1067;"	member	struct:TIM4_struct
 EGR	..\stm8s_stdperiph_driver\inc\stm8s.h	1129;"	member	struct:TIM5_struct
@@ -992,8 +992,8 @@ Filter01	..\stm8s_stdperiph_driver\inc\stm8s.h	2247;"	member	union:__anon5::__an
 Filter23	..\stm8s_stdperiph_driver\inc\stm8s.h	2268;"	member	union:__anon5::__anon6	typeref:struct:__anon5::__anon6::__anon10
 Filter45	..\stm8s_stdperiph_driver\inc\stm8s.h	2289;"	member	union:__anon5::__anon6	typeref:struct:__anon5::__anon6::__anon11
 FlagStatus	..\stm8s_stdperiph_driver\inc\stm8s.h	233;"	typedef	typeref:enum:__anon2
-Flash_Read_Write_Test	..\inc\stm8s003_swim.h	89;"	prototype	signature:(void)
-Flash_Read_Write_Test	..\src\stm8s003_swim.c	703;"	function	signature:(void)
+Flash_Read_Write_Test	..\inc\stm8s003_swim.h	91;"	prototype	signature:(void)
+Flash_Read_Write_Test	..\src\stm8s003_swim.c	636;"	function	signature:(void)
 FunctionalState	..\stm8s_stdperiph_driver\inc\stm8s.h	235;"	typedef	typeref:enum:__anon3
 GCR	..\stm8s_stdperiph_driver\inc\stm8s.h	2524;"	member	struct:CFG_struct
 GPIOA	..\stm8s_stdperiph_driver\inc\stm8s.h	2627;"	macro
@@ -1068,8 +1068,8 @@ GPIO_struct	..\stm8s_stdperiph_driver\inc\stm8s.h	265;"	struct
 GTR	..\stm8s_stdperiph_driver\inc\stm8s.h	1778;"	member	struct:UART1_struct
 GTR	..\stm8s_stdperiph_driver\inc\stm8s.h	1877;"	member	struct:UART2_struct
 GTR	..\stm8s_stdperiph_driver\inc\stm8s.h	2076;"	member	struct:UART4_struct
-Get_SWIM_Devices	..\inc\stm8_swim.h	85;"	prototype	signature:(void)
-Get_SWIM_Devices	..\src\stm8_swim.c	599;"	function	signature:(void)
+Get_SWIM_Devices	..\inc\stm8_swim.h	87;"	prototype	signature:(void)
+Get_SWIM_Devices	..\src\stm8_swim.c	693;"	function	signature:(void)
 HSE_VALUE	..\stm8s_stdperiph_driver\inc\stm8s.h	109;"	macro
 HSE_VALUE	..\stm8s_stdperiph_driver\inc\stm8s.h	111;"	macro
 HSIDivFactor	..\stm8s_stdperiph_driver\src\stm8s_clk.c	48;"	variable
@@ -1553,9 +1553,9 @@ NOPT4	..\stm8s_stdperiph_driver\inc\stm8s.h	1594;"	member	struct:OPT_struct
 NOPT5	..\stm8s_stdperiph_driver\inc\stm8s.h	1596;"	member	struct:OPT_struct
 NOPT7	..\stm8s_stdperiph_driver\inc\stm8s.h	1600;"	member	struct:OPT_struct
 NRST_High	..\inc\stm8_swim.h	67;"	prototype	signature:(void)
-NRST_High	..\src\stm8_swim.c	131;"	function
+NRST_High	..\src\stm8_swim.c	120;"	function
 NRST_Low	..\inc\stm8_swim.h	66;"	prototype	signature:(void)
-NRST_Low	..\src\stm8_swim.c	102;"	function
+NRST_Low	..\src\stm8_swim.c	91;"	function
 NRST_PIN_1	..\inc\stm8_swim.h	29;"	macro
 NRST_PIN_1_PORT	..\inc\stm8_swim.h	30;"	macro
 NRST_PIN_2	..\inc\stm8_swim.h	32;"	macro
@@ -1587,8 +1587,8 @@ OPTION_BYTE_END_PHYSICAL_ADDRESS	..\stm8s_stdperiph_driver\inc\stm8s_flash.h	74;
 OPTION_BYTE_START_PHYSICAL_ADDRESS	..\stm8s_stdperiph_driver\inc\stm8s_flash.h	73;"	macro
 OPTION_BYTE_STORE_ADDRESS	..\inc\stm8s003_swim.h	36;"	macro
 OPT_BaseAddress	..\stm8s_stdperiph_driver\inc\stm8s.h	2556;"	macro
-OPT_Read_Write_Test	..\inc\stm8s003_swim.h	88;"	prototype	signature:(void)
-OPT_Read_Write_Test	..\src\stm8s003_swim.c	637;"	function	signature:(void)
+OPT_Read_Write_Test	..\inc\stm8s003_swim.h	90;"	prototype	signature:(void)
+OPT_Read_Write_Test	..\src\stm8s003_swim.c	570;"	function	signature:(void)
 OPT_TypeDef	..\stm8s_stdperiph_driver\inc\stm8s.h	1602;"	typedef	typeref:struct:OPT_struct
 OPT_struct	..\stm8s_stdperiph_driver\inc\stm8s.h	1584;"	struct
 PCKENR1	..\stm8s_stdperiph_driver\inc\stm8s.h	517;"	member	struct:CLK_struct
@@ -1820,12 +1820,16 @@ SWIM_DELAY_0_BIT	..\src\stm8_swim.c	33;"	macro	file:
 SWIM_DELAY_1_BIT	..\src\stm8_swim.c	32;"	macro	file:
 SWIM_DM_CSR2	..\inc\stm8_swim.h	57;"	macro
 SWIM_Devices	..\src\stm8_swim.c	81;"	variable
+SWIM_Disable_Read_Out_Protection	..\inc\stm8s003_swim.h	83;"	prototype	signature:(uint8_t swim_pin)
+SWIM_Disable_Read_Out_Protection	..\src\stm8s003_swim.c	289;"	function	signature:(uint8_t swim_pin)
 SWIM_Enable_Block_Programming	..\inc\stm8s003_swim.h	66;"	prototype	signature:(uint8_t swim_pin)
-SWIM_Enable_Block_Programming	..\src\stm8s003_swim.c	104;"	function	signature:(uint8_t swim_pin)
+SWIM_Enable_Block_Programming	..\src\stm8s003_swim.c	103;"	function	signature:(uint8_t swim_pin)
 SWIM_Enable_Block_Programming_All	..\inc\stm8s003_swim.h	81;"	prototype	signature:(void)
-SWIM_Enable_Block_Programming_All	..\src\stm8s003_swim.c	325;"	function	signature:(void)
-SWIM_Enter	..\inc\stm8_swim.h	73;"	prototype	signature:(void)
-SWIM_Enter	..\src\stm8_swim.c	182;"	function
+SWIM_Enable_Block_Programming_All	..\src\stm8s003_swim.c	266;"	function	signature:(void)
+SWIM_Enable_Read_Out_Protection	..\inc\stm8s003_swim.h	82;"	prototype	signature:(uint8_t swim_pin)
+SWIM_Enable_Read_Out_Protection	..\src\stm8s003_swim.c	275;"	function	signature:(uint8_t swim_pin)
+SWIM_Enter	..\inc\stm8_swim.h	74;"	prototype	signature:(void)
+SWIM_Enter	..\src\stm8_swim.c	171;"	function
 SWIM_FLASH	..\inc\stm8s003_swim.h	44;"	macro
 SWIM_FLASH_CR1	..\inc\stm8s003_swim.h	45;"	macro
 SWIM_FLASH_CR2	..\inc\stm8s003_swim.h	46;"	macro
@@ -1840,17 +1844,17 @@ SWIM_FLASH_PUKR	..\inc\stm8s003_swim.h	51;"	macro
 SWIM_FLASH_PUKR_KEY1	..\inc\stm8_swim.h	60;"	macro
 SWIM_FLASH_PUKR_KEY2	..\inc\stm8_swim.h	61;"	macro
 SWIM_Lock_EEPROM	..\inc\stm8s003_swim.h	61;"	prototype	signature:(uint8_t swim_pin)
-SWIM_Lock_EEPROM	..\src\stm8s003_swim.c	67;"	function	signature:(uint8_t swim_pin)
+SWIM_Lock_EEPROM	..\src\stm8s003_swim.c	66;"	function	signature:(uint8_t swim_pin)
 SWIM_Lock_EEPROM_All	..\inc\stm8s003_swim.h	76;"	prototype	signature:(void)
-SWIM_Lock_EEPROM_All	..\src\stm8s003_swim.c	232;"	function	signature:(void)
+SWIM_Lock_EEPROM_All	..\src\stm8s003_swim.c	173;"	function	signature:(void)
 SWIM_Lock_Flash	..\inc\stm8s003_swim.h	64;"	prototype	signature:(uint8_t swim_pin)
-SWIM_Lock_Flash	..\src\stm8s003_swim.c	92;"	function	signature:(uint8_t swim_pin)
+SWIM_Lock_Flash	..\src\stm8s003_swim.c	91;"	function	signature:(uint8_t swim_pin)
 SWIM_Lock_Flash_All	..\inc\stm8s003_swim.h	79;"	prototype	signature:(void)
-SWIM_Lock_Flash_All	..\src\stm8s003_swim.c	285;"	function	signature:(void)
+SWIM_Lock_Flash_All	..\src\stm8s003_swim.c	226;"	function	signature:(void)
 SWIM_Lock_OptionByte	..\inc\stm8s003_swim.h	58;"	prototype	signature:(uint8_t swim_pin)
-SWIM_Lock_OptionByte	..\src\stm8s003_swim.c	37;"	function	signature:(uint8_t swim_pin)
+SWIM_Lock_OptionByte	..\src\stm8s003_swim.c	39;"	function	signature:(uint8_t swim_pin)
 SWIM_Lock_OptionByte_All	..\inc\stm8s003_swim.h	73;"	prototype	signature:(void)
-SWIM_Lock_OptionByte_All	..\src\stm8s003_swim.c	179;"	function	signature:(void)
+SWIM_Lock_OptionByte_All	..\src\stm8s003_swim.c	147;"	function	signature:(void)
 SWIM_MAX_RESEND_CNT	..\inc\stm8_swim.h	53;"	macro
 SWIM_NOPT1	..\inc\stm8s003_swim.h	19;"	macro
 SWIM_NOPT2	..\inc\stm8s003_swim.h	22;"	macro
@@ -1877,44 +1881,48 @@ SWIM_PIN_LOW	..\src\stm8_swim.c	28;"	macro	file:
 SWIM_PIN_Mask	..\src\stm8_swim.c	80;"	variable
 SWIM_PIN_OUT	..\src\stm8_swim.c	18;"	macro	file:
 SWIM_PIN_READ	..\src\stm8_swim.c	29;"	macro	file:
-SWIM_ROTF	..\inc\stm8_swim.h	78;"	prototype	signature:(uint8_t swim_pin, uint32_t addr, uint8_t *buf, uint8_t size)
-SWIM_ROTF	..\src\stm8_swim.c	445;"	function	signature:(uint8_t swim_pin, uint32_t addr, uint8_t *buf, uint8_t size)
-SWIM_Reset_Devices	..\inc\stm8_swim.h	83;"	prototype	signature:(void)
-SWIM_Reset_Devices	..\src\stm8_swim.c	585;"	function	signature:(void)
+SWIM_ROTF	..\inc\stm8_swim.h	79;"	prototype	signature:(uint8_t swim_pin, uint32_t addr, uint8_t *buf, uint8_t size)
+SWIM_ROTF	..\src\stm8_swim.c	486;"	function	signature:(uint8_t swim_pin, uint32_t addr, uint8_t *buf, uint8_t size)
+SWIM_Reset_Device	..\inc\stm8_swim.h	84;"	prototype	signature:(uint8_t swim_pin)
+SWIM_Reset_Device	..\src\stm8_swim.c	665;"	function	signature:(uint8_t swim_pin)
+SWIM_Reset_Device_All	..\inc\stm8_swim.h	85;"	prototype	signature:(void)
+SWIM_Reset_Device_All	..\src\stm8_swim.c	679;"	function	signature:(void)
 SWIM_Setup	..\inc\stm8_swim.h	68;"	prototype	signature:(void)
-SWIM_Setup	..\src\stm8_swim.c	161;"	function	signature:(void)
-SWIM_Soft_Reset	..\inc\stm8_swim.h	80;"	prototype	signature:(uint8_t swim_pin)
-SWIM_Soft_Reset	..\src\stm8_swim.c	573;"	function	signature:(uint8_t swim_pin)
-SWIM_Soft_Reset_All	..\inc\stm8_swim.h	81;"	prototype	signature:(void)
-SWIM_Soft_Reset_All	..\src\stm8_swim.c	579;"	function	signature:(void)
-SWIM_Stall_CPU	..\inc\stm8_swim.h	87;"	prototype	signature:(uint8_t swim_pin)
+SWIM_Setup	..\src\stm8_swim.c	150;"	function	signature:(void)
+SWIM_Soft_Reset	..\inc\stm8_swim.h	81;"	prototype	signature:(uint8_t swim_pin)
+SWIM_Soft_Reset	..\src\stm8_swim.c	653;"	function	signature:(uint8_t swim_pin)
+SWIM_Soft_Reset_All	..\inc\stm8_swim.h	82;"	prototype	signature:(void)
+SWIM_Soft_Reset_All	..\src\stm8_swim.c	659;"	function	signature:(void)
+SWIM_Stall_CPU	..\inc\stm8_swim.h	89;"	prototype	signature:(uint8_t swim_pin)
 SWIM_Stall_CPU	..\inc\stm8s003_swim.h	55;"	prototype	signature:(uint8_t swim_pin)
-SWIM_Stall_CPU	..\src\stm8_swim.c	605;"	function	signature:(uint8_t swim_pin)
-SWIM_Stall_CPU_All	..\inc\stm8_swim.h	88;"	prototype	signature:(void)
-SWIM_Stall_CPU_All	..\src\stm8_swim.c	617;"	function	signature:(void)
+SWIM_Stall_CPU	..\src\stm8_swim.c	699;"	function	signature:(uint8_t swim_pin)
+SWIM_Stall_CPU_All	..\inc\stm8_swim.h	90;"	prototype	signature:(void)
+SWIM_Stall_CPU_All	..\src\stm8_swim.c	707;"	function	signature:(void)
 SWIM_Unlock_EEPROM	..\inc\stm8s003_swim.h	60;"	prototype	signature:(uint8_t swim_pin)
-SWIM_Unlock_EEPROM	..\src\stm8s003_swim.c	54;"	function	signature:(uint8_t swim_pin)
+SWIM_Unlock_EEPROM	..\src\stm8s003_swim.c	53;"	function	signature:(uint8_t swim_pin)
 SWIM_Unlock_EEPROM_All	..\inc\stm8s003_swim.h	75;"	prototype	signature:(void)
-SWIM_Unlock_EEPROM_All	..\src\stm8s003_swim.c	220;"	function	signature:(void)
+SWIM_Unlock_EEPROM_All	..\src\stm8s003_swim.c	161;"	function	signature:(void)
 SWIM_Unlock_Flash	..\inc\stm8s003_swim.h	63;"	prototype	signature:(uint8_t swim_pin)
-SWIM_Unlock_Flash	..\src\stm8s003_swim.c	79;"	function	signature:(uint8_t swim_pin)
+SWIM_Unlock_Flash	..\src\stm8s003_swim.c	78;"	function	signature:(uint8_t swim_pin)
 SWIM_Unlock_Flash_All	..\inc\stm8s003_swim.h	78;"	prototype	signature:(void)
-SWIM_Unlock_Flash_All	..\src\stm8s003_swim.c	273;"	function	signature:(void)
+SWIM_Unlock_Flash_All	..\src\stm8s003_swim.c	214;"	function	signature:(void)
 SWIM_Unlock_OptionByte	..\inc\stm8s003_swim.h	57;"	prototype	signature:(uint8_t swim_pin)
-SWIM_Unlock_OptionByte	..\src\stm8s003_swim.c	20;"	function	signature:(uint8_t swim_pin)
+SWIM_Unlock_OptionByte	..\src\stm8s003_swim.c	24;"	function	signature:(uint8_t swim_pin)
 SWIM_Unlock_OptionByte_All	..\inc\stm8s003_swim.h	72;"	prototype	signature:(void)
-SWIM_Unlock_OptionByte_All	..\src\stm8s003_swim.c	140;"	function	signature:(void)
-SWIM_WOTF	..\inc\stm8_swim.h	75;"	prototype	signature:(uint8_t swim_pin, uint32_t addr, uint8_t *buf, uint8_t size)
-SWIM_WOTF	..\src\stm8_swim.c	371;"	function	signature:(uint8_t swim_pin, uint32_t addr, uint8_t *buf, uint8_t size)
-SWIM_WOTF_All	..\inc\stm8_swim.h	76;"	prototype	signature:(uint32_t addr, uint8_t *buf, uint8_t size)
-SWIM_WOTF_All	..\src\stm8_swim.c	408;"	function	signature:(uint32_t addr, uint8_t *buf, uint8_t size)
+SWIM_Unlock_OptionByte_All	..\src\stm8s003_swim.c	133;"	function	signature:(void)
+SWIM_WOTF	..\inc\stm8_swim.h	76;"	prototype	signature:(uint8_t swim_pin, uint32_t addr, uint8_t *buf, uint8_t size)
+SWIM_WOTF	..\src\stm8_swim.c	412;"	function	signature:(uint8_t swim_pin, uint32_t addr, uint8_t *buf, uint8_t size)
+SWIM_WOTF_All	..\inc\stm8_swim.h	77;"	prototype	signature:(uint32_t addr, uint8_t *buf, uint8_t size)
+SWIM_WOTF_All	..\src\stm8_swim.c	449;"	function	signature:(uint32_t addr, uint8_t *buf, uint8_t size)
 SWIM_Wait_For_EOP	..\inc\stm8s003_swim.h	67;"	prototype	signature:(uint8_t swim_pin)
-SWIM_Wait_For_EOP	..\src\stm8s003_swim.c	117;"	function	signature:(uint8_t swim_pin)
+SWIM_Wait_For_EOP	..\src\stm8s003_swim.c	112;"	function	signature:(uint8_t swim_pin)
 SWIM_Write_Bit	..\src\stm8_swim.c	42;"	macro	file:
 SWIM_Write_Cammand	..\inc\stm8_swim.h	70;"	prototype	signature:(uint8_t cammand)
-SWIM_Write_Cammand	..\src\stm8_swim.c	271;"	function	signature:(uint8_t cammand)
+SWIM_Write_Cammand	..\src\stm8_swim.c	266;"	function	signature:(uint8_t cammand)
 SWIM_Write_Data	..\inc\stm8_swim.h	71;"	prototype	signature:(uint8_t data)
-SWIM_Write_Data	..\src\stm8_swim.c	313;"	function	signature:(uint8_t data)
+SWIM_Write_Data	..\src\stm8_swim.c	308;"	function	signature:(uint8_t data)
+SWIM_Write_Data_Read	..\inc\stm8_swim.h	72;"	prototype	signature:(uint8_t data)
+SWIM_Write_Data_Read	..\src\stm8_swim.c	366;"	function	signature:(uint8_t data)
 SWIM_Write_Parity_Ack_Bit	..\src\stm8_swim.c	60;"	macro	file:
 SWR	..\stm8s_stdperiph_driver\inc\stm8s.h	514;"	member	struct:CLK_struct
 SetBit	..\stm8s_stdperiph_driver\inc\stm8s.h	2789;"	macro
@@ -2553,7 +2561,6 @@ TIM3_UPD_OVF_BRK_IRQHandler	..\inc\stm8s_it.h	72;"	prototype	signature:(void)
 TIM3_struct	..\stm8s_stdperiph_driver\inc\stm8s.h	952;"	struct
 TIM4	..\stm8s_stdperiph_driver\inc\stm8s.h	2692;"	macro
 TIM4_ARRPreloadConfig	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	146;"	prototype	signature:(FunctionalState NewState)
-TIM4_ARRPreloadConfig	..\stm8s_stdperiph_driver\src\stm8s_tim4.c	234;"	function	signature:(FunctionalState NewState)
 TIM4_ARR_ARR	..\stm8s_stdperiph_driver\inc\stm8s.h	1110;"	macro
 TIM4_ARR_RESET_VALUE	..\stm8s_stdperiph_driver\inc\stm8s.h	1084;"	macro
 TIM4_BaseAddress	..\stm8s_stdperiph_driver\inc\stm8s.h	2583;"	macro
@@ -2566,13 +2573,9 @@ TIM4_CR1_RESET_VALUE	..\stm8s_stdperiph_driver\inc\stm8s.h	1078;"	macro
 TIM4_CR1_UDIS	..\stm8s_stdperiph_driver\inc\stm8s.h	1097;"	macro
 TIM4_CR1_URS	..\stm8s_stdperiph_driver\inc\stm8s.h	1096;"	macro
 TIM4_ClearFlag	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	153;"	prototype	signature:(TIM4_FLAG_TypeDef TIM4_FLAG)
-TIM4_ClearFlag	..\stm8s_stdperiph_driver\src\stm8s_tim4.c	344;"	function	signature:(TIM4_FLAG_TypeDef TIM4_FLAG)
 TIM4_ClearITPendingBit	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	155;"	prototype	signature:(TIM4_IT_TypeDef TIM4_IT)
-TIM4_ClearITPendingBit	..\stm8s_stdperiph_driver\src\stm8s_tim4.c	391;"	function	signature:(TIM4_IT_TypeDef TIM4_IT)
 TIM4_Cmd	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	140;"	prototype	signature:(FunctionalState NewState)
-TIM4_Cmd	..\stm8s_stdperiph_driver\src\stm8s_tim4.c	81;"	function	signature:(FunctionalState NewState)
 TIM4_DeInit	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	138;"	prototype	signature:(void)
-TIM4_DeInit	..\stm8s_stdperiph_driver\src\stm8s_tim4.c	49;"	function	signature:(void)
 TIM4_EGR_RESET_VALUE	..\stm8s_stdperiph_driver\inc\stm8s.h	1081;"	macro
 TIM4_EGR_UG	..\stm8s_stdperiph_driver\inc\stm8s.h	1104;"	macro
 TIM4_EVENTSOURCE_UPDATE	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	102;"	enumerator	enum:__anon120
@@ -2580,19 +2583,13 @@ TIM4_EventSource_TypeDef	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	103;"	typede
 TIM4_FLAG_TypeDef	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	111;"	typedef	typeref:enum:__anon121
 TIM4_FLAG_UPDATE	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	110;"	enumerator	enum:__anon121
 TIM4_GenerateEvent	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	147;"	prototype	signature:(TIM4_EventSource_TypeDef TIM4_EventSource)
-TIM4_GenerateEvent	..\stm8s_stdperiph_driver\src\stm8s_tim4.c	257;"	function	signature:(TIM4_EventSource_TypeDef TIM4_EventSource)
 TIM4_GetCounter	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	150;"	prototype	signature:(void)
-TIM4_GetCounter	..\stm8s_stdperiph_driver\src\stm8s_tim4.c	295;"	function	signature:(void)
 TIM4_GetFlagStatus	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	152;"	prototype	signature:(TIM4_FLAG_TypeDef TIM4_FLAG)
-TIM4_GetFlagStatus	..\stm8s_stdperiph_driver\src\stm8s_tim4.c	319;"	function	signature:(TIM4_FLAG_TypeDef TIM4_FLAG)
 TIM4_GetITStatus	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	154;"	prototype	signature:(TIM4_IT_TypeDef TIM4_IT)
-TIM4_GetITStatus	..\stm8s_stdperiph_driver\src\stm8s_tim4.c	360;"	function	signature:(TIM4_IT_TypeDef TIM4_IT)
 TIM4_GetPrescaler	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	151;"	prototype	signature:(void)
-TIM4_GetPrescaler	..\stm8s_stdperiph_driver\src\stm8s_tim4.c	306;"	function	signature:(void)
 TIM4_IER_RESET_VALUE	..\stm8s_stdperiph_driver\inc\stm8s.h	1079;"	macro
 TIM4_IER_UIE	..\stm8s_stdperiph_driver\inc\stm8s.h	1100;"	macro
 TIM4_ITConfig	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	141;"	prototype	signature:(TIM4_IT_TypeDef TIM4_IT, FunctionalState NewState)
-TIM4_ITConfig	..\stm8s_stdperiph_driver\src\stm8s_tim4.c	107;"	function	signature:(TIM4_IT_TypeDef TIM4_IT, FunctionalState NewState)
 TIM4_IT_TypeDef	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	121;"	typedef	typeref:enum:__anon122
 TIM4_IT_UPDATE	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	120;"	enumerator	enum:__anon122
 TIM4_OPMODE_REPETITIVE	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	73;"	enumerator	enum:__anon117
@@ -2613,26 +2610,19 @@ TIM4_PSCR_PSC	..\stm8s_stdperiph_driver\inc\stm8s.h	1108;"	macro
 TIM4_PSCR_RESET_VALUE	..\stm8s_stdperiph_driver\inc\stm8s.h	1083;"	macro
 TIM4_PSCReloadMode_TypeDef	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	84;"	typedef	typeref:enum:__anon118
 TIM4_PrescalerConfig	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	145;"	prototype	signature:(TIM4_Prescaler_TypeDef Prescaler, TIM4_PSCReloadMode_TypeDef TIM4_PSCReloadMode)
-TIM4_PrescalerConfig	..\stm8s_stdperiph_driver\src\stm8s_tim4.c	215;"	function	signature:(TIM4_Prescaler_TypeDef Prescaler, TIM4_PSCReloadMode_TypeDef TIM4_PSCReloadMode)
 TIM4_Prescaler_TypeDef	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	58;"	typedef	typeref:enum:__anon116
 TIM4_SR1_RESET_VALUE	..\stm8s_stdperiph_driver\inc\stm8s.h	1080;"	macro
 TIM4_SR1_UIF	..\stm8s_stdperiph_driver\inc\stm8s.h	1102;"	macro
 TIM4_SelectOnePulseMode	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	144;"	prototype	signature:(TIM4_OPMode_TypeDef TIM4_OPMode)
-TIM4_SelectOnePulseMode	..\stm8s_stdperiph_driver\src\stm8s_tim4.c	179;"	function	signature:(TIM4_OPMode_TypeDef TIM4_OPMode)
 TIM4_SetAutoreload	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	149;"	prototype	signature:(uint8_t Autoreload)
-TIM4_SetAutoreload	..\stm8s_stdperiph_driver\src\stm8s_tim4.c	284;"	function	signature:(uint8_t Autoreload)
 TIM4_SetCounter	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	148;"	prototype	signature:(uint8_t Counter)
-TIM4_SetCounter	..\stm8s_stdperiph_driver\src\stm8s_tim4.c	272;"	function	signature:(uint8_t Counter)
 TIM4_TimeBaseInit	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	139;"	prototype	signature:(TIM4_Prescaler_TypeDef TIM4_Prescaler, uint8_t TIM4_Period)
-TIM4_TimeBaseInit	..\stm8s_stdperiph_driver\src\stm8s_tim4.c	65;"	function	signature:(TIM4_Prescaler_TypeDef TIM4_Prescaler, uint8_t TIM4_Period)
 TIM4_TypeDef	..\stm8s_stdperiph_driver\inc\stm8s.h	1072;"	typedef	typeref:struct:TIM4_struct
 TIM4_UPDATESOURCE_GLOBAL	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	92;"	enumerator	enum:__anon119
 TIM4_UPDATESOURCE_REGULAR	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	93;"	enumerator	enum:__anon119
 TIM4_UPD_OVF_IRQHandler	..\inc\stm8s_it.h	103;"	prototype	signature:(void)
 TIM4_UpdateDisableConfig	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	142;"	prototype	signature:(FunctionalState NewState)
-TIM4_UpdateDisableConfig	..\stm8s_stdperiph_driver\src\stm8s_tim4.c	131;"	function	signature:(FunctionalState NewState)
 TIM4_UpdateRequestConfig	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	143;"	prototype	signature:(TIM4_UpdateSource_TypeDef TIM4_UpdateSource)
-TIM4_UpdateRequestConfig	..\stm8s_stdperiph_driver\src\stm8s_tim4.c	155;"	function	signature:(TIM4_UpdateSource_TypeDef TIM4_UpdateSource)
 TIM4_UpdateSource_TypeDef	..\stm8s_stdperiph_driver\inc\stm8s_tim4.h	94;"	typedef	typeref:enum:__anon119
 TIM4_struct	..\stm8s_stdperiph_driver\inc\stm8s.h	1058;"	struct
 TIM5	..\stm8s_stdperiph_driver\inc\stm8s.h	2696;"	macro
@@ -3111,7 +3101,7 @@ _STM8S003_SWIM_H	..\inc\stm8s003_swim.h	2;"	macro
 __I	..\stm8s_stdperiph_driver\inc\stm8s.h	206;"	macro
 __IO	..\stm8s_stdperiph_driver\inc\stm8s.h	208;"	macro
 __MILLIS_H	..\inc\millis.h	3;"	macro
-__MODS0__	..\..\..\..\..\..\..\program files (x86)\cosmic\fse_compilers\cxstm8\hstm8\mods0.h	11;"	macro
+__MODS0__	..\..\..\..\..\..\program files (x86)\cosmic\cxstm8_eval\hstm8\mods0.h	11;"	macro
 __O	..\stm8s_stdperiph_driver\inc\stm8s.h	207;"	macro
 __STM8S_ADC1_H	..\stm8s_stdperiph_driver\inc\stm8s_adc1.h	29;"	macro
 __STM8S_AWU_H	..\stm8s_stdperiph_driver\inc\stm8s_awu.h	30;"	macro
@@ -3140,9 +3130,8 @@ __STM8S_UART1_H	..\stm8s_stdperiph_driver\inc\stm8s_uart1.h	30;"	macro
 __STM8S_WWDG_H	..\stm8s_stdperiph_driver\inc\stm8s_wwdg.h	30;"	macro
 __STM8_SWIM_H	..\inc\stm8_swim.h	2;"	macro
 _stext	..\inc\stm8s_it.h	34;"	prototype	signature:(void)
-_vectab	stm8_interrupt_vector.c	14;"	variable
 assert_failed	..\inc\stm8s_conf.h	99;"	prototype	signature:(uint8_t* file, uint32_t line)
-assert_failed	..\src\main.c	65;"	function	signature:(u8* file, u32 line)
+assert_failed	..\src\main.c	67;"	function	signature:(u8* file, u32 line)
 assert_param	..\inc\stm8s_conf.h	101;"	macro
 assert_param	..\inc\stm8s_conf.h	97;"	macro
 bool	..\stm8s_stdperiph_driver\inc\stm8s.h	231;"	typedef	typeref:enum:__anon1
@@ -3163,10 +3152,6 @@ halt	..\stm8s_stdperiph_driver\inc\stm8s.h	2742;"	macro
 int16_t	..\stm8s_stdperiph_driver\inc\stm8s.h	212;"	typedef
 int32_t	..\stm8s_stdperiph_driver\inc\stm8s.h	213;"	typedef
 int8_t	..\stm8s_stdperiph_driver\inc\stm8s.h	211;"	typedef
-interrupt_handler	stm8_interrupt_vector.c	11;"	member	struct:interrupt_vector	file:
-interrupt_handler_t	stm8_interrupt_vector.c	7;"	typedef	file:
-interrupt_instruction	stm8_interrupt_vector.c	10;"	member	struct:interrupt_vector	file:
-interrupt_vector	stm8_interrupt_vector.c	9;"	struct	file:
 main	..\src\main.c	40;"	function	signature:(void)
 millis	..\inc\millis.h	11;"	prototype	signature:(void)
 millis	..\src\millis.c	34;"	function	signature:(void)
