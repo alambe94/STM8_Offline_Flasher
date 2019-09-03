@@ -23,9 +23,9 @@
 
 if ($debugfile -eq "")
 {
-& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "C:\Users\lambe\OneDrive\Documents\STM8_Offline_Flasher\Firmware\EWSTM8\settings\STM8_SWIM_1.1.Debug.general.xcl" --backend -f "C:\Users\lambe\OneDrive\Documents\STM8_Offline_Flasher\Firmware\EWSTM8\settings\STM8_SWIM_1.1.Debug.driver.xcl" 
+& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "C:\Users\sam\Desktop\STM8_Offline_Flasher\Firmware\EWSTM8\settings\STM8_SWIM_1.1.Debug.general.xcl" --backend -f "C:\Users\sam\Desktop\STM8_Offline_Flasher\Firmware\EWSTM8\settings\STM8_SWIM_1.1.Debug.driver.xcl" 
 }
 else
 {
-& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "C:\Users\lambe\OneDrive\Documents\STM8_Offline_Flasher\Firmware\EWSTM8\settings\STM8_SWIM_1.1.Debug.general.xcl" --debug_file=$debugfile --backend -f "C:\Users\lambe\OneDrive\Documents\STM8_Offline_Flasher\Firmware\EWSTM8\settings\STM8_SWIM_1.1.Debug.driver.xcl" 
+& "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "C:\Users\sam\Desktop\STM8_Offline_Flasher\Firmware\EWSTM8\settings\STM8_SWIM_1.1.Debug.general.xcl" --debug_file=$debugfile --backend -f "C:\Users\sam\Desktop\STM8_Offline_Flasher\Firmware\EWSTM8\settings\STM8_SWIM_1.1.Debug.driver.xcl" 
 }

@@ -69,6 +69,7 @@ void SWIM_Setup(void);
 
 uint8_t SWIM_Write_Cammand(uint8_t cammand);
 uint8_t SWIM_Write_Data(uint8_t data);
+uint8_t SWIM_Write_Data_Read(uint8_t data);
 
 uint8_t SWIM_Enter(void);
 
@@ -80,7 +81,8 @@ uint8_t SWIM_ROTF(uint8_t swim_pin, uint32_t addr, uint8_t *buf, uint8_t size);
 uint8_t SWIM_Soft_Reset(uint8_t swim_pin);
 uint8_t SWIM_Soft_Reset_All(void);
 
-uint8_t SWIM_Reset_Devices(void);
+uint8_t SWIM_Reset_Device(uint8_t swim_pin);
+uint8_t SWIM_Reset_Device_All(void);
 
 uint8_t Get_SWIM_Devices(void);
 

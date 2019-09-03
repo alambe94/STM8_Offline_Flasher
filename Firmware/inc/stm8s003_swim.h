@@ -79,6 +79,8 @@ uint8_t SWIM_Unlock_Flash_All(void);
 uint8_t SWIM_Lock_Flash_All(void);
 
 uint8_t SWIM_Enable_Block_Programming_All(void);
+uint8_t SWIM_Enable_Read_Out_Protection(uint8_t swim_pin);
+uint8_t SWIM_Disable_Read_Out_Protection(uint8_t swim_pin);
 
 
 uint8_t Copy_STM8S003_To_AT24CXX(void);

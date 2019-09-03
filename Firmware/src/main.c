@@ -45,8 +45,10 @@ void main(void)
   
   /* Infinite loop */
   
-  status = Flash_Read_Write_Test();
-  
+  //status = Flash_Read_Write_Test();
+  //status = EEPROM_Read_Write_Test();
+  //status = OPT_Read_Write_Test();
+      
   while (1)
   {
   }
