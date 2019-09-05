@@ -31,6 +31,8 @@
 #include "soft_i2c.h"
 #include "stm8_swim.h"
 #include "stm8s003_swim.h"
+#include "tests.h"
+
 
 
 /* Private defines -----------------------------------------------------------*/
@@ -45,9 +47,9 @@ void main(void)
   
   /* Infinite loop */
 
-  //status = Flash_Read_Write_Test();
-  //status = EEPROM_Read_Write_Test();
-  //status = OPT_Read_Write_Test();
+  status = Flash_Read_Write_Test();
+  status = EEPROM_Read_Write_Test();
+  status = OPT_Read_Write_Test();
         
   while (1)
   {

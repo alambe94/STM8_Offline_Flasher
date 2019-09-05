@@ -1,6 +1,8 @@
 #ifndef __TESTS_H
 #define __TESTS_H
 
+#include "stm8s.h"
+
 uint8_t OPT_Read_Write_Test(void);
 uint8_t Flash_Read_Write_Test(void);
 uint8_t EEPROM_Read_Write_Test(void);

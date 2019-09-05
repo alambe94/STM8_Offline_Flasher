@@ -1,10 +1,13 @@
-#include"tests.h"
+#include "tests.h"
 #include "stm8s003_swim.h"
 #include "stm8_swim.h"
 #include "millis.h"
 #include "at24cxx.h"
 
 
+extern uint8_t RAM_Buffer[STM8S003_BLOCK_SIZE];
+extern uint8_t Compare_Buffer[STM8S003_BLOCK_SIZE];
+extern uint8_t STM8S003_Default_OPT[10];
 
 uint8_t OPT_Read_Write_Test(void)
 {
