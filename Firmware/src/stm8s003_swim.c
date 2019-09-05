@@ -140,7 +140,8 @@ uint8_t SWIM_Wait_For_EOP_All(void)
   
   devices = Get_SWIM_Devices();  
   
-  for(uint8_t i=0; i<255; i=i*2)
+  // iterate all gpio pins
+  for(uint8_t i=1; i<255; i=i*2)
   {
     if(devices & i)
     {
@@ -200,7 +201,8 @@ uint8_t SWIM_Lock_EEPROM_All(void)
   
   devices = Get_SWIM_Devices();  
   
-  for(uint8_t i=0; i<255; i=i*2)
+  // iterate all gpio pins
+  for(uint8_t i=1; i<255; i=i*2)
   {
     if(devices & i)
     {
@@ -232,7 +234,8 @@ uint8_t SWIM_Lock_Flash_All(void)
   
   devices = Get_SWIM_Devices();  
   
-  for(uint8_t i=0; i<255; i=i*2)
+  // iterate all gpio pins
+  for(uint8_t i=1; i<255; i=i*2)
   {
     if(devices & i)
     {
@@ -325,7 +328,8 @@ uint8_t Copy_STM8S003_To_AT24CXX(void)
   
   device = Get_SWIM_Devices(); 
   
-  for(uint8_t i=0; i<255; i=i*2)
+  // iterate all gpio pins
+  for(uint8_t i=1; i<255; i=i*2)
   {
     if(device & i)
     {
@@ -567,7 +571,7 @@ uint8_t Compare_STM8S003_To_AT24CXX(void)
       status = AT24CXX_Read_Buffer(at24xx_mem_address, Compare_Buffer, STM8S003_BLOCK_SIZE); 
     }
     // iterate all gpio pins
-    for(uint8_t i=0; i<255; i=i*2)
+    for(uint8_t i=1; i<255; i=i*2)
     {
       if(device & i)
       {
@@ -604,11 +608,12 @@ uint8_t Compare_STM8S003_To_AT24CXX(void)
       status = AT24CXX_Read_Buffer(at24xx_mem_address, Compare_Buffer, STM8S003_BLOCK_SIZE); 
     }
     // iterate all gpio pins
-    for(uint8_t i=0; i<255; i=i*2)
+    for(uint8_t i=1; i<255; i=i*2)
     {
       if(device & i)
       {
         status = SWIM_ROTF(i, stm8s003_mem_address, RAM_Buffer, STM8S003_BLOCK_SIZE);
+        
         for(uint8_t j=0; j<STM8S003_BLOCK_SIZE; j++ )
         {
           if(RAM_Buffer[j] != Compare_Buffer[j])
@@ -636,11 +641,12 @@ uint8_t Compare_STM8S003_To_AT24CXX(void)
     status = AT24CXX_Read_Buffer(OPTION_BYTE_STORE_ADDRESS, Compare_Buffer, 10); 
   }
   // iterate all gpio pins
-  for(uint8_t i=0; i<255; i=i*2)
+  for(uint8_t i=1; i<255; i=i*2)
   {
     if(device & i)
     {
       status = SWIM_ROTF(i, SWIM_OPT1, RAM_Buffer, 10);
+      
       for(uint8_t j=0; j<STM8S003_BLOCK_SIZE; j++ )
       {
         if(RAM_Buffer[j] != Compare_Buffer[j])
