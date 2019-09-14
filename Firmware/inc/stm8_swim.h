@@ -18,14 +18,14 @@
 #define SWIM_PINS_PORT          GPIOD
 #define SWIM_PINS_EXTI_PORT     EXTI_PORT_GPIOD
 
-#define SWIM_PIN_1              GPIO_PIN_1
-#define SWIM_PIN_2              GPIO_PIN_2
-#define SWIM_PIN_3              GPIO_PIN_3 
-#define SWIM_PIN_4              GPIO_PIN_4 
-#define SWIM_PIN_5              GPIO_PIN_5 
-#define SWIM_PIN_6              GPIO_PIN_6 
+#define SWIM_PIN_1              GPIO_PIN_2
+#define SWIM_PIN_2              GPIO_PIN_3 
+#define SWIM_PIN_3              GPIO_PIN_4 
+#define SWIM_PIN_4              GPIO_PIN_5 
+#define SWIM_PIN_5              GPIO_PIN_6 
 
 /* resets lines corrensponding to swim lines */
+
 #define NRST_PIN_1              GPIO_PIN_3
 #define NRST_PIN_1_PORT         GPIOC
 
@@ -41,8 +41,7 @@
 #define NRST_PIN_5              GPIO_PIN_7
 #define NRST_PIN_5_PORT         GPIOC
 
-#define NRST_PIN_6              GPIO_PIN_3
-#define NRST_PIN_6_PORT         GPIOA
+
 
 
 

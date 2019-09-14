@@ -77,7 +77,7 @@ uint8_t INT_Count = 0;
 uint8_t RX_Frame[15] = {0};
 
 /* Initially all swim ports are enabled. If device did not responds to swim sequence, then that port will be disabled*/
-uint8_t SWIM_PIN_Mask = (SWIM_PIN_1|SWIM_PIN_2|SWIM_PIN_3|SWIM_PIN_4|SWIM_PIN_5|SWIM_PIN_6);
+uint8_t SWIM_PIN_Mask = (SWIM_PIN_1|SWIM_PIN_2|SWIM_PIN_3|SWIM_PIN_4|SWIM_PIN_5);
 uint8_t SWIM_Devices = 0; // discovred devices on swim pin, ie response to swim sequence;
 
 
@@ -110,10 +110,6 @@ void NRST_Low()
   {
     NRST_PIN_LOW(NRST_PIN_5_PORT, NRST_PIN_5);
   }
-  if(SWIM_PIN_Mask & SWIM_PIN_6)
-  {
-    NRST_PIN_LOW(NRST_PIN_6_PORT, NRST_PIN_6);
-  }
 }
 
 
@@ -140,11 +136,6 @@ void NRST_High()
   {
     NRST_PIN_HIGH(NRST_PIN_5_PORT, NRST_PIN_5);
   }
-  if(SWIM_PIN_Mask & SWIM_PIN_6)
-  {
-    NRST_PIN_HIGH(NRST_PIN_6_PORT, NRST_PIN_6);
-  }
-  
 }
 
 void SWIM_Setup(void)
@@ -162,7 +153,6 @@ void SWIM_Setup(void)
   GPIO_Init(NRST_PIN_3_PORT, NRST_PIN_3, GPIO_MODE_OUT_OD_HIZ_SLOW);
   GPIO_Init(NRST_PIN_4_PORT, NRST_PIN_4, GPIO_MODE_OUT_OD_HIZ_SLOW);
   GPIO_Init(NRST_PIN_5_PORT, NRST_PIN_5, GPIO_MODE_OUT_OD_HIZ_SLOW);
-  GPIO_Init(NRST_PIN_6_PORT, NRST_PIN_6, GPIO_MODE_OUT_OD_HIZ_SLOW);
   
   enableInterrupts();
 }
@@ -171,9 +161,9 @@ void SWIM_Setup(void)
 uint8_t SWIM_Enter()
 {
   uint8_t for_index;
-  uint16_t timeout = 0;
   uint8_t swim_port = 0;
   uint8_t csr = 0xA0;
+  uint16_t timeout = 0;
   
   SWIM_Devices = SWIM_PIN_Mask;
   

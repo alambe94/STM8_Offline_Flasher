@@ -46,10 +46,10 @@ void main(void)
   Soft_I2C_Init();
   
   /* Infinite loop */
-
-  status = Flash_Read_Write_Test();
-  status = EEPROM_Read_Write_Test();
-  status = OPT_Read_Write_Test();
+  status = AT24CXX_Read_Write_Test();
+  //status = Flash_Read_Write_Test();
+  //status = EEPROM_Read_Write_Test();
+  //status = OPT_Read_Write_Test();
         
   while (1)
   {

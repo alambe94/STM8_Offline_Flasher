@@ -4,6 +4,7 @@
 #include "millis.h"
 #include "at24cxx.h"
 
+#define SWIM_TEST_PIN   SWIM_PIN_1
 
 extern uint8_t RAM_Buffer[STM8S003_BLOCK_SIZE];
 extern uint8_t Compare_Buffer[STM8S003_BLOCK_SIZE];
@@ -18,47 +19,47 @@ uint8_t OPT_Read_Write_Test(void)
   
   if(status)
   {
-    status=SWIM_Unlock_OptionByte(SWIM_PIN_6);
+    status=SWIM_Unlock_OptionByte(SWIM_TEST_PIN);
   }
     
   if(status)
   {
-    status=SWIM_WOTF(SWIM_PIN_6, SWIM_OPT1, STM8S003_Default_OPT, 2);
-    status = SWIM_Wait_For_EOP(SWIM_PIN_6);
+    status=SWIM_WOTF(SWIM_TEST_PIN, SWIM_OPT1, STM8S003_Default_OPT, 2);
+    status = SWIM_Wait_For_EOP(SWIM_TEST_PIN);
   }
   
   if(status)
   {
-    status=SWIM_WOTF(SWIM_PIN_6, SWIM_OPT2, STM8S003_Default_OPT+2, 2);
-    status = SWIM_Wait_For_EOP(SWIM_PIN_6);
+    status=SWIM_WOTF(SWIM_TEST_PIN, SWIM_OPT2, STM8S003_Default_OPT+2, 2);
+    status = SWIM_Wait_For_EOP(SWIM_TEST_PIN);
   }
   
   if(status)
   {
-    status=SWIM_WOTF(SWIM_PIN_6, SWIM_OPT3, STM8S003_Default_OPT+4, 2);
-    status = SWIM_Wait_For_EOP(SWIM_PIN_6);
+    status=SWIM_WOTF(SWIM_TEST_PIN, SWIM_OPT3, STM8S003_Default_OPT+4, 2);
+    status = SWIM_Wait_For_EOP(SWIM_TEST_PIN);
   }
   
   if(status)
   {
-    status=SWIM_WOTF(SWIM_PIN_6, SWIM_OPT4, STM8S003_Default_OPT+6, 2);
-    status = SWIM_Wait_For_EOP(SWIM_PIN_6);
+    status=SWIM_WOTF(SWIM_TEST_PIN, SWIM_OPT4, STM8S003_Default_OPT+6, 2);
+    status = SWIM_Wait_For_EOP(SWIM_TEST_PIN);
   }
   
   if(status)
   {
-    status=SWIM_WOTF(SWIM_PIN_6, SWIM_OPT5, STM8S003_Default_OPT+8, 2);
-    status = SWIM_Wait_For_EOP(SWIM_PIN_6);
+    status=SWIM_WOTF(SWIM_TEST_PIN, SWIM_OPT5, STM8S003_Default_OPT+8, 2);
+    status = SWIM_Wait_For_EOP(SWIM_TEST_PIN);
   }
   
   if(status)
   {
-    status = SWIM_Lock_OptionByte(SWIM_PIN_6);
+    status = SWIM_Lock_OptionByte(SWIM_TEST_PIN);
   }
   
   if(status)
   {
-    status = SWIM_ROTF(SWIM_PIN_6, SWIM_OPT1, Compare_Buffer, 10); // stm8s003 has 10 option bytes
+    status = SWIM_ROTF(SWIM_TEST_PIN, SWIM_OPT1, Compare_Buffer, 10); // stm8s003 has 10 option bytes
   }
   
   for(for_index=0; for_index<10; for_index++)
@@ -91,7 +92,7 @@ uint8_t Flash_Read_Write_Test(void)
   
   if(status)
   {
-    status = SWIM_Unlock_Flash(SWIM_PIN_6);
+    status = SWIM_Unlock_Flash(SWIM_TEST_PIN);
   }
   
   for (for_index_i =0; for_index_i<STM8S003_FLASH_PAGES; for_index_i++)
@@ -99,14 +100,14 @@ uint8_t Flash_Read_Write_Test(void)
     
     if(status)
     {
-      status = SWIM_Enable_Block_Programming(SWIM_PIN_6); //standard block programming
+      status = SWIM_Enable_Block_Programming(SWIM_TEST_PIN); //standard block programming
     }
     
     if(status)
     {
-      status = SWIM_WOTF(SWIM_PIN_6, address, RAM_Buffer, STM8S003_BLOCK_SIZE);
+      status = SWIM_WOTF(SWIM_TEST_PIN, address, RAM_Buffer, STM8S003_BLOCK_SIZE);
       address += STM8S003_BLOCK_SIZE;
-      status = SWIM_Wait_For_EOP(SWIM_PIN_6);
+      status = SWIM_Wait_For_EOP(SWIM_TEST_PIN);
     }
     else
     {
@@ -123,7 +124,7 @@ uint8_t Flash_Read_Write_Test(void)
     
     if(status)
     {
-      status = SWIM_ROTF(SWIM_PIN_6, address, Compare_Buffer, STM8S003_BLOCK_SIZE);
+      status = SWIM_ROTF(SWIM_TEST_PIN, address, Compare_Buffer, STM8S003_BLOCK_SIZE);
       address += STM8S003_BLOCK_SIZE;
     }
     
@@ -141,7 +142,7 @@ uint8_t Flash_Read_Write_Test(void)
   }
   if(status)
   {
-    status = SWIM_Lock_Flash(SWIM_PIN_6);
+    status = SWIM_Lock_Flash(SWIM_TEST_PIN);
   }
   return status;
 }
@@ -164,7 +165,7 @@ uint8_t EEPROM_Read_Write_Test(void)
   
   if(status)
   {
-    status = SWIM_Unlock_EEPROM(SWIM_PIN_6);
+    status = SWIM_Unlock_EEPROM(SWIM_TEST_PIN);
   }
   
   for (for_index_i =0; for_index_i<STM8S003_EEPROM_PAGES; for_index_i++)
@@ -172,14 +173,14 @@ uint8_t EEPROM_Read_Write_Test(void)
     
     if(status)
     {
-      status = SWIM_Enable_Block_Programming(SWIM_PIN_6); //standard block programming
+      status = SWIM_Enable_Block_Programming(SWIM_TEST_PIN); //standard block programming
     }
     
     if(status)
     {
-      status = SWIM_WOTF(SWIM_PIN_6, address, RAM_Buffer, STM8S003_BLOCK_SIZE);
+      status = SWIM_WOTF(SWIM_TEST_PIN, address, RAM_Buffer, STM8S003_BLOCK_SIZE);
       address += STM8S003_BLOCK_SIZE;
-      SWIM_Wait_For_EOP(SWIM_PIN_6);
+      SWIM_Wait_For_EOP(SWIM_TEST_PIN);
     }
     else
     {
@@ -196,7 +197,7 @@ uint8_t EEPROM_Read_Write_Test(void)
     
     if(status)
     {
-      status = SWIM_ROTF(SWIM_PIN_6, address, Compare_Buffer, STM8S003_BLOCK_SIZE);
+      status = SWIM_ROTF(SWIM_TEST_PIN, address, Compare_Buffer, STM8S003_BLOCK_SIZE);
       address += STM8S003_BLOCK_SIZE;
     }
     
@@ -215,7 +216,7 @@ uint8_t EEPROM_Read_Write_Test(void)
   
   if(status)
   {
-    status = SWIM_Lock_EEPROM(SWIM_PIN_6);
+    status = SWIM_Lock_EEPROM(SWIM_TEST_PIN);
   }
   return status;
 }
@@ -241,6 +242,12 @@ uint8_t AT24CXX_Read_Write_Test(void)
   
   for(address = for_index_i=0; for_index_i<AT24CXX_PAGES; for_index_i++ )
   {
+    
+    for(for_index_j=0; for_index_j<STM8S003_BLOCK_SIZE; for_index_j++ )
+    {
+      Compare_Buffer[for_index_j] = 0x00;
+    }
+    
     if(status)
     {
       status = AT24CXX_Read_Buffer(address, Compare_Buffer, STM8S003_BLOCK_SIZE);
