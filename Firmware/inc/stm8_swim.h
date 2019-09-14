@@ -54,7 +54,7 @@
 
 
 #define SWIM_CSR               0x7F80
-#define SWIM_DM_CSR2	      0x7F99
+#define SWIM_DM_CSR2	       0x7F99
 
 
 #define SWIM_FLASH_PUKR_KEY1    0x56

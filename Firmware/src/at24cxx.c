@@ -39,7 +39,7 @@ uint8_t AT24CXX_Write_Byte (uint16_t register_address, uint8_t data)
   
   Soft_I2C_Stop ();
   
-  //delay_ms(3);/*Memory Programming Time approx 5ms*//*3ms for BL24CXX */
+  //delay_ms(AT24CXX_WRITE_DELAY);/*Memory Programming Time approx 5ms*//*3ms for BL24CXX */
   
   return AT24CXX_OK;
 }
@@ -88,7 +88,7 @@ uint8_t AT24CXX_Read_Byte (uint16_t register_address, uint8_t* data)
   return AT24CXX_OK;
 }
 
-uint8_t AT24CXX_Write_Page (uint16_t start_address, uint8_t *buf, uint16_t len)
+uint8_t AT24CXX_Write_Page (uint16_t start_address, const uint8_t *buf, uint16_t len)
 {
   
   if (len == 0)
@@ -129,7 +129,7 @@ uint8_t AT24CXX_Write_Page (uint16_t start_address, uint8_t *buf, uint16_t len)
   
   Soft_I2C_Stop ();
   
-  //delay_ms(3); /*Memory Programming Time approx 5ms*//*3ms for BL24CXX */
+  delay_ms(AT24CXX_WRITE_DELAY); /*Memory Programming Time approx 5ms*//*3ms for BL24CXX */
   
   return AT24CXX_OK;
 }
@@ -193,52 +193,55 @@ uint8_t AT24CXX_Read_Buffer (uint16_t start_address, uint8_t *buf, uint16_t len)
 }
 
 /*this function can write any number of bytes from arbitrary location*/
-uint8_t AT24CXX_Write_Buffer (uint16_t start_address, uint8_t *buf, uint16_t len)
+uint8_t AT24CXX_Write_Buffer (uint16_t start_address, const uint8_t *buf, uint16_t len)
 {
   
   uint16_t index;
-  uint16_t page_counter, byte_counter;
-  uint16_t offset_address = 0;
+  uint16_t page_counter;
+  uint16_t byte_counter;
+  
+  uint16_t eeprom_address;
+  const    uint8_t* buffer_address;
+  
   
   byte_counter = (AT24CXX_PAGE_LENGTH - (start_address % AT24CXX_PAGE_LENGTH));
-  
   if (len < byte_counter)
   {
     byte_counter = len;
   }
+  page_counter = ((len - byte_counter) / AT24CXX_PAGE_LENGTH);
   
-  if (AT24CXX_Write_Page (start_address, buf, byte_counter) == AT24CXX_ERR)
+  
+  eeprom_address = start_address;
+  buffer_address = buf;
+  if (AT24CXX_Write_Page (eeprom_address, buffer_address, byte_counter) == AT24CXX_ERR)
   {
     return AT24CXX_ERR;
   }
+ 
   
-  delay_ms(3);/*Memory Programming Time approx 5ms*//*3ms for BL24CXX */
+  eeprom_address += byte_counter;
+  buffer_address += byte_counter;
   
-  page_counter = ((len - byte_counter) / AT24CXX_PAGE_LENGTH);
-  
-  for (index = 0; index < (page_counter); index++)
-  {
-    
-    offset_address = byte_counter + (index * AT24CXX_PAGE_LENGTH);
-    
-    if (AT24CXX_Write_Page ((start_address + offset_address),
-                            (buf + offset_address),
+  for (index=0; index<page_counter; index++)
+  {    
+    if (AT24CXX_Write_Page (eeprom_address,
+                            buffer_address,
                             AT24CXX_PAGE_LENGTH) == AT24CXX_ERR)
     {
       return AT24CXX_ERR;
     }
-    delay_ms(3);/*Memory Programming Time approx 5ms*//*3ms for BL24CXX */
+    
+    eeprom_address += AT24CXX_PAGE_LENGTH;
+    buffer_address += AT24CXX_PAGE_LENGTH;
   }
   
-  offset_address += AT24CXX_PAGE_LENGTH;
-  
-  if (AT24CXX_Write_Page ((start_address + offset_address),
-			  (buf + offset_address),
-			  (len - offset_address)) == AT24CXX_ERR)
+  if (AT24CXX_Write_Page (eeprom_address,
+			  buffer_address,
+			 (len - (eeprom_address-start_address))) == AT24CXX_ERR)
   {
     return AT24CXX_ERR;
   }
-  delay_ms(3);/*Memory Programming Time approx 5ms*//*3ms for BL24CXX */
   
   return AT24CXX_OK;
 }
