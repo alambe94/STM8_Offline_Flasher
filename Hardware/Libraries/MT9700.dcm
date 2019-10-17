@@ -1,8 +1,0 @@
-EESchema-DOCLIB  Version 2.0
-#
-$CMP MT9700
-D 80mohm Adjusable fast response current limited power distribution switch
-K power distribution switch
-$ENDCMP
-#
-#End Doc Library
