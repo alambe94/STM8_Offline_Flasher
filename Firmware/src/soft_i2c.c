@@ -2,13 +2,13 @@
 
 void Soft_I2C_Init(void)
 {
-  GPIO_Init(SOFT_I2C_SDA_PORT, SOFT_I2C_SDA_PIN, GPIO_MODE_OUT_OD_HIZ_FAST);
-  GPIO_Init(SOFT_I2C_SCL_PORT, SOFT_I2C_SCL_PIN, GPIO_MODE_OUT_OD_HIZ_FAST);
+	GPIO_Init(SOFT_I2C_SDA_PORT, SOFT_I2C_SDA_PIN, GPIO_MODE_OUT_OD_HIZ_FAST);
+	GPIO_Init(SOFT_I2C_SCL_PORT, SOFT_I2C_SCL_PIN, GPIO_MODE_OUT_OD_HIZ_FAST);
 }
 
 void Soft_I2C_Delay()
 {
-  nop();
+	nop();
 }
 
 uint8_t Soft_I2C_Start(void)
@@ -69,7 +69,6 @@ uint8_t Soft_I2C_Wait_ACK()
 	Soft_I2C_Delay();
 
 	return SOFT_I2C_OK;
-
 }
 
 void Soft_I2C_ACK(void)
@@ -83,7 +82,6 @@ void Soft_I2C_ACK(void)
 	Soft_I2C_Delay();
 	SOFT_I2C_SCL_LOW();
 	Soft_I2C_Delay();
-
 }
 
 void Soft_I2C_NACK(void)
@@ -97,7 +95,6 @@ void Soft_I2C_NACK(void)
 	Soft_I2C_Delay();
 	SOFT_I2C_SCL_LOW();
 	Soft_I2C_Delay();
-
 }
 
 uint8_t Soft_I2C_Send_Byte(uint8_t byte)
@@ -153,7 +150,6 @@ uint8_t Soft_I2C_Receive_Byte(void)
 	}
 	SOFT_I2C_SCL_LOW();
 	return ReceivedByte;
-
 }
 
 uint8_t Soft_I2C_Write_Byte(uint8_t slave_address, uint8_t register_address, uint8_t *byte)
@@ -185,7 +181,6 @@ uint8_t Soft_I2C_Write_Byte(uint8_t slave_address, uint8_t register_address, uin
 	Soft_I2C_Stop();
 
 	return SOFT_I2C_OK;
-
 }
 
 uint8_t Soft_I2C_Read_Byte(uint8_t slave_address, uint8_t register_address, uint8_t *val)
@@ -223,11 +218,10 @@ uint8_t Soft_I2C_Read_Byte(uint8_t slave_address, uint8_t register_address, uint
 	Soft_I2C_Stop();
 
 	return SOFT_I2C_OK;
-
 }
 
 uint8_t Soft_I2C_Write_Bytes(uint8_t slave_address, uint8_t register_address, uint8_t *buf,
-		uint8_t num)
+							 uint8_t num)
 {
 
 	if (Soft_I2C_Start() == SOFT_I2C_ERR)
@@ -252,17 +246,15 @@ uint8_t Soft_I2C_Write_Bytes(uint8_t slave_address, uint8_t register_address, ui
 		{
 			return SOFT_I2C_ERR;
 		}
-
 	}
 
 	Soft_I2C_Stop();
 
 	return SOFT_I2C_OK;
-
 }
 
 uint8_t Soft_I2C_Read_Bytes(uint8_t slave_address, uint8_t register_address, uint8_t *buf,
-		uint8_t num)
+							uint8_t num)
 {
 
 	if (Soft_I2C_Start() == SOFT_I2C_ERR)
@@ -309,7 +301,6 @@ uint8_t Soft_I2C_Read_Bytes(uint8_t slave_address, uint8_t register_address, uin
 	Soft_I2C_Stop();
 
 	return SOFT_I2C_OK;
-
 }
 
 uint8_t Soft_I2C_Scan(uint8_t slave_address)
@@ -326,6 +317,6 @@ uint8_t Soft_I2C_Scan(uint8_t slave_address)
 		return SOFT_I2C_ERR;
 	}
 	Soft_I2C_Stop();
-        
+
 	return SOFT_I2C_OK;
 }

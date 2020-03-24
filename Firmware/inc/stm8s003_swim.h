@@ -52,39 +52,22 @@
 #define SWIM_FLASH_DUKR              (SWIM_FLASH + 0x0a)
 
 
-uint8_t SWIM_Stall_CPU(uint8_t swim_pin);
+uint8_t SWIM_Stall_CPU(void);
 
-uint8_t SWIM_Unlock_OptionByte(uint8_t swim_pin);
-uint8_t SWIM_Lock_OptionByte(uint8_t swim_pin);
+uint8_t SWIM_Unlock_OptionByte(void);
+uint8_t SWIM_Lock_OptionByte(void);
 
-uint8_t SWIM_Unlock_EEPROM(uint8_t swim_pin);
-uint8_t SWIM_Lock_EEPROM(uint8_t swim_pin);
+uint8_t SWIM_Unlock_EEPROM(void);
+uint8_t SWIM_Lock_EEPROM(void);
 
-uint8_t SWIM_Unlock_Flash(uint8_t swim_pin);
-uint8_t SWIM_Lock_Flash(uint8_t swim_pin);
+uint8_t SWIM_Unlock_Flash(void);
+uint8_t SWIM_Lock_Flash(void);
 
-uint8_t SWIM_Enable_Block_Programming(uint8_t swim_pin);
-uint8_t SWIM_Wait_For_EOP(uint8_t swim_pin);
-uint8_t SWIM_Wait_For_EOP_All(void);
+uint8_t SWIM_Enable_Block_Programming(void);
+uint8_t SWIM_Wait_For_EOP(void);
 
-
-
-
-
-uint8_t SWIM_Unlock_OptionByte_All(void);
-uint8_t SWIM_Lock_OptionByte_All(void);
-
-uint8_t SWIM_Unlock_EEPROM_All(void);
-uint8_t SWIM_Lock_EEPROM_All(void);
-
-uint8_t SWIM_Unlock_Flash_All(void);
-uint8_t SWIM_Lock_Flash_All(void);
-
-uint8_t SWIM_Enable_Block_Programming_All(void);
-uint8_t SWIM_Enable_Read_Out_Protection(uint8_t swim_pin);
-uint8_t SWIM_Enable_Read_Out_Protection_All(void);
-uint8_t SWIM_Disable_Read_Out_Protection(uint8_t swim_pin);
-uint8_t SWIM_Disable_Read_Out_Protection_All(void);
+uint8_t SWIM_Enable_Read_Out_Protection(void);
+uint8_t SWIM_Disable_Read_Out_Protection(void);
 
 
 

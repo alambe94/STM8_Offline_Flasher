@@ -14,36 +14,6 @@
 
 /* Private defines -----------------------------------------------------------*/
 
-/* all swim pin must be on the same port */
-#define SWIM_PINS_PORT          GPIOD
-#define SWIM_PINS_EXTI_PORT     EXTI_PORT_GPIOD
-
-#define SWIM_PIN_1              GPIO_PIN_2
-#define SWIM_PIN_2              GPIO_PIN_3 
-#define SWIM_PIN_3              GPIO_PIN_4 
-#define SWIM_PIN_4              GPIO_PIN_5 
-#define SWIM_PIN_5              GPIO_PIN_6 
-
-/* resets lines corrensponding to swim lines */
-
-#define NRST_PIN_1              GPIO_PIN_3
-#define NRST_PIN_1_PORT         GPIOC
-
-#define NRST_PIN_2              GPIO_PIN_4
-#define NRST_PIN_2_PORT         GPIOC
-
-#define NRST_PIN_3              GPIO_PIN_5
-#define NRST_PIN_3_PORT         GPIOC
-
-#define NRST_PIN_4              GPIO_PIN_6
-#define NRST_PIN_4_PORT         GPIOC
-
-#define NRST_PIN_5              GPIO_PIN_7
-#define NRST_PIN_5_PORT         GPIOC
-
-
-
-
 
 #define SWIM_CMD_LEN           3
 #define SWIM_CMD_SRST          0x00
@@ -62,31 +32,22 @@
 #define SWIM_FLASH_DUKR_KEY2    0x56
 
 /* Private function prototypes -----------------------------------------------*/
-void NRST_Low(void);
-void NRST_High(void);
+
 void SWIM_Setup(void);
 
 uint8_t SWIM_Write_Cammand(uint8_t cammand);
 uint8_t SWIM_Write_Data(uint8_t data);
-uint8_t SWIM_Write_Data_Read(uint8_t data);
+void    SWIM_Write_Data2(uint8_t data);
 
 uint8_t SWIM_Enter(void);
 
-uint8_t SWIM_WOTF(uint8_t swim_pin, uint32_t addr, uint8_t *buf, uint8_t size);
-uint8_t SWIM_WOTF_All(uint32_t addr, uint8_t *buf, uint8_t size);
+uint8_t SWIM_WOTF( uint32_t addr, uint8_t *buf, uint8_t size);
 
-uint8_t SWIM_ROTF(uint8_t swim_pin, uint32_t addr, uint8_t *buf, uint8_t size);
+uint8_t SWIM_ROTF( uint32_t addr, uint8_t *buf, uint8_t size);
 
-uint8_t SWIM_Soft_Reset(uint8_t swim_pin);
-uint8_t SWIM_Soft_Reset_All(void);
-
-uint8_t SWIM_Reset_Device(uint8_t swim_pin);
-uint8_t SWIM_Reset_Device_All(void);
-
-uint8_t Get_SWIM_Devices(void);
-
-uint8_t SWIM_Stall_CPU(uint8_t swim_pin);
-uint8_t SWIM_Stall_CPU_All(void);
+uint8_t SWIM_Soft_Reset(void);
+uint8_t SWIM_Reset_Device(void);
+uint8_t SWIM_Stall_CPU(void);
 
 
 /***************** FLASH_CR2 ********************************/

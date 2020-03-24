@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "C:\Users\sam\Desktop\STM8_Offline_Flasher\Firmware\EWSTM8\settings\STM8_SWIM_1.1.Debug.general.xcl" --backend -f "C:\Users\sam\Desktop\STM8_Offline_Flasher\Firmware\EWSTM8\settings\STM8_SWIM_1.1.Debug.driver.xcl" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "D:\ST\STM8_Offline_Flasher\Firmware\EWSTM8\settings\STM8_SWIM_1.1.Debug.general.xcl" --backend -f "D:\ST\STM8_Offline_Flasher\Firmware\EWSTM8\settings\STM8_SWIM_1.1.Debug.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "C:\Users\sam\Desktop\STM8_Offline_Flasher\Firmware\EWSTM8\settings\STM8_SWIM_1.1.Debug.general.xcl" "--debug_file=%~1" --backend -f "C:\Users\sam\Desktop\STM8_Offline_Flasher\Firmware\EWSTM8\settings\STM8_SWIM_1.1.Debug.driver.xcl" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.3\common\bin\cspybat" -f "D:\ST\STM8_Offline_Flasher\Firmware\EWSTM8\settings\STM8_SWIM_1.1.Debug.general.xcl" "--debug_file=%~1" --backend -f "D:\ST\STM8_Offline_Flasher\Firmware\EWSTM8\settings\STM8_SWIM_1.1.Debug.driver.xcl" 
 
 @echo off 
 :end
